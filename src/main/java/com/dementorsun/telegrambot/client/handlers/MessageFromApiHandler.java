@@ -8,7 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.InputFile;
 
 @Component
 @AllArgsConstructor
-public class MessageFromApiHandler {
+class MessageFromApiHandler {
 
     public SendPhoto createSendPhoto(String chatId, InputFile photo, String caption) {
         return SendPhoto.builder()

@@ -18,7 +18,7 @@ import java.util.List;
 @Component
 @Slf4j
 @AllArgsConstructor
-public class TelegramBotCore extends TelegramLongPollingBot {
+class TelegramBotCore extends TelegramLongPollingBot {
 
     private final UpdateHandler updateHandler;
     private final SchedulerHelper schedulerHelper;

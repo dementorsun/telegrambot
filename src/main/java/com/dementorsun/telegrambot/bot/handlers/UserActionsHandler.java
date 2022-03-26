@@ -19,7 +19,7 @@ import static com.dementorsun.telegrambot.bot.data.BotButtons.TOPICS_DONE;
 @Component
 @Slf4j
 @AllArgsConstructor
-public class UserActionsHandler {
+class UserActionsHandler {
 
     private final UserDataHandler userDataHandler;
     private final MessageHandler messageHandler;

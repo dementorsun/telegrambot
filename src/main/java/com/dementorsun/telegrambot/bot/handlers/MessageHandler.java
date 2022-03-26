@@ -19,6 +19,8 @@ import java.util.Random;
 @AllArgsConstructor
 public class MessageHandler {
 
+    private static final String BOT_MESSAGE = "*КоженДеньБот: *";
+
     public SendMessage createDefaultMessageFromUpdateMessage(Update update) {
         SendMessage defaultMessage = SendMessage.builder()
                 .chatId(update.getMessage().getChatId().toString())
@@ -44,7 +46,8 @@ public class MessageHandler {
     }
 
     public SendMessage setMessageToUser(SendMessage replyMessage, String message, long userId) {
-        replyMessage.setText(message);
+        replyMessage.setText(BOT_MESSAGE + message);
+        replyMessage.setParseMode("Markdown");
 
         log.info("'{}' message is set for user with id = '{}'", message, userId);
 
@@ -54,7 +57,7 @@ public class MessageHandler {
     public SendMessage setNewMessageToUser(String chatId, String message) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
-        sendMessage.setText(message);
+        sendMessage.setText(BOT_MESSAGE + message);
         sendMessage.setParseMode("Markdown");
 
         return sendMessage;
@@ -96,15 +99,15 @@ public class MessageHandler {
     public String getInitialDayMessage() {
         List<String> randomMessageList =
                 Arrays.asList("",
-                        "*Кожен день одне й теж саме. Кожен день...*",
-                        "*Слава Україні!*\uD83C\uDDFA\uD83C\uDDE6",
-                        "*До вашої уваги пропонується:*",
-                        "*Це знову я, а це знову ти...*",
-                        "*Який сьогодні день? Де я?*",
-                        "*Це ж було вже!©*",
-                        "*Ось, все як домовлялися.*",
-                        "*Путін вже помер?*",
-                        "*Мені здається, що я тобі подобаюсь. Та нічого, я не проти.*");
+                        "Кожен день одне й теж саме. Кожен день...",
+                        "Слава Україні!\uD83C\uDDFA\uD83C\uDDE6",
+                        "До вашої уваги пропонується:",
+                        "Це знову я, а це знову ти...",
+                        "Який сьогодні день? Де я?",
+                        "Це ж було вже!©",
+                        "Ось, все як домовлялися.",
+                        "Путін вже помер?",
+                        "Мені здається, що я тобі подобаюсь. Та нічого, я не проти.");
 
         return randomMessageList.get(new Random().nextInt(randomMessageList.size()));
     }

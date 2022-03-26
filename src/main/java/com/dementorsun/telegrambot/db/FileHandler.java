@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 @AllArgsConstructor
-public class FileHandler {
+class FileHandler {
 
     private static final String USER_DB_FILE_PATH = "src/main/resources/userDB";
     private static final Type BOT_USER_TYPE_TOKEN = new TypeToken<List<BotUser>>(){}.getType();

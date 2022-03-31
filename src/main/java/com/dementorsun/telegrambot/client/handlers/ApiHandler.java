@@ -83,6 +83,25 @@ public class ApiHandler {
         return sendPhoto;
     }
 
+    public SendPhoto createRandomPokemonSendPhoto(String chatId) {
+        SendPhoto sendPhoto;
+
+        try {
+            PokemonResponse pokemonResponse = botClient.getRandomPokemon();
+            InputFile photo = new InputFile(pokemonResponse.getSprites().getOther().getOfficialArtwork().getFrontDefault());
+            int pokemonId = pokemonResponse.getId();
+            PokemonDescriptionResponse pokemonDescriptionResponse = botClient.getRandomPokemonDescription(pokemonId);
+            String caption = getPokemonCaption(pokemonResponse, pokemonDescriptionResponse);
+
+            sendPhoto = messageFromApiHandler.createSendPhoto(chatId, photo, caption);
+
+        } catch (NullPointerException e) {
+            sendPhoto = null;
+        }
+
+        return sendPhoto;
+    }
+
     public SendMessage createRandomQuoteSendMessage(String chatId) {
         SendMessage sendMessage;
 
@@ -105,8 +124,8 @@ public class ApiHandler {
         SendPhoto sendPhoto;
 
         try {
-            List<TmdbResponse.Result> movieList = gson.fromJson(botClient.getRandomMovie(), TmdbResponse.class).getResults();
-            TmdbResponse.Result movie = getTmdbItemWithOverview(movieList);
+            List<TmdbResponse.TmdbItem> movieList = gson.fromJson(botClient.getRandomMovie(), TmdbResponse.class).getResults();
+            TmdbResponse.TmdbItem movie = getTmdbItemWithOverview(movieList);
 
             InputFile photo = new InputFile(tmdbImageUrl + movie.getPosterPath());
             String caption = String.format("\uD83C\uDFAC *Фільм дня*\n*%s(%s)*\n_%s_\n\"%s\"\n_TMDB рейтинг:_ *%s*",
@@ -128,8 +147,8 @@ public class ApiHandler {
         SendPhoto sendPhoto;
 
         try {
-            List<TmdbResponse.Result> tvShowList = gson.fromJson(botClient.getRandomTvShow(), TmdbResponse.class).getResults();
-            TmdbResponse.Result tvShow = getTmdbItemWithOverview(tvShowList);
+            List<TmdbResponse.TmdbItem> tvShowList = gson.fromJson(botClient.getRandomTvShow(), TmdbResponse.class).getResults();
+            TmdbResponse.TmdbItem tvShow = getTmdbItemWithOverview(tvShowList);
 
             InputFile photo = new InputFile(tmdbImageUrl + tvShow.getPosterPath());
             String caption = String.format("\uD83D\uDCFA *Серіал дня*\n*%s(%s)*\n_%s_\n\"%s\"\n_TMDB рейтинг:_ *%s*",
@@ -147,19 +166,38 @@ public class ApiHandler {
         return sendPhoto;
     }
 
-    private TmdbResponse.Result getTmdbItemWithOverview(List<TmdbResponse.Result> movieList) {
-        TmdbResponse.Result tmdbItem;
-        List<TmdbResponse.Result> movieListWithOverview = movieList.stream()
+    private TmdbResponse.TmdbItem getTmdbItemWithOverview(List<TmdbResponse.TmdbItem> movieList) {
+        TmdbResponse.TmdbItem tmdbItem;
+        List<TmdbResponse.TmdbItem> movieListWithOverview = movieList.stream()
                 .filter(item -> !item.getOverview().isEmpty())
                 .collect(Collectors.toList());
 
         if (movieListWithOverview.isEmpty()) {
-            tmdbItem = movieList.stream().findAny().orElse(null);
+            tmdbItem = movieList.stream().findAny().orElse(movieList.get(0));
             tmdbItem.setOverview("На жаль, опису немає(");
         } else {
             tmdbItem = movieListWithOverview.get(new Random().nextInt(movieListWithOverview.size()));
         }
 
         return tmdbItem;
+    }
+
+    private String getPokemonCaption(PokemonResponse pokemonResponse, PokemonDescriptionResponse pokemonDescriptionResponse) {
+        String pokemonNameTemp = pokemonResponse.getName();
+        String pokemonName = pokemonNameTemp.substring(0, 1).toUpperCase() + pokemonNameTemp.substring(1);
+
+        String pokemonTypes = pokemonResponse.getTypes()
+                .stream()
+                .map(PokemonResponse.PokemonType::getType)
+                .map(PokemonResponse.PokemonType.Type::getName)
+                .collect(Collectors.joining(", "));
+
+        String pokemonDescription = pokemonDescriptionResponse.getPokemonDescriptions()
+                .stream()
+                .filter(description -> description.getLanguage().getName().equals("en"))
+                .map(PokemonDescriptionResponse.PokemonDescription::getDescription)
+                .findFirst().orElse("На жаль, опису немає(").replace("\n", " ");
+
+        return String.format("⛩ *Покемон дня*\n*Назва:* %s\n*Тип:* %s\n*Опис:* %s", pokemonName, pokemonTypes, pokemonDescription);
     }
 }

@@ -1,6 +1,7 @@
 package com.dementorsun.telegrambot.client.api;
 
 import com.dementorsun.telegrambot.client.data.*;
+import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -12,11 +13,16 @@ import java.util.Random;
 @AllArgsConstructor
 public class BotClient {
 
+    private static final String USER_AGENT_HEADER = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
+            "(KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36";
+
     private final NasaApiClient nasaApiClient;
     private final CatApiClient catApiClient;
     private final DogApiClient dogApiClient;
+    private final PokemonApiClient pokemonApiClient;
     private final QuoteApiClient quoteApiClient;
     private final TmdbApiClient tmdbApiClient;
+    private final Gson gson;
 
     public NasaApodResponse getNasaApod() {
         return nasaApiClient.getNasaApod();
@@ -31,9 +37,7 @@ public class BotClient {
     }
 
     public RandomQuoteResponse getRandomQuote() {
-        String header = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36";
-
-        return quoteApiClient.getRandomQuote(header);
+        return quoteApiClient.getRandomQuote(USER_AGENT_HEADER);
     }
 
     public String getRandomMovie() {
@@ -48,5 +52,16 @@ public class BotClient {
         int page = new Random().ints(1, totalPages).findFirst().orElse(1);
 
         return tmdbApiClient.getRandomTvShow(page);
+    }
+
+    public PokemonResponse getRandomPokemon() {
+        final int totalPokemons = 493;
+        int pokemonId = new Random().ints(1, totalPokemons).findFirst().orElse(1);
+
+        return gson.fromJson(pokemonApiClient.getPokemon(USER_AGENT_HEADER, pokemonId), PokemonResponse.class);
+    }
+
+    public PokemonDescriptionResponse getRandomPokemonDescription(int pokemonId) {
+        return gson.fromJson(pokemonApiClient.getPokemonDescription(USER_AGENT_HEADER, pokemonId), PokemonDescriptionResponse.class);
     }
 }

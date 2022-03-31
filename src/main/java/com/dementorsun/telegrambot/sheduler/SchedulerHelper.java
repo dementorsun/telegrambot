@@ -53,6 +53,8 @@ public class SchedulerHelper {
                 objectsToSend.add(apiHandler.createRandomCatSendPhoto(chatId));
             if (userTopics.get(BotButtons.DOG_TOPIC))
                 objectsToSend.add(apiHandler.createRandomDogSendPhoto(chatId));
+            if (userTopics.get(BotButtons.POKEMON_TOPIC))
+                objectsToSend.add(apiHandler.createRandomPokemonSendPhoto(chatId));
             if (userTopics.get(BotButtons.MOVIE_TOPIC))
                 objectsToSend.add(apiHandler.createRandomMovieSendPhoto(chatId));
             if (userTopics.get(BotButtons.TV_SHOW_TOPIC))

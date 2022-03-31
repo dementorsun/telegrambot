@@ -98,7 +98,7 @@ public class MessageHandler {
 
     public String getInitialDayMessage() {
         List<String> randomMessageList =
-                Arrays.asList("",
+                Arrays.asList("Ось, трохи відволічись від тіктоку.",
                         "Кожен день одне й теж саме. Кожен день...",
                         "Слава Україні!\uD83C\uDDFA\uD83C\uDDE6",
                         "До вашої уваги пропонується:",

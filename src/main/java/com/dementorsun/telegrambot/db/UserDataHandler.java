@@ -81,6 +81,7 @@ public class UserDataHandler {
                         .isNasa(false)
                         .isCat(false)
                         .isDog(false)
+                        .isPokemon(false)
                         .isQuote(false)
                         .isMovie(false)
                         .isTvShow(false)
@@ -117,6 +118,15 @@ public class UserDataHandler {
         fileHandler.updateUserDataInDbFile(botUser);
 
         log.info("Dog topic is marked '{}' for user with id = '{}' in DB file", isMarked, userId);
+    }
+
+    public void updatePokemonTopicData(long userId, boolean isMarked) {
+        BotUser botUser = fileHandler.getUserDataFromDbFile(userId);
+
+        botUser.userTopics.setIsPokemon(isMarked);
+        fileHandler.updateUserDataInDbFile(botUser);
+
+        log.info("Pokemon topic is marked '{}' for user with id = '{}' in DB file", isMarked, userId);
     }
 
     public void updateQuoteTopicData(long userId, boolean isMarked) {
@@ -180,6 +190,7 @@ public class UserDataHandler {
         userTopics.put(BotButtons.NASA_TOPIC, botUserTopics.isNasa);
         userTopics.put(BotButtons.CAT_TOPIC, botUserTopics.isCat);
         userTopics.put(BotButtons.DOG_TOPIC, botUserTopics.isDog);
+        userTopics.put(BotButtons.POKEMON_TOPIC, botUserTopics.isPokemon);
         userTopics.put(BotButtons.QUOTE_TOPIC, botUserTopics.isQuote);
         userTopics.put(BotButtons.MOVIE_TOPIC, botUserTopics.isMovie);
         userTopics.put(BotButtons.TV_SHOW_TOPIC, botUserTopics.isTvShow);

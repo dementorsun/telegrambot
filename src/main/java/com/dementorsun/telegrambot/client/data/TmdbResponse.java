@@ -9,11 +9,11 @@ import java.util.List;
 @Getter
 public class TmdbResponse {
 
-    List<Result> results;
+    List<TmdbItem> results;
 
     @Setter
     @Getter
-    public static class Result {
+    public static class TmdbItem {
         @SerializedName("original_title")
         String originalTitle;
         @SerializedName("original_name")

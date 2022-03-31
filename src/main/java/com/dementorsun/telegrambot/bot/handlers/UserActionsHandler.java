@@ -86,6 +86,14 @@ class UserActionsHandler {
                 userDataHandler.updateDogTopicData(userId, false);
                 editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId);
                 break;
+            case "POKEMON_TOPIC":
+                userDataHandler.updatePokemonTopicData(userId, true);
+                editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId);
+                break;
+            case "POKEMON_TOPIC_MARKED":
+                userDataHandler.updatePokemonTopicData(userId, false);
+                editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId);
+                break;
             case "QUOTE_TOPIC":
                 userDataHandler.updateQuoteTopicData(userId, true);
                 editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId);

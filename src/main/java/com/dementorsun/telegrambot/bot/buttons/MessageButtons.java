@@ -52,31 +52,38 @@ public class MessageButtons {
 
         List<InlineKeyboardButton> messageButtonsLine4 = new ArrayList<>();
         InlineKeyboardButton buttonTopic4 = InlineKeyboardButton.builder()
-                .text(getTopicButtonText(userTopics, BotButtons.QUOTE_TOPIC))
-                .callbackData(getTopicButtonCallBackData(userTopics, BotButtons.QUOTE_TOPIC))
+                .text(getTopicButtonText(userTopics, BotButtons.POKEMON_TOPIC))
+                .callbackData(getTopicButtonCallBackData(userTopics, BotButtons.POKEMON_TOPIC))
                 .build();
         messageButtonsLine4.add(buttonTopic4);
 
         List<InlineKeyboardButton> messageButtonsLine5 = new ArrayList<>();
         InlineKeyboardButton buttonTopic5 = InlineKeyboardButton.builder()
-                .text(getTopicButtonText(userTopics, BotButtons.MOVIE_TOPIC))
-                .callbackData(getTopicButtonCallBackData(userTopics, BotButtons.MOVIE_TOPIC))
+                .text(getTopicButtonText(userTopics, BotButtons.QUOTE_TOPIC))
+                .callbackData(getTopicButtonCallBackData(userTopics, BotButtons.QUOTE_TOPIC))
                 .build();
         messageButtonsLine5.add(buttonTopic5);
 
         List<InlineKeyboardButton> messageButtonsLine6 = new ArrayList<>();
         InlineKeyboardButton buttonTopic6 = InlineKeyboardButton.builder()
-                .text(getTopicButtonText(userTopics, BotButtons.TV_SHOW_TOPIC))
-                .callbackData(getTopicButtonCallBackData(userTopics, BotButtons.TV_SHOW_TOPIC))
+                .text(getTopicButtonText(userTopics, BotButtons.MOVIE_TOPIC))
+                .callbackData(getTopicButtonCallBackData(userTopics, BotButtons.MOVIE_TOPIC))
                 .build();
         messageButtonsLine6.add(buttonTopic6);
 
         List<InlineKeyboardButton> messageButtonsLine7 = new ArrayList<>();
         InlineKeyboardButton buttonTopic7 = InlineKeyboardButton.builder()
+                .text(getTopicButtonText(userTopics, BotButtons.TV_SHOW_TOPIC))
+                .callbackData(getTopicButtonCallBackData(userTopics, BotButtons.TV_SHOW_TOPIC))
+                .build();
+        messageButtonsLine7.add(buttonTopic7);
+
+        List<InlineKeyboardButton> messageButtonsLine8 = new ArrayList<>();
+        InlineKeyboardButton buttonTopic8 = InlineKeyboardButton.builder()
                 .text(BotButtons.TOPICS_DONE.getButtonText())
                 .callbackData(BotButtons.TOPICS_DONE.getButtonCallBackData())
                 .build();
-        messageButtonsLine7.add(buttonTopic7);
+        messageButtonsLine8.add(buttonTopic8);
 
         List<List<InlineKeyboardButton>> messageAllButtons = new ArrayList<>();
         messageAllButtons.add(messageButtonsLine1);
@@ -86,6 +93,7 @@ public class MessageButtons {
         messageAllButtons.add(messageButtonsLine5);
         messageAllButtons.add(messageButtonsLine6);
         messageAllButtons.add(messageButtonsLine7);
+        messageAllButtons.add(messageButtonsLine8);
 
         InlineKeyboardMarkup messageButtonsMarkup = new InlineKeyboardMarkup();
         messageButtonsMarkup.setKeyboard(messageAllButtons);

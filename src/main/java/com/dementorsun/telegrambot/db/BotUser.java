@@ -10,6 +10,7 @@ public class BotUser {
     UserSetting userSettings;
     UserTopic userTopics;
 
+    @Setter
     @Builder
     public static class UserInfo {
         Long userId;
@@ -33,6 +34,7 @@ public class BotUser {
         Boolean isNasa;
         Boolean isCat;
         Boolean isDog;
+        Boolean isPokemon;
         Boolean isQuote;
         Boolean isMovie;
         Boolean isTvShow;

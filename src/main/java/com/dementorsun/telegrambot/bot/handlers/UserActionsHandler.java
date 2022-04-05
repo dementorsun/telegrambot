@@ -27,14 +27,16 @@ class UserActionsHandler {
     private final BottomButtons bottomButtons;
 
     public SendMessage handleReceivedMessage(Update update) {
-        SendMessage replyMessage = messageHandler.createDefaultMessageFromUpdateMessage(update);
-        String message = update.getMessage().getText();
-        long userId = update.getMessage().getFrom().getId();
+        long userId = UpdateObjectHandler.getUserIdFromUpdate(update);
+        long chatId = UpdateObjectHandler.getChatIdFromUpdate(update);
+        String message = UpdateObjectHandler.getMessageTextFromUpdate(update);
+        User user = UpdateObjectHandler.getMessageUserObjectFromUpdate(update);
 
+        SendMessage replyMessage = messageHandler.createDefaultMessageFromUpdateMessage(chatId, userId);
         log.info("'{}' message is received from user with id = '{}'", message, userId);
 
         if (message.equals("/start")) {
-            replyMessage = createSendMessageForStartTopicsTutorial(update, replyMessage);
+            replyMessage = createSendMessageForStartTopicsTutorial(userId, chatId, user, replyMessage);
         } else if (userDataHandler.checkIsTimeEnterMode(userId)) {
             replyMessage = messageHandler.checkTimeFormatIsCorrect(message) ?
                     createSendMessageForCompleteTimeEntering(userId, message, replyMessage) :
@@ -49,17 +51,10 @@ class UserActionsHandler {
     }
 
     public EditMessageReplyMarkup handleTopicButtonClick(Update update) {
-        String callBackData = update.getCallbackQuery().getData();
-        String inlineMessageId = update.getCallbackQuery().getInlineMessageId();
-        long userId = update.getCallbackQuery().getFrom().getId();
-        long chatId = update.getCallbackQuery().getMessage().getChatId();
-        long messageId = update.getCallbackQuery().getMessage().getMessageId();
+        long userId = UpdateObjectHandler.getCallBackUserIdFromUpdate(update);
+        String callBackData = UpdateObjectHandler.getCallBackDataFromUpdate(update);
 
-        EditMessageReplyMarkup editedReplyMessage = EditMessageReplyMarkup.builder()
-                                                                          .chatId(String.valueOf(chatId))
-                                                                          .messageId((int) messageId)
-                                                                          .inlineMessageId(inlineMessageId)
-                                                                          .build();
+        EditMessageReplyMarkup editedReplyMessage = generateEditMessageReplyMarkup(update);
 
         switch (callBackData) {
             case "NASA_TOPIC":
@@ -127,24 +122,25 @@ class UserActionsHandler {
 
 
     public SendMessage handleTopicsDoneOrUnexpectedButtonClick(Update update) {
-        SendMessage replyMessage = messageHandler.createDefaultMessageFromUpdateCallBack(update);
-        String callBackData = update.getCallbackQuery().getData();
+        long userId = UpdateObjectHandler.getCallBackUserIdFromUpdate(update);
+        long chatId = UpdateObjectHandler.getCallBackChatIdFromUpdate(update);
+        String callBackData = UpdateObjectHandler.getCallBackDataFromUpdate(update);
+
+        SendMessage replyMessage = messageHandler.createDefaultMessageFromUpdateCallBack(chatId, userId);
         BotButtons commonButton = BotButtons.valueOf(callBackData);
 
         if (commonButton == TOPICS_DONE) {
-            replyMessage = createSendMessageUponClickTopicsDoneButton(update, replyMessage);
+            replyMessage = createSendMessageUponClickTopicsDoneButton(userId, replyMessage);
         }
 
         return replyMessage;
     }
 
-    private SendMessage createSendMessageForStartTopicsTutorial(Update update, SendMessage defaultMessage) {
-        long userId = update.getMessage().getFrom().getId();
-        User user = update.getMessage().getFrom();
+    private SendMessage createSendMessageForStartTopicsTutorial(long userId, long chatId, User user, SendMessage defaultMessage) {
         SendMessage replyMessage;
 
         if (userDataHandler.checkIsUserNew(userId)) {
-            userDataHandler.saveNewUserData(user, update);
+            userDataHandler.saveNewUserData(user, chatId);
             replyMessage = createSendMessageForShowTopicsButtons(userId, defaultMessage, BotMessages.WELCOME_MESSAGE);
 
             log.info("Topics buttons are shown during tutorial for user with id = '{}'", userId);
@@ -159,8 +155,7 @@ class UserActionsHandler {
         return replyMessage;
     }
 
-    private SendMessage createSendMessageUponClickTopicsDoneButton(Update update, SendMessage defaultMessage) {
-        long userId = update.getCallbackQuery().getFrom().getId();
+    private SendMessage createSendMessageUponClickTopicsDoneButton(long userId, SendMessage defaultMessage) {
         SendMessage replyMessage;
 
         if (userDataHandler.checkIsDoneButtonClickedForUser(userId)) {
@@ -243,5 +238,17 @@ class UserActionsHandler {
         log.info("Time changing process is started for user with id = '{}'", userId);
 
         return replyMessage;
+    }
+
+    private EditMessageReplyMarkup generateEditMessageReplyMarkup(Update update) {
+        String inlineMessageId = UpdateObjectHandler.getCallBackInlineMessageIdFromUpdate(update);
+        long messageId = UpdateObjectHandler.getCallBackMessageIdFromUpdate(update);
+        long chatId = UpdateObjectHandler.getCallBackChatIdFromUpdate(update);
+
+        return EditMessageReplyMarkup.builder()
+                .chatId(String.valueOf(chatId))
+                .messageId((int) messageId)
+                .inlineMessageId(inlineMessageId)
+                .build();
     }
 }

@@ -10,18 +10,18 @@ import org.telegram.telegrambots.meta.api.objects.InputFile;
 @AllArgsConstructor
 class MessageFromApiHandler {
 
-    public SendPhoto createSendPhoto(String chatId, InputFile photo, String caption) {
+    public SendPhoto createSendPhoto(long chatId, InputFile photo, String caption) {
         return SendPhoto.builder()
-                .chatId(chatId)
+                .chatId(String.valueOf(chatId))
                 .photo(photo)
                 .caption(caption)
                 .parseMode("Markdown")
                 .build();
     }
 
-    public SendMessage createSendMessage(String chatId, String message) {
+    public SendMessage createSendMessage(long chatId, String message) {
         return SendMessage.builder()
-                .chatId(chatId)
+                .chatId(String.valueOf(chatId))
                 .text(message)
                 .parseMode("Markdown")
                 .build();

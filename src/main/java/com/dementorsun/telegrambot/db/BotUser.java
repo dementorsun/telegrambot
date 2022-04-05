@@ -17,7 +17,7 @@ public class BotUser {
         String username;
         String firstName;
         String lastName;
-        String userChatId;
+        Long userChatId;
     }
 
     @Setter

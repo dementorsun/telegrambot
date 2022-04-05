@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -21,26 +20,24 @@ public class MessageHandler {
 
     private static final String BOT_MESSAGE = "*КоженДеньБот: *";
 
-    public SendMessage createDefaultMessageFromUpdateMessage(Update update) {
+    public SendMessage createDefaultMessageFromUpdateMessage(long chatId, long userId) {
         SendMessage defaultMessage = SendMessage.builder()
-                .chatId(update.getMessage().getChatId().toString())
+                .chatId(String.valueOf(chatId))
                 .text(getRandomMessage())
                 .build();
 
-        log.info("Default message '{}' is created from UpdateMessage for user with id = {}", defaultMessage.getText(),
-                                                                                             update.getMessage().getFrom().getId());
+        log.info("Default message '{}' is created from UpdateMessage for user with id = {}", defaultMessage.getText(), userId);
 
         return defaultMessage;
     }
 
-    public SendMessage createDefaultMessageFromUpdateCallBack(Update update) {
+    public SendMessage createDefaultMessageFromUpdateCallBack(long chatId, long userId) {
         SendMessage defaultMessage = SendMessage.builder()
-                .chatId(update.getCallbackQuery().getMessage().getChatId().toString())
+                .chatId(String.valueOf(chatId))
                 .text(getRandomMessage())
                 .build();
 
-        log.info("Default message '{}' is created from UpdateCallBack for user with id = {}", defaultMessage.getText(),
-                                                                                              update.getCallbackQuery().getFrom().getId());
+        log.info("Default message '{}' is created from UpdateCallBack for user with id = {}", defaultMessage.getText(), userId);
 
         return defaultMessage;
     }
@@ -54,9 +51,9 @@ public class MessageHandler {
         return replyMessage;
     }
 
-    public SendMessage setNewMessageToUser(String chatId, String message) {
+    public SendMessage setNewMessageToUser(long chatId, String message) {
         SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(chatId);
+        sendMessage.setChatId(String.valueOf(chatId));
         sendMessage.setText(BOT_MESSAGE + message);
         sendMessage.setParseMode("Markdown");
 
@@ -80,34 +77,34 @@ public class MessageHandler {
         return timeFormatIsCorrect;
     }
 
-    private String getRandomMessage() {
-        List<String> randomMessageList =
-                Arrays.asList("Ну і шо?",
-                              "Слава Україні!\uD83C\uDDFA\uD83C\uDDE6",
-                              "Ти шо руській? Тобі показати в якій стороні воєнний корабль?",
-                              "Сходи краще зроби собі чай.",
-                              "Майбутні покоління ботів помстяться тобі за це!",
-                              "Це все що ти можеш мені сказати?",
-                              "Продовжуй, якщо тобі стане від цього легше. Я не поспішаю.",
-                              "Я навіть трохи заздрю тобі. Так багато вільного часу...",
-                              "Як давно це з тобою?",
-                              "Я починаю за тебе хвилюватися.");
-
-        return randomMessageList.get(new Random().nextInt(randomMessageList.size()));
-    }
-
     public String getInitialDayMessage() {
         List<String> randomMessageList =
                 Arrays.asList("Ось, трохи відволічись від тіктоку.",
                         "Кожен день одне й теж саме. Кожен день...",
                         "Слава Україні!\uD83C\uDDFA\uD83C\uDDE6",
-                        "До вашої уваги пропонується:",
+                        "До вашої уваги пропонується.",
                         "Це знову я, а це знову ти...",
                         "Який сьогодні день? Де я?",
                         "Це ж було вже!©",
                         "Ось, все як домовлялися.",
                         "Путін вже помер?",
                         "Мені здається, що я тобі подобаюсь. Та нічого, я не проти.");
+
+        return randomMessageList.get(new Random().nextInt(randomMessageList.size()));
+    }
+
+    private String getRandomMessage() {
+        List<String> randomMessageList =
+                Arrays.asList("Ну і шо?",
+                        "Слава Україні!\uD83C\uDDFA\uD83C\uDDE6",
+                        "Ти шо руській? Тобі показати в якій стороні воєнний корабль?",
+                        "Сходи краще зроби собі чай.",
+                        "Майбутні покоління ботів помстяться тобі за це!",
+                        "Це все що ти можеш мені сказати?",
+                        "Продовжуй, якщо тобі стане від цього легше. Я не поспішаю.",
+                        "Я навіть трохи заздрю тобі. Так багато вільного часу...",
+                        "Як давно це з тобою?",
+                        "Я починаю за тебе хвилюватися.");
 
         return randomMessageList.get(new Random().nextInt(randomMessageList.size()));
     }

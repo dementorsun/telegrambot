@@ -4,7 +4,6 @@ import com.dementorsun.telegrambot.bot.data.BotButtons;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 
 import java.util.HashMap;
@@ -63,14 +62,14 @@ public class UserDataHandler {
         return isTimePresent;
     }
 
-    public void saveNewUserData(User user, Update update) {
+    public void saveNewUserData(User user, long chatId) {
         BotUser botUser = BotUser.builder()
                 .userInfo(BotUser.UserInfo.builder()
                         .userId(user.getId())
                         .username(user.getUserName())
                         .firstName(user.getFirstName())
                         .lastName(user.getLastName())
-                        .userChatId(update.getMessage().getChatId().toString())
+                        .userChatId(chatId)
                         .build())
                 .userSettings(BotUser.UserSetting.builder()
                         .isDoneClicked(false)
@@ -205,7 +204,7 @@ public class UserDataHandler {
     }
 
     public List<BotUser> getUsersByTime(String time) {
-        List<BotUser> userList = fileHandler.getAllUsers();
+        List<BotUser> userList = fileHandler.getAllUsersFromDbFile();
 
         userList = userList.stream()
                 .filter(botUser -> botUser.userSettings.time.equals(time))
@@ -214,7 +213,7 @@ public class UserDataHandler {
         return userList;
     }
 
-    public String getUserChatId(BotUser botUser) {
+    public long getUserChatId(BotUser botUser) {
         return botUser.userInfo.userChatId;
     }
 

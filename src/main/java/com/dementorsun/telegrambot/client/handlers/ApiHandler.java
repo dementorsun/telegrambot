@@ -32,7 +32,7 @@ public class ApiHandler {
     @Value("${tmdb.image.url}")
     private String tmdbImageUrl;
 
-    public SendPhoto createNasaApodSendPhoto(String chatId) {
+    public SendPhoto createNasaApodSendPhoto(long chatId) {
         SendPhoto sendPhoto;
 
         try {
@@ -49,7 +49,7 @@ public class ApiHandler {
         return sendPhoto;
     }
 
-    public SendPhoto createRandomCatSendPhoto(String chatId) {
+    public SendPhoto createRandomCatSendPhoto(long chatId) {
         SendPhoto sendPhoto;
 
         try {
@@ -66,7 +66,7 @@ public class ApiHandler {
         return sendPhoto;
     }
 
-    public SendPhoto createRandomDogSendPhoto(String chatId) {
+    public SendPhoto createRandomDogSendPhoto(long chatId) {
         SendPhoto sendPhoto;
 
         try {
@@ -83,7 +83,7 @@ public class ApiHandler {
         return sendPhoto;
     }
 
-    public SendPhoto createRandomPokemonSendPhoto(String chatId) {
+    public SendPhoto createRandomPokemonSendPhoto(long chatId) {
         SendPhoto sendPhoto;
 
         try {
@@ -102,7 +102,7 @@ public class ApiHandler {
         return sendPhoto;
     }
 
-    public SendMessage createRandomQuoteSendMessage(String chatId) {
+    public SendMessage createRandomQuoteSendMessage(long chatId) {
         SendMessage sendMessage;
 
         try {
@@ -120,7 +120,7 @@ public class ApiHandler {
         return sendMessage;
     }
 
-    public SendPhoto createRandomMovieSendPhoto(String chatId) {
+    public SendPhoto createRandomMovieSendPhoto(long chatId) {
         SendPhoto sendPhoto;
 
         try {
@@ -143,7 +143,7 @@ public class ApiHandler {
         return sendPhoto;
     }
 
-    public SendPhoto createRandomTvShowSendPhoto(String chatId) {
+    public SendPhoto createRandomTvShowSendPhoto(long chatId) {
         SendPhoto sendPhoto;
 
         try {

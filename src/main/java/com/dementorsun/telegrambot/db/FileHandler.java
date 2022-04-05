@@ -87,7 +87,7 @@ class FileHandler {
         return botUser;
     }
 
-    public List<BotUser> getAllUsers() {
+    public List<BotUser> getAllUsersFromDbFile() {
         return readFromDbFile();
     }
 }

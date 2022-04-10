@@ -15,9 +15,10 @@ public enum BotMessages {
     CHANGE_TOPICS_MESSAGE("Хочеш щось змінити? Ну спробуй, не буду тобі заважати."),
     TOPICS_ARE_CHANGED_MESSAGE("Ніби це щось змінить! Жартую, все працює як годинник."),
     TOPIC_DONE_REPEAT_CLICK("Одного разу цілком вистачить. Тримай себе в руках."),
-    TOPIC_DONE_NO_CHOSEN_CLICK("Ти майже знайшов вразливість у программі, але все ж таки потрібно щось обрати. Заплющ очі і просто ткни в екран."),
+    TOPIC_DONE_NO_CHOSEN_TOPIC_CLICK("Так не піде. Потрібно хоча б щось обрати, такі правила гри."),
     TIME_ARE_CHANGED_MESSAGE("Наче змінив. Скоро дізнаємось..."),
-    TIME_CHANGING_MESSAGE("Твій час '%s'. Чекаю новий! Може в тебе навіть вийде з першого разу.");
+    TIME_CHANGING_MESSAGE("Твій час '%s'. Чекаю новий! Може в тебе навіть вийде з першого разу."),
+    UNEXPECTED_ACTION_MESSAGE("Як то кажуть 'Oops, something went wrong'.");
 
     private String message;
 }

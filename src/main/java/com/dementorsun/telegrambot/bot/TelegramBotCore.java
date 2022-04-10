@@ -43,18 +43,30 @@ class TelegramBotCore extends TelegramLongPollingBot {
                 log.info("Telegram bot send message exception: {}", e.getMessage());
             }
         } else if (update.hasCallbackQuery()) {
-            if (update.getCallbackQuery().getData().contains("_TOPIC")) {
+            String callBackData = update.getCallbackQuery().getData();
+            if (callBackData.contains("_TOPIC")) {
                 try {
                     execute(updateHandler.handleCallBackDataUponTopicButtonClick(update));
                 } catch (TelegramApiException e) {
-                    log.info("Telegram bot send edit message exception: {}", e.getMessage());
+                    log.info("Telegram bot handle click topic button exception: {}", e.getMessage());
                 }
-            } else {
+            } else if (callBackData.equals("TOPICS_DONE")) {
                 try {
-                    execute(updateHandler.handleCallBackDataUponDoneOrUnexpectedButtonClick(update));
+                    execute(updateHandler.handleCallBackDataUponDoneButtonClick(update));
                 } catch (TelegramApiException e) {
-                    log.info("Telegram bot send message exception: {}", e.getMessage());
+                    log.info("Telegram bot handle click topics done button exception: {}", e.getMessage());
                 }
+            }
+            try {
+                execute(updateHandler.generateAnswerCallBackQuery(update));
+            } catch (TelegramApiException e) {
+                log.info("Telegram bot send call back query answer exception: {}", e.getMessage());
+            }
+        } else {
+            try {
+                execute(updateHandler.handleUnexpectedAction(update));
+            } catch (TelegramApiException e) {
+                log.info("Telegram bot handle unexpected action exception: {}", e.getMessage());
             }
         }
     }

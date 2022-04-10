@@ -30,18 +30,22 @@ public class UpdateObjectHandler {
     }
 
     public static long getCallBackUserIdFromUpdate(Update update) {
-        return Long.valueOf(update.getCallbackQuery().getFrom().getId());
+        return update.getCallbackQuery().getFrom().getId();
     }
 
     public static long getCallBackChatIdFromUpdate(Update update) {
-        return Long.valueOf(update.getCallbackQuery().getMessage().getChatId());
+        return update.getCallbackQuery().getMessage().getChatId();
     }
 
-    public static long getCallBackMessageIdFromUpdate(Update update) {
-        return Long.valueOf(update.getCallbackQuery().getMessage().getMessageId());
+    public static int getCallBackMessageIdFromUpdate(Update update) {
+        return update.getCallbackQuery().getMessage().getMessageId();
     }
 
     public static String getCallBackInlineMessageIdFromUpdate(Update update) {
         return update.getCallbackQuery().getInlineMessageId();
+    }
+
+    public static String getCallBackQueryIdFromUpdate(Update update) {
+        return update.getCallbackQuery().getId();
     }
 }

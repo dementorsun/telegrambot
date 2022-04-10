@@ -2,7 +2,6 @@ package com.dementorsun.telegrambot.bot.handlers;
 
 import com.dementorsun.telegrambot.bot.buttons.BottomButtons;
 import com.dementorsun.telegrambot.bot.buttons.MessageButtons;
-import com.dementorsun.telegrambot.bot.data.BotButtons;
 import com.dementorsun.telegrambot.bot.data.BotMessages;
 import com.dementorsun.telegrambot.db.UserDataHandler;
 import lombok.AllArgsConstructor;
@@ -13,8 +12,6 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageRe
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-
-import static com.dementorsun.telegrambot.bot.data.BotButtons.TOPICS_DONE;
 
 @Component
 @Slf4j
@@ -121,19 +118,33 @@ class UserActionsHandler {
     }
 
 
-    public SendMessage handleTopicsDoneOrUnexpectedButtonClick(Update update) {
+    public SendMessage handleTopicsDoneButtonClick(Update update) {
         long userId = UpdateObjectHandler.getCallBackUserIdFromUpdate(update);
         long chatId = UpdateObjectHandler.getCallBackChatIdFromUpdate(update);
-        String callBackData = UpdateObjectHandler.getCallBackDataFromUpdate(update);
+        boolean isNoneTopicsAreChosen = userDataHandler.checkIsUserDoNotHaveActiveTopics(userId);
+        boolean isDoneButtonClicked = userDataHandler.checkIsDoneButtonClickedForUser(userId);
 
         SendMessage replyMessage = messageHandler.createDefaultMessageFromUpdateCallBack(chatId, userId);
-        BotButtons commonButton = BotButtons.valueOf(callBackData);
 
-        if (commonButton == TOPICS_DONE) {
-            replyMessage = createSendMessageUponClickTopicsDoneButton(userId, replyMessage);
+        if (isNoneTopicsAreChosen) {
+            replyMessage = messageHandler.setMessageToUser(replyMessage, BotMessages.TOPIC_DONE_NO_CHOSEN_TOPIC_CLICK.getMessage(), userId);
+
+            log.info("User with id = '{}' is clicked on Done topics button without choose any topic", userId);
+        } else if (isDoneButtonClicked) {
+            replyMessage = messageHandler.setMessageToUser(replyMessage, BotMessages.TOPIC_DONE_REPEAT_CLICK.getMessage(), userId);
+
+            log.info("User with id = '{}' is clicked on already clicked Done topics button", userId);
+        } else {
+            replyMessage = createSendMessageUponProperClickTopicsDoneButton(userId, replyMessage);
         }
 
         return replyMessage;
+    }
+
+    public SendMessage handleUnexpectedAction(Update update) {
+        long userId = UpdateObjectHandler.getUserIdFromUpdate(update);
+
+        return messageHandler.setMessageToUser(new SendMessage(), BotMessages.UNEXPECTED_ACTION_MESSAGE.getMessage(), userId);
     }
 
     private SendMessage createSendMessageForStartTopicsTutorial(long userId, long chatId, User user, SendMessage defaultMessage) {
@@ -150,27 +161,6 @@ class UserActionsHandler {
             bottomButtons.setBottomButtons(replyMessage);
 
             log.info("Welcome back tutorial is finished for user with id = '{}'", userId);
-        }
-
-        return replyMessage;
-    }
-
-    private SendMessage createSendMessageUponClickTopicsDoneButton(long userId, SendMessage defaultMessage) {
-        SendMessage replyMessage;
-
-        if (userDataHandler.checkIsDoneButtonClickedForUser(userId)) {
-            replyMessage = messageHandler.setMessageToUser(defaultMessage, BotMessages.TOPIC_DONE_REPEAT_CLICK.getMessage(), userId);
-
-            log.info("User with id = '{}' is clicked on already clicked Done topics button", userId);
-        }
-        else if (userDataHandler.checkIsUserDoNotHaveActiveTopics(userId)) {
-            replyMessage = messageHandler.setMessageToUser(defaultMessage, BotMessages.TOPIC_DONE_NO_CHOSEN_CLICK.getMessage(), userId);
-
-            log.info("User with id = '{}' is clicked on Done topics button without choose any topic during tutorial", userId);
-
-        }
-        else {
-            replyMessage = createSendMessageUponProperClickTopicsDoneButton(userId, defaultMessage);
         }
 
         return replyMessage;
@@ -242,12 +232,12 @@ class UserActionsHandler {
 
     private EditMessageReplyMarkup generateEditMessageReplyMarkup(Update update) {
         String inlineMessageId = UpdateObjectHandler.getCallBackInlineMessageIdFromUpdate(update);
-        long messageId = UpdateObjectHandler.getCallBackMessageIdFromUpdate(update);
+        int messageId = UpdateObjectHandler.getCallBackMessageIdFromUpdate(update);
         long chatId = UpdateObjectHandler.getCallBackChatIdFromUpdate(update);
 
         return EditMessageReplyMarkup.builder()
                 .chatId(String.valueOf(chatId))
-                .messageId((int) messageId)
+                .messageId(messageId)
                 .inlineMessageId(inlineMessageId)
                 .build();
     }

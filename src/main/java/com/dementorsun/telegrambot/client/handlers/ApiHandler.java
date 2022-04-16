@@ -174,7 +174,7 @@ public class ApiHandler {
 
         if (movieListWithOverview.isEmpty()) {
             tmdbItem = movieList.stream().findAny().orElse(movieList.get(0));
-            tmdbItem.setOverview("На жаль, опису немає(");
+            tmdbItem.setOverview("На жаль, опису немає (");
         } else {
             tmdbItem = movieListWithOverview.get(new Random().nextInt(movieListWithOverview.size()));
         }

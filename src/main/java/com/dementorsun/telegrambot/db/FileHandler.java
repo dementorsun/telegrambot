@@ -71,20 +71,14 @@ class FileHandler {
         }
 
         writeToDbFile(usersData);
-
-        log.info("'{}' user data is saved to DB file", userId);
     }
 
     public BotUser getUserDataFromDbFile(long userId) {
         List<BotUser> usersData = readFromDbFile();
 
-        BotUser botUser = usersData.stream()
+        return usersData.stream()
                 .filter(user -> user.userInfo.userId.equals(userId))
                 .findFirst().orElse(null);
-
-        log.info("'{}' user data is fetched from DB file", userId);
-
-        return botUser;
     }
 
     public List<BotUser> getAllUsersFromDbFile() {

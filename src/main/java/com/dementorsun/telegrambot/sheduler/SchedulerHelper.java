@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
@@ -32,8 +33,13 @@ public class SchedulerHelper {
 
     public List<Object> getPhotosAndMessagesToSend() {
         List<BotUser> usersByTime = userDataHandler.getUsersByTime(getCurrentTime());
+        List<Object> objectsToSend = getObjectsToSend(usersByTime).stream().filter(Objects::nonNull).collect(Collectors.toList());
 
-        return getObjectsToSend(usersByTime);
+        if (objectsToSend.size() == 1) {
+            objectsToSend.clear();
+        }
+
+        return objectsToSend;
     }
 
     private List<Object> getObjectsToSend(List<BotUser> usersByTime) {

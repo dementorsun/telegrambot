@@ -13,6 +13,15 @@ import java.util.List;
 @AllArgsConstructor
 public class BottomButtons {
 
+    public void setBottomButtons(SendMessage replyMessage) {
+        ReplyKeyboardMarkup bottomKeyboard = createBottomButtonsMarkup();
+
+        List<KeyboardRow> bottomKeyboardRows = createBottomButtons();
+        bottomKeyboard.setKeyboard(bottomKeyboardRows);
+
+        replyMessage.setReplyMarkup(bottomKeyboard);
+    }
+
     private ReplyKeyboardMarkup createBottomButtonsMarkup() {
         ReplyKeyboardMarkup bottomKeyboard = new ReplyKeyboardMarkup();
         bottomKeyboard.setResizeKeyboard(true);
@@ -24,21 +33,16 @@ public class BottomButtons {
     private List<KeyboardRow> createBottomButtons() {
         List<KeyboardRow> bottomKeyboardRows = new ArrayList<>();
 
-        KeyboardRow bottomKeyboardRow = new KeyboardRow();
-        bottomKeyboardRow.add("Змінити свої топіки \uD83E\uDDF3");
-        bottomKeyboardRow.add("Змінити час ⏳");
+        KeyboardRow bottomKeyboardRow1 = new KeyboardRow();
+        bottomKeyboardRow1.add("Змінити свої топіки \uD83E\uDDF3");
+        bottomKeyboardRow1.add("Змінити час ⏳");
 
-        bottomKeyboardRows.add(bottomKeyboardRow);
+        KeyboardRow bottomKeyboardRow2 = new KeyboardRow();
+        bottomKeyboardRow2.add("Зупинити цей спам ❌");
+
+        bottomKeyboardRows.add(bottomKeyboardRow1);
+        bottomKeyboardRows.add(bottomKeyboardRow2);
 
         return bottomKeyboardRows;
-    }
-
-    public void setBottomButtons(SendMessage replyMessage) {
-        ReplyKeyboardMarkup bottomKeyboard = createBottomButtonsMarkup();
-
-        List<KeyboardRow> bottomKeyboardRows = createBottomButtons();
-        bottomKeyboard.setKeyboard(bottomKeyboardRows);
-
-        replyMessage.setReplyMarkup(bottomKeyboard);
     }
 }

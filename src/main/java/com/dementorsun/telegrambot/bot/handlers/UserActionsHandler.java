@@ -42,6 +42,10 @@ class UserActionsHandler {
             replyMessage = createSendMessageForShowTopicsButtons(userId, replyMessage, BotMessages.CHANGE_TOPICS_MESSAGE);
         } else if (message.equals("Змінити час ⏳")) {
             replyMessage = changeUserTime(replyMessage, userId);
+        } else if (message.equals("Зупинити цей спам ❌")) {
+            replyMessage = userDataHandler.checkIsSilenceModeActive(userId) ?
+                    messageHandler.setMessageToUser(replyMessage, BotMessages.SILENCE_MODE_IS_ALREADY_ACTIVE_MESSAGE.getMessage(), userId) :
+                    activateSilenceMode(replyMessage, userId);
         }
 
         return replyMessage;
@@ -55,59 +59,59 @@ class UserActionsHandler {
 
         switch (callBackData) {
             case "NASA_TOPIC":
-                userDataHandler.updateNasaTopicData(userId, true);
+                userDataHandler.setNasaTopicData(userId, true);
                 editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId);
                 break;
             case "NASA_TOPIC_MARKED":
-                userDataHandler.updateNasaTopicData(userId, false);
+                userDataHandler.setNasaTopicData(userId, false);
                 editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId);
                 break;
             case "CAT_TOPIC":
-                userDataHandler.updateCatTopicData(userId, true);
+                userDataHandler.setCatTopicData(userId, true);
                 editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId);
                 break;
             case "CAT_TOPIC_MARKED":
-                userDataHandler.updateCatTopicData(userId, false);
+                userDataHandler.setCatTopicData(userId, false);
                 editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId);
                 break;
             case "DOG_TOPIC":
-                userDataHandler.updateDogTopicData(userId, true);
+                userDataHandler.setDogTopicData(userId, true);
                 editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId);
                 break;
             case "DOG_TOPIC_MARKED":
-                userDataHandler.updateDogTopicData(userId, false);
+                userDataHandler.setDogTopicData(userId, false);
                 editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId);
                 break;
             case "POKEMON_TOPIC":
-                userDataHandler.updatePokemonTopicData(userId, true);
+                userDataHandler.setPokemonTopicData(userId, true);
                 editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId);
                 break;
             case "POKEMON_TOPIC_MARKED":
-                userDataHandler.updatePokemonTopicData(userId, false);
+                userDataHandler.setPokemonTopicData(userId, false);
                 editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId);
                 break;
             case "QUOTE_TOPIC":
-                userDataHandler.updateQuoteTopicData(userId, true);
+                userDataHandler.setQuoteTopicData(userId, true);
                 editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId);
                 break;
             case "QUOTE_TOPIC_MARKED":
-                userDataHandler.updateQuoteTopicData(userId, false);
+                userDataHandler.setQuoteTopicData(userId, false);
                 editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId);
                 break;
             case "MOVIE_TOPIC":
-                userDataHandler.updateMovieTopicData(userId, true);
+                userDataHandler.setMovieTopicData(userId, true);
                 editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId);
                 break;
             case "MOVIE_TOPIC_MARKED":
-                userDataHandler.updateMovieTopicData(userId, false);
+                userDataHandler.setMovieTopicData(userId, false);
                 editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId);
                 break;
             case "TV_SHOW_TOPIC":
-                userDataHandler.updateTvShowTopicData(userId, true);
+                userDataHandler.setTvShowTopicData(userId, true);
                 editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId);
                 break;
             case "TV_SHOW_TOPIC_MARKED":
-                userDataHandler.updateTvShowTopicData(userId, false);
+                userDataHandler.setTvShowTopicData(userId, false);
                 editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId);
                 break;
         }
@@ -155,6 +159,12 @@ class UserActionsHandler {
             replyMessage = createSendMessageForShowTopicsButtons(userId, defaultMessage, BotMessages.WELCOME_MESSAGE);
 
             log.info("Topics buttons are shown during tutorial for user with id = '{}'", userId);
+        } else if(userDataHandler.checkIsSilenceModeActive(userId)) {
+            String welcomeBackMessage = String.format(BotMessages.WELCOME_BACK_WITH_SILENCE_MODE_MESSAGE.getMessage(), user.getFirstName());
+            replyMessage = messageHandler.setMessageToUser(defaultMessage, welcomeBackMessage, userId);
+            bottomButtons.setBottomButtons(replyMessage);
+
+            log.info("Welcome back tutorial with active silence mode is finished for user with id = '{}'", userId);
         } else {
             String welcomeBackMessage = String.format(BotMessages.WELCOME_BACK_MESSAGE.getMessage(), user.getFirstName());
             replyMessage = messageHandler.setMessageToUser(defaultMessage, welcomeBackMessage, userId);
@@ -171,13 +181,13 @@ class UserActionsHandler {
 
         if (userDataHandler.checkTimeIsPresent(userId)) {
             replyMessage = messageHandler.setMessageToUser(defaultMessage, BotMessages.TOPICS_ARE_CHANGED_MESSAGE.getMessage(), userId);
-            userDataHandler.updateDoneButtonClickedData(userId, true);
+            userDataHandler.setDoneButtonClickedData(userId, true);
 
             log.info("User with id = '{}' is clicked on Done topics button and topic successfully changed", userId);
         } else {
-            userDataHandler.updateTimeEnterModeData(userId, true);
+            userDataHandler.setTimeEnterModeData(userId, true);
             replyMessage = messageHandler.setMessageToUser(defaultMessage, BotMessages.FINISH_TOPICS_TUTORIAL_MESSAGE.getMessage(), userId);
-            userDataHandler.updateDoneButtonClickedData(userId, true);
+            userDataHandler.setDoneButtonClickedData(userId, true);
 
             log.info("Time tutorial is started for user with id = '{}'", userId);
         }
@@ -187,15 +197,15 @@ class UserActionsHandler {
 
     private SendMessage createSendMessageForCompleteTimeEntering(long userId, String message, SendMessage defaultMessage) {
         SendMessage replyMessage;
-        userDataHandler.updateTimeEnterModeData(userId, false);
+        userDataHandler.setTimeEnterModeData(userId, false);
 
         if (userDataHandler.checkTimeIsPresent(userId)) {
-            userDataHandler.updateTimeData(userId, message);
+            userDataHandler.setTimeData(userId, message);
             replyMessage = messageHandler.setMessageToUser(defaultMessage, BotMessages.TIME_ARE_CHANGED_MESSAGE.getMessage(), userId);
 
             log.info("Time changing is completed for user with id = '{}'", userId);
         } else {
-            userDataHandler.updateTimeData(userId, message);
+            userDataHandler.setTimeData(userId, message);
             bottomButtons.setBottomButtons(defaultMessage);
             replyMessage = messageHandler.setMessageToUser(defaultMessage, BotMessages.COMPLETE_TUTORIAL_MESSAGE.getMessage(), userId);
 
@@ -207,25 +217,37 @@ class UserActionsHandler {
 
     private SendMessage createSendMessageForShowTopicsButtons(long userId, SendMessage defaultMessage, BotMessages message) {
         SendMessage replyMessage;
-        replyMessage = messageHandler.setMessageToUser(defaultMessage, message.getMessage(), userId);
 
-        InlineKeyboardMarkup messageButtonsMarkup = messageButtons.setTopicsButtons(userId);
-        replyMessage.setReplyMarkup(messageButtonsMarkup);
+        if (userDataHandler.checkIsSilenceModeActive(userId)) {
+            replyMessage = messageHandler.setMessageToUser(defaultMessage, BotMessages.TOPICS_WITH_SILENCE_MODE_MESSAGE.getMessage(), userId);
+        } else {
+            replyMessage = messageHandler.setMessageToUser(defaultMessage, message.getMessage(), userId);
 
-        userDataHandler.updateDoneButtonClickedData(userId, false);
+            InlineKeyboardMarkup messageButtonsMarkup = messageButtons.setTopicsButtons(userId);
+            replyMessage.setReplyMarkup(messageButtonsMarkup);
 
-        log.info("Topics button is shown for user with id = '{}'", userId);
+            userDataHandler.setDoneButtonClickedData(userId, false);
+
+            log.info("Topics button is shown for user with id = '{}'", userId);
+        }
 
         return replyMessage;
     }
 
     private SendMessage changeUserTime(SendMessage defaultMessage, long userId) {
-        userDataHandler.updateTimeEnterModeData(userId, true);
-        String time = userDataHandler.getUserTime(userId);
+        SendMessage replyMessage;
+        userDataHandler.setTimeEnterModeData(userId, true);
 
-        SendMessage replyMessage = messageHandler.setMessageToUser(defaultMessage, String.format(BotMessages.TIME_CHANGING_MESSAGE.getMessage(), time), userId);
+        if (userDataHandler.checkIsSilenceModeActive(userId)) {
+            replyMessage = messageHandler.setMessageToUser(defaultMessage, BotMessages.TIME_CHANGING_WITH_SILENCE_MODE.getMessage(), userId);
 
-        log.info("Time changing process is started for user with id = '{}'", userId);
+            log.info("Time changing process with active silence mode is started for user with id = '{}'", userId);
+        } else {
+            String time = userDataHandler.getUserTime(userId);
+            replyMessage = messageHandler.setMessageToUser(defaultMessage, String.format(BotMessages.TIME_CHANGING_MESSAGE.getMessage(), time), userId);
+
+            log.info("Time changing process is started for user with id = '{}'", userId);
+        }
 
         return replyMessage;
     }
@@ -240,5 +262,13 @@ class UserActionsHandler {
                 .messageId(messageId)
                 .inlineMessageId(inlineMessageId)
                 .build();
+    }
+
+    private SendMessage activateSilenceMode(SendMessage replyMessage, long userId) {
+        userDataHandler.setSilenceModeForUser(userId);
+
+        log.info("Silence mode is activated for user with id = '{}'", userId);
+
+        return messageHandler.setMessageToUser(replyMessage, BotMessages.ACTIVATE_SILENCE_MODE_MESSAGE.getMessage(), userId);
     }
 }

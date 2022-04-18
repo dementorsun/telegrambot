@@ -42,26 +42,33 @@ public class BotClient {
 
     public String getRandomMovie() {
         final int totalPages = 161;
-        int page = new Random().ints(1, totalPages).findFirst().orElse(1);
+        int page = getRandomResponseItem(totalPages);
 
         return tmdbApiClient.getRandomMovie(page);
     }
 
     public String getRandomTvShow() {
         final int totalPages = 149;
-        int page = new Random().ints(1, totalPages).findFirst().orElse(1);
+        int page = getRandomResponseItem(totalPages);
 
         return tmdbApiClient.getRandomTvShow(page);
     }
 
     public PokemonResponse getRandomPokemon() {
         final int totalPokemons = 493;
-        int pokemonId = new Random().ints(1, totalPokemons).findFirst().orElse(1);
+        int pokemonId = getRandomResponseItem(totalPokemons);
+        String response = pokemonApiClient.getPokemon(USER_AGENT_HEADER, pokemonId);
 
-        return gson.fromJson(pokemonApiClient.getPokemon(USER_AGENT_HEADER, pokemonId), PokemonResponse.class);
+        return gson.fromJson(response, PokemonResponse.class);
     }
 
     public PokemonDescriptionResponse getRandomPokemonDescription(int pokemonId) {
-        return gson.fromJson(pokemonApiClient.getPokemonDescription(USER_AGENT_HEADER, pokemonId), PokemonDescriptionResponse.class);
+        String response = pokemonApiClient.getPokemonDescription(USER_AGENT_HEADER, pokemonId);
+
+        return gson.fromJson(response, PokemonDescriptionResponse.class);
+    }
+
+    private int getRandomResponseItem(int totalItems) {
+        return new Random().ints(1, totalItems).findFirst().orElse(1);
     }
 }

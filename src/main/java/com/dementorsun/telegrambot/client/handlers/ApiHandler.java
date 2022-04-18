@@ -5,7 +5,6 @@ import com.dementorsun.telegrambot.client.data.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -18,7 +17,6 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 @Component
-@Slf4j
 @RequiredArgsConstructor
 public class ApiHandler {
 
@@ -40,8 +38,7 @@ public class ApiHandler {
             InputFile photo = new InputFile(nasaApodResponse.getUrl());
             String caption = "\uD83E\uDE90 *Астрономічне фото дня*\n" + nasaApodResponse.getTitle();
 
-            sendPhoto = messageFromApiHandler.createSendPhoto(chatId, photo, caption);
-
+            sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (NullPointerException e) {
             sendPhoto = null;
         }
@@ -57,8 +54,7 @@ public class ApiHandler {
             InputFile photo = new InputFile(randomCatResponse.get(0).getUrl());
             String caption = "\uD83D\uDC08 *Кіт дня*\n" + randomCatResponse.get(0).getBreeds().get(0).getName();
 
-            sendPhoto = messageFromApiHandler.createSendPhoto(chatId, photo, caption);
-
+            sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (NullPointerException e) {
             sendPhoto = null;
         }
@@ -74,8 +70,7 @@ public class ApiHandler {
             InputFile photo = new InputFile(randomDogResponse.get(0).getUrl());
             String caption = "\uD83D\uDC15 *Пес дня*\n" + randomDogResponse.get(0).getBreeds().get(0).getName();
 
-            sendPhoto = messageFromApiHandler.createSendPhoto(chatId, photo, caption);
-
+            sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (NullPointerException e) {
             sendPhoto = null;
         }
@@ -93,8 +88,7 @@ public class ApiHandler {
             PokemonDescriptionResponse pokemonDescriptionResponse = botClient.getRandomPokemonDescription(pokemonId);
             String caption = getPokemonCaption(pokemonResponse, pokemonDescriptionResponse);
 
-            sendPhoto = messageFromApiHandler.createSendPhoto(chatId, photo, caption);
-
+            sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (NullPointerException e) {
             sendPhoto = null;
         }
@@ -109,10 +103,9 @@ public class ApiHandler {
             RandomQuoteResponse randomQuoteResponse = botClient.getRandomQuote();
             String quote = randomQuoteResponse.getQuoteText();
             String author = randomQuoteResponse.getQuoteAuthor();
+            String message = String.format("\uD83E\uDD89 *Мудрість дня*\n\"%s\"\n*%s*", quote, author);
 
-            sendMessage = messageFromApiHandler.createSendMessage(chatId,
-                    String.format("\uD83E\uDD89 *Мудрість дня*\n\"%s\"\n*%s*", quote, author));
-
+            sendMessage = messageFromApiHandler.generateSendMessage(chatId, message);
         } catch (NullPointerException e) {
             sendMessage = null;
         }
@@ -126,7 +119,6 @@ public class ApiHandler {
         try {
             List<TmdbResponse.TmdbItem> movieList = gson.fromJson(botClient.getRandomMovie(), TmdbResponse.class).getResults();
             TmdbResponse.TmdbItem movie = getTmdbItemWithOverview(movieList);
-
             InputFile photo = new InputFile(tmdbImageUrl + movie.getPosterPath());
             String caption = String.format("\uD83C\uDFAC *Фільм дня*\n*%s(%s)*\n_%s_\n\"%s\"\n_TMDB рейтинг:_ *%s*",
                                             movie.getTitle(),
@@ -134,8 +126,8 @@ public class ApiHandler {
                                             movie.getOriginalTitle(),
                                             movie.getOverview(),
                                             movie.getVoteAverage());
-            sendPhoto = messageFromApiHandler.createSendPhoto(chatId, photo, caption);
 
+            sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (NullPointerException e) {
             sendPhoto = null;
         }
@@ -149,7 +141,6 @@ public class ApiHandler {
         try {
             List<TmdbResponse.TmdbItem> tvShowList = gson.fromJson(botClient.getRandomTvShow(), TmdbResponse.class).getResults();
             TmdbResponse.TmdbItem tvShow = getTmdbItemWithOverview(tvShowList);
-
             InputFile photo = new InputFile(tmdbImageUrl + tvShow.getPosterPath());
             String caption = String.format("\uD83D\uDCFA *Серіал дня*\n*%s(%s)*\n_%s_\n\"%s\"\n_TMDB рейтинг:_ *%s*",
                                             tvShow.getName(),
@@ -157,8 +148,8 @@ public class ApiHandler {
                                             tvShow.getOriginalName(),
                                             tvShow.getOverview(),
                                             tvShow.getVoteAverage());
-            sendPhoto = messageFromApiHandler.createSendPhoto(chatId, photo, caption);
 
+            sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (NullPointerException e) {
             sendPhoto = null;
         }

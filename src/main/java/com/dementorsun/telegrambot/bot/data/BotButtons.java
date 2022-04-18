@@ -16,8 +16,8 @@ public enum BotButtons {
     TV_SHOW_TOPIC("\uD83D\uDCFA Серіал дня", "\uD83D\uDCFA Серіал дня ✅", "TV_SHOW_TOPIC", "TV_SHOW_TOPIC_MARKED"),
     TOPICS_DONE("Готово", null, "TOPICS_DONE", null);
 
-    private String buttonText;
-    private String markedButtonText;
-    private String buttonCallBackData;
-    private String markedButtonCallBackData;
+    private final String buttonText;
+    private final String markedButtonText;
+    private final String buttonCallBackData;
+    private final String markedButtonCallBackData;
 }

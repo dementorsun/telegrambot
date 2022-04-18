@@ -3,14 +3,13 @@ package com.dementorsun.telegrambot.client.api;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(
         name = "tmdb",
-        url = "${tmdb.host}"
+        url = "${tmdb.host}",
+        path = "/3/discover"
 )
-@RequestMapping("/3/discover")
 
 public interface TmdbApiClient {
 

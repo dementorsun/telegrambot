@@ -6,12 +6,14 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
 @AllArgsConstructor
 public class BottomButtons {
+
+    private static final List<String> BOTTOM_KEYBOARD_ROW1_BUTTONS = List.of("Змінити свої топіки \uD83E\uDDF3", "Змінити час ⏳");
+    private static final List<String> BOTTOM_KEYBOARD_ROW2_BUTTONS = List.of("Зупинити цей спам ❌");
 
     public void setBottomButtons(SendMessage replyMessage) {
         ReplyKeyboardMarkup bottomKeyboard = createBottomButtonsMarkup();
@@ -31,18 +33,12 @@ public class BottomButtons {
     }
 
     private List<KeyboardRow> createBottomButtons() {
-        List<KeyboardRow> bottomKeyboardRows = new ArrayList<>();
-
         KeyboardRow bottomKeyboardRow1 = new KeyboardRow();
-        bottomKeyboardRow1.add("Змінити свої топіки \uD83E\uDDF3");
-        bottomKeyboardRow1.add("Змінити час ⏳");
+        bottomKeyboardRow1.addAll(BOTTOM_KEYBOARD_ROW1_BUTTONS);
 
         KeyboardRow bottomKeyboardRow2 = new KeyboardRow();
-        bottomKeyboardRow2.add("Зупинити цей спам ❌");
+        bottomKeyboardRow2.addAll(BOTTOM_KEYBOARD_ROW2_BUTTONS);
 
-        bottomKeyboardRows.add(bottomKeyboardRow1);
-        bottomKeyboardRows.add(bottomKeyboardRow2);
-
-        return bottomKeyboardRows;
+        return List.of(bottomKeyboardRow1, bottomKeyboardRow2);
     }
 }

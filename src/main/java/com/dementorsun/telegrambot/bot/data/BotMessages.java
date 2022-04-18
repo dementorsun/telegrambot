@@ -25,5 +25,5 @@ public enum BotMessages {
     ACTIVATE_SILENCE_MODE_MESSAGE("Ну що ж, вибір зроблено. Відтепер, я буду мовчати. Захочеш знову отримувати від мене повідомлення тисни на кнопку 'Змінити час'. Бувай!"),
     SILENCE_MODE_IS_ALREADY_ACTIVE_MESSAGE("Я ображений і зараз в режимі тиші. Кнопка 'Змінити час'. Ти знаєш, що робити.");
 
-    private String message;
+    private final String message;
 }

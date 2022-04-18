@@ -24,7 +24,7 @@ class FileHandler {
 
     private final Gson gson;
 
-    private List<BotUser> readFromDbFile() {
+    public List<BotUser> getUsersFromDbFile() {
         List<BotUser> usersData = new ArrayList<>();
 
         try {
@@ -36,28 +36,17 @@ class FileHandler {
             }
             usersData = tempUsersData;
             jsonReader.close();
-
         } catch (FileNotFoundException e) {
             log.error("DB file is not found");
         } catch (IOException e) {
-            log.error("Exception is occurred during closing JSONReader:", e.getMessage());
+            log.error("Exception is occurred during closing JSONReader: {}", e.getMessage());
         }
 
         return usersData;
     }
 
-    private void writeToDbFile(List<BotUser> usersData) {
-        try {
-            JsonWriter jsonWriter = new JsonWriter(new FileWriter(USER_DB_FILE_PATH));
-            gson.toJson(usersData, BOT_USER_TYPE_TOKEN, jsonWriter);
-            jsonWriter.close();
-        } catch (IOException e) {
-            log.error("Exception is occurred during writing to DB file: {}", e.getMessage());
-        }
-    }
-
     public void updateUserDataInDbFile(BotUser botUser) {
-        List<BotUser> usersData = readFromDbFile();
+        List<BotUser> usersData = getUsersFromDbFile();
         List<BotUser> updatedUsersData;
         long userId = botUser.userInfo.userId;
 
@@ -70,18 +59,24 @@ class FileHandler {
             usersData.add(botUser);
         }
 
-        writeToDbFile(usersData);
+        setUsersDataToDbFile(usersData);
     }
 
     public BotUser getUserDataFromDbFile(long userId) {
-        List<BotUser> usersData = readFromDbFile();
+        List<BotUser> usersData = getUsersFromDbFile();
 
         return usersData.stream()
                 .filter(user -> user.userInfo.userId.equals(userId))
                 .findFirst().orElse(null);
     }
 
-    public List<BotUser> getAllUsersFromDbFile() {
-        return readFromDbFile();
+    private void setUsersDataToDbFile(List<BotUser> usersData) {
+        try {
+            JsonWriter jsonWriter = new JsonWriter(new FileWriter(USER_DB_FILE_PATH));
+            gson.toJson(usersData, BOT_USER_TYPE_TOKEN, jsonWriter);
+            jsonWriter.close();
+        } catch (IOException e) {
+            log.error("Exception is occurred during writing data to DB file: {}", e.getMessage());
+        }
     }
 }

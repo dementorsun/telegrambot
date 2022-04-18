@@ -21,19 +21,12 @@ public class SchedulerHelper {
     private final ApiHandler apiHandler;
     private final MessageHandler messageHandler;
 
-    private String getCurrentTime() {
-        TimeZone timeZone = TimeZone.getTimeZone("Europe/Kiev");
-
-        Date currentTime = Calendar.getInstance(timeZone).getTime();
-        DateFormat formatter = new SimpleDateFormat("HH:mm");
-        formatter.setTimeZone(timeZone);
-
-        return formatter.format(currentTime);
-    }
-
     public List<Object> getPhotosAndMessagesToSend() {
         List<BotUser> usersByTime = userDataHandler.getUsersByTime(getCurrentTime());
-        List<Object> objectsToSend = getObjectsToSend(usersByTime).stream().filter(Objects::nonNull).collect(Collectors.toList());
+        List<Object> objectsToSend = getObjectsToSend(usersByTime)
+                .stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
 
         if (objectsToSend.size() == 1) {
             objectsToSend.clear();
@@ -70,5 +63,15 @@ public class SchedulerHelper {
         });
 
         return objectsToSend;
+    }
+
+    private String getCurrentTime() {
+        TimeZone timeZone = TimeZone.getTimeZone("Europe/Kiev");
+
+        Date currentTime = Calendar.getInstance(timeZone).getTime();
+        DateFormat formatter = new SimpleDateFormat("HH:mm");
+        formatter.setTimeZone(timeZone);
+
+        return formatter.format(currentTime);
     }
 }

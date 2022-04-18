@@ -1,6 +1,7 @@
 package com.dementorsun.telegrambot.bot;
 
 import com.dementorsun.telegrambot.bot.handlers.UpdateHandler;
+import com.dementorsun.telegrambot.bot.handlers.UpdateObjectHandler;
 import com.dementorsun.telegrambot.sheduler.SchedulerHelper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,36 +38,47 @@ class TelegramBotCore extends TelegramLongPollingBot {
     @Override
     public synchronized void onUpdateReceived(Update update) {
         if (update.hasMessage()) {
+            SendMessage sendMessageToUser = updateHandler.handleMessageUpdate(update);
+            long userId = UpdateObjectHandler.getUserIdFromUpdate(update);
+            String messageToUser = sendMessageToUser.getText();
             try {
-                execute(updateHandler.handleMessageUpdate(update));
+                execute(sendMessageToUser);
+                log.info("Telegram bot sent '{}' message to user with '{}' id", messageToUser, userId);
             } catch (TelegramApiException e) {
-                log.info("Telegram bot send message exception: {}", e.getMessage());
+                log.info("Exception is occurred during sending message to user with '{}' id: {}", userId, e.getMessage());
             }
         } else if (update.hasCallbackQuery()) {
-            String callBackData = update.getCallbackQuery().getData();
+            long userId = UpdateObjectHandler.getCallBackUserIdFromUpdate(update);
+            String callBackData = UpdateObjectHandler.getCallBackDataFromUpdate(update);
             if (callBackData.contains("_TOPIC")) {
                 try {
                     execute(updateHandler.handleCallBackDataUponTopicButtonClick(update));
+                    log.info("Telegram bot handled '{}' button click by user with '{}' id", callBackData, userId);
                 } catch (TelegramApiException e) {
-                    log.info("Telegram bot handle click topic button exception: {}", e.getMessage());
+                    log.info("Exception is occurred during handling click to topic button by user with '{}' id: {}", userId, e.getMessage());
                 }
             } else if (callBackData.equals("TOPICS_DONE")) {
                 try {
                     execute(updateHandler.handleCallBackDataUponDoneButtonClick(update));
+                    log.info("Telegram bot handled done topics button click by user with '{}' id", userId);
+
                 } catch (TelegramApiException e) {
-                    log.info("Telegram bot handle click topics done button exception: {}", e.getMessage());
+                    log.info("Exception is occurred during handling click to topics done button by user with '{}' id: {}", userId, e.getMessage());
                 }
             }
             try {
                 execute(updateHandler.generateAnswerCallBackQuery(update));
+                log.info("Telegram bot sent answer call back query to user with '{}' id", userId);
             } catch (TelegramApiException e) {
-                log.info("Telegram bot send call back query answer exception: {}", e.getMessage());
+                log.info("Exception is occurred during sending answer call back query to user with '{}' id: {}", userId, e.getMessage());
             }
         } else {
+            long userId = UpdateObjectHandler.getCallBackUserIdFromUpdate(update);
             try {
                 execute(updateHandler.handleUnexpectedAction(update));
+                log.info("Telegram bot sent message about unexpected action to user with '{}' id", userId);
             } catch (TelegramApiException e) {
-                log.info("Telegram bot handle unexpected action exception: {}", e.getMessage());
+                log.info("Exception is occurred during sending message about unexpected action to user with '{}' id: {}", userId, e.getMessage());
             }
         }
     }
@@ -78,16 +90,22 @@ class TelegramBotCore extends TelegramLongPollingBot {
         if (!photosAndMessagesToSend.isEmpty()) {
             photosAndMessagesToSend.forEach((objectToSend) -> {
                 if (objectToSend instanceof SendPhoto) {
+                    SendPhoto photoToSend = (SendPhoto) objectToSend;
+                    String chatId = photoToSend.getChatId();
                     try {
-                        execute((SendPhoto) objectToSend);
+                        execute(photoToSend);
+                        log.info("Telegram bot sent scheduled photo with '{}' caption to '{}' chat id", photoToSend.getCaption(), chatId);
                     } catch (TelegramApiException e) {
-                        log.info("Telegram bot scheduled send photo exception: {}", e.getMessage());
+                        log.info("Exception is occurred during sending scheduled photo to '{}' chat id: {}", chatId, e.getMessage());
                     }
                 } else if (objectToSend instanceof SendMessage) {
+                    SendMessage messageToSend = (SendMessage) objectToSend;
+                    String chatId = messageToSend.getChatId();
                     try {
-                        execute((SendMessage) objectToSend);
+                        execute(messageToSend);
+                        log.info("Telegram bot sent scheduled message with '{}' text to '{}' chat id", messageToSend.getText(), chatId);
                     } catch (TelegramApiException e) {
-                        log.info("Telegram bot scheduled send photo exception: {}", e.getMessage());
+                        log.info("Exception is occurred during sending scheduled message to '{}' chat id: {}", chatId, e.getMessage());
                     }
                 } else {
                     log.info("Incompatible object type during send message/photo");

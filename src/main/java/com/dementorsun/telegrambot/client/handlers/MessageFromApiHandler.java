@@ -10,7 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.InputFile;
 @AllArgsConstructor
 class MessageFromApiHandler {
 
-    public SendPhoto createSendPhoto(long chatId, InputFile photo, String caption) {
+    public SendPhoto generateSendPhoto(long chatId, InputFile photo, String caption) {
         return SendPhoto.builder()
                 .chatId(String.valueOf(chatId))
                 .photo(photo)
@@ -19,7 +19,7 @@ class MessageFromApiHandler {
                 .build();
     }
 
-    public SendMessage createSendMessage(long chatId, String message) {
+    public SendMessage generateSendMessage(long chatId, String message) {
         return SendMessage.builder()
                 .chatId(String.valueOf(chatId))
                 .text(message)

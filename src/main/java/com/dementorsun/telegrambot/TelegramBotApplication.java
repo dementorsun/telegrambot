@@ -8,8 +8,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @SpringBootApplication
 @EnableFeignClients
-class TelegrambotApplication {
+class TelegramBotApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(TelegrambotApplication.class, args);
+		SpringApplication.run(TelegramBotApplication.class, args);
 	}
 }

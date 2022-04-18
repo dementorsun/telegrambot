@@ -1,7 +1,6 @@
 package com.dementorsun.telegrambot.bot.handlers;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
@@ -9,69 +8,55 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import static org.telegram.telegrambots.meta.api.methods.ParseMode.MARKDOWN;
+
 @Component
-@Slf4j
 @AllArgsConstructor
 public class MessageHandler {
 
     private static final String BOT_MESSAGE = "*КоженДеньБот: *";
 
-    public SendMessage createDefaultMessageFromUpdateMessage(long chatId, long userId) {
-        SendMessage defaultMessage = SendMessage.builder()
+    public SendMessage createDefaultMessageFromUpdateMessage(long chatId) {
+        return SendMessage.builder()
                 .chatId(String.valueOf(chatId))
                 .text(getRandomMessage())
                 .build();
-
-        log.info("Default message '{}' is created from UpdateMessage for user with id = {}", defaultMessage.getText(), userId);
-
-        return defaultMessage;
     }
 
-    public SendMessage createDefaultMessageFromUpdateCallBack(long chatId, long userId) {
-        SendMessage defaultMessage = SendMessage.builder()
+    public SendMessage createDefaultMessageFromUpdateCallBack(long chatId) {
+        return SendMessage.builder()
                 .chatId(String.valueOf(chatId))
                 .text(getRandomMessage())
                 .build();
-
-        log.info("Default message '{}' is created from UpdateCallBack for user with id = {}", defaultMessage.getText(), userId);
-
-        return defaultMessage;
     }
 
-    public SendMessage setMessageToUser(SendMessage replyMessage, String message, long userId) {
+    public SendMessage setMessageToUser(SendMessage replyMessage, String message) {
         replyMessage.setText(BOT_MESSAGE + message);
-        replyMessage.setParseMode("Markdown");
-
-        log.info("'{}' message is set for user with id = '{}'", message, userId);
+        replyMessage.setParseMode(MARKDOWN);
 
         return replyMessage;
     }
 
     public SendMessage setNewMessageToUser(long chatId, String message) {
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(String.valueOf(chatId));
-        sendMessage.setText(BOT_MESSAGE + message);
-        sendMessage.setParseMode("Markdown");
+        SendMessage sendMessage = new SendMessage(String.valueOf(chatId), BOT_MESSAGE + message);
+        sendMessage.setParseMode(MARKDOWN);
 
         return sendMessage;
     }
 
     public boolean checkTimeFormatIsCorrect(String message) {
-        boolean timeFormatIsCorrect = false;
+        boolean timeFormatIsCorrect;
 
         DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm").withResolverStyle(ResolverStyle.STRICT);
 
         try {
             LocalTime.parse(message, timeFormat);
             timeFormatIsCorrect = true;
-
-            log.info("Time format for '{}' message is correct", message);
         } catch (DateTimeParseException | NullPointerException e) {
-            log.info("Time format for '{}' message is not correct", message);
+            timeFormatIsCorrect = false;
         }
 
         return timeFormatIsCorrect;
@@ -79,7 +64,7 @@ public class MessageHandler {
 
     public String getInitialDayMessage() {
         List<String> randomMessageList =
-                Arrays.asList("Ось, трохи відволічись від тіктоку.",
+                List.of("Ось, трохи відволічись від тіктоку.",
                         "Кожен день одне й теж саме. Кожен день...",
                         "Слава Україні!\uD83C\uDDFA\uD83C\uDDE6",
                         "До вашої уваги пропонується.",
@@ -95,7 +80,7 @@ public class MessageHandler {
 
     private String getRandomMessage() {
         List<String> randomMessageList =
-                Arrays.asList("Ну і шо?",
+                List.of("Ну і шо?",
                         "Слава Україні!\uD83C\uDDFA\uD83C\uDDE6",
                         "Ти шо руській? Тобі показати в якій стороні воєнний корабль?",
                         "Сходи краще зроби собі чай.",

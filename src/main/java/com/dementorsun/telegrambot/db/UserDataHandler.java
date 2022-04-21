@@ -1,6 +1,6 @@
 package com.dementorsun.telegrambot.db;
 
-import com.dementorsun.telegrambot.bot.data.BotButtons;
+import com.dementorsun.telegrambot.enums.TopicsDict;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -66,13 +66,13 @@ public class UserDataHandler {
                         .time(NONE_TIME)
                         .build())
                 .userTopics(BotUser.UserTopic.builder()
-                        .isNasa(false)
-                        .isCat(false)
-                        .isDog(false)
-                        .isPokemon(false)
-                        .isQuote(false)
-                        .isMovie(false)
-                        .isTvShow(false)
+                        .isNasaChosen(false)
+                        .isCatChosen(false)
+                        .isDogChosen(false)
+                        .isPokemonChosen(false)
+                        .isQuoteChosen(false)
+                        .isMovieChosen(false)
+                        .isTvShowChosen(false)
                         .build())
                 .build();
 
@@ -84,7 +84,7 @@ public class UserDataHandler {
     public void setNasaTopicDataForUser(long userId, boolean isMarked) {
         BotUser botUser = fileHandler.getUserDataFromDbFile(userId);
 
-        botUser.userTopics.setIsNasa(isMarked);
+        botUser.userTopics.setIsNasaChosen(isMarked);
         fileHandler.updateUserDataInDbFile(botUser);
 
         log.info("Value '{}' has been set for Nasa topic and user with id = '{}' in DB file", isMarked, userId);
@@ -93,7 +93,7 @@ public class UserDataHandler {
     public void setCatTopicDataForUser(long userId, boolean isMarked) {
         BotUser botUser = fileHandler.getUserDataFromDbFile(userId);
 
-        botUser.userTopics.setIsCat(isMarked);
+        botUser.userTopics.setIsCatChosen(isMarked);
         fileHandler.updateUserDataInDbFile(botUser);
 
         log.info("Value '{}' has been set for Cat topic and user with id = '{}' in DB file", isMarked, userId);
@@ -102,7 +102,7 @@ public class UserDataHandler {
     public void setDogTopicDataForUser(long userId, boolean isMarked) {
         BotUser botUser = fileHandler.getUserDataFromDbFile(userId);
 
-        botUser.userTopics.setIsDog(isMarked);
+        botUser.userTopics.setIsDogChosen(isMarked);
         fileHandler.updateUserDataInDbFile(botUser);
 
         log.info("Value '{}' has been set for Dog topic and user with id = '{}' in DB file", isMarked, userId);
@@ -111,7 +111,7 @@ public class UserDataHandler {
     public void setPokemonTopicDataForUser(long userId, boolean isMarked) {
         BotUser botUser = fileHandler.getUserDataFromDbFile(userId);
 
-        botUser.userTopics.setIsPokemon(isMarked);
+        botUser.userTopics.setIsPokemonChosen(isMarked);
         fileHandler.updateUserDataInDbFile(botUser);
 
         log.info("Value '{}' has been set for Pokemon topic and user with id = '{}' in DB file", isMarked, userId);
@@ -120,7 +120,7 @@ public class UserDataHandler {
     public void setQuoteTopicDataForUser(long userId, boolean isMarked) {
         BotUser botUser = fileHandler.getUserDataFromDbFile(userId);
 
-        botUser.userTopics.setIsQuote(isMarked);
+        botUser.userTopics.setIsQuoteChosen(isMarked);
         fileHandler.updateUserDataInDbFile(botUser);
 
         log.info("Value '{}' has been set for Quote topic and user with id = '{}' in DB file", isMarked, userId);
@@ -129,7 +129,7 @@ public class UserDataHandler {
     public void setMovieTopicDataForUser(long userId, boolean isMarked) {
         BotUser botUser = fileHandler.getUserDataFromDbFile(userId);
 
-        botUser.userTopics.setIsMovie(isMarked);
+        botUser.userTopics.setIsMovieChosen(isMarked);
         fileHandler.updateUserDataInDbFile(botUser);
 
         log.info("Value '{}' has been set for Movie topic and user with id = '{}' in DB file", isMarked, userId);
@@ -138,7 +138,7 @@ public class UserDataHandler {
     public void setTvShowTopicDataForUser(long userId, boolean isMarked) {
         BotUser botUser = fileHandler.getUserDataFromDbFile(userId);
 
-        botUser.userTopics.setIsTvShow(isMarked);
+        botUser.userTopics.setIsTvShowChosen(isMarked);
         fileHandler.updateUserDataInDbFile(botUser);
 
         log.info("Value '{}' has been set for TV Show topic and user with id = '{}' in DB file", isMarked, userId);
@@ -171,17 +171,17 @@ public class UserDataHandler {
         log.info("Value '{}' has been set for time enter mode property and user with id = '{}' in DB file", isMarked, userId);
     }
 
-    public Map<BotButtons, Boolean> getUserTopics(long userId) {
+    public Map<TopicsDict, Boolean> getUserTopics(long userId) {
         BotUser.UserTopic botUserTopics = fileHandler.getUserDataFromDbFile(userId).userTopics;
-        Map<BotButtons,Boolean> userTopics = new HashMap<>();
+        Map<TopicsDict,Boolean> userTopics = new HashMap<>();
 
-        userTopics.put(BotButtons.NASA_TOPIC, botUserTopics.isNasa);
-        userTopics.put(BotButtons.CAT_TOPIC, botUserTopics.isCat);
-        userTopics.put(BotButtons.DOG_TOPIC, botUserTopics.isDog);
-        userTopics.put(BotButtons.POKEMON_TOPIC, botUserTopics.isPokemon);
-        userTopics.put(BotButtons.QUOTE_TOPIC, botUserTopics.isQuote);
-        userTopics.put(BotButtons.MOVIE_TOPIC, botUserTopics.isMovie);
-        userTopics.put(BotButtons.TV_SHOW_TOPIC, botUserTopics.isTvShow);
+        userTopics.put(TopicsDict.NASA_TOPIC, botUserTopics.isNasaChosen);
+        userTopics.put(TopicsDict.CAT_TOPIC, botUserTopics.isCatChosen);
+        userTopics.put(TopicsDict.DOG_TOPIC, botUserTopics.isDogChosen);
+        userTopics.put(TopicsDict.POKEMON_TOPIC, botUserTopics.isPokemonChosen);
+        userTopics.put(TopicsDict.QUOTE_TOPIC, botUserTopics.isQuoteChosen);
+        userTopics.put(TopicsDict.MOVIE_TOPIC, botUserTopics.isMovieChosen);
+        userTopics.put(TopicsDict.TV_SHOW_TOPIC, botUserTopics.isTvShowChosen);
 
         return userTopics;
     }

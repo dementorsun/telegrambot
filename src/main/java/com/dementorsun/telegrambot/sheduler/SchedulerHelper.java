@@ -1,10 +1,10 @@
 package com.dementorsun.telegrambot.sheduler;
 
-import com.dementorsun.telegrambot.bot.data.BotButtons;
 import com.dementorsun.telegrambot.bot.handlers.MessageHandler;
 import com.dementorsun.telegrambot.client.handlers.ApiHandler;
 import com.dementorsun.telegrambot.db.BotUser;
 import com.dementorsun.telegrambot.db.UserDataHandler;
+import com.dementorsun.telegrambot.enums.TopicsDict;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -42,23 +42,23 @@ public class SchedulerHelper {
             long chatId = userDataHandler.getUserChatId(botUser);
             long userId = userDataHandler.getUserId(botUser);
             String initialDayMessage = messageHandler.getInitialDayMessage();
-            Map<BotButtons, Boolean> userTopics = userDataHandler.getUserTopics(userId);
+            Map<TopicsDict, Boolean> userTopics = userDataHandler.getUserTopics(userId);
 
             objectsToSend.add(messageHandler.setNewMessageToUser(chatId, initialDayMessage));
 
-            if (userTopics.get(BotButtons.NASA_TOPIC))
+            if (userTopics.get(TopicsDict.NASA_TOPIC))
                 objectsToSend.add(apiHandler.createNasaApodSendPhoto(chatId));
-            if (userTopics.get(BotButtons.CAT_TOPIC))
+            if (userTopics.get(TopicsDict.CAT_TOPIC))
                 objectsToSend.add(apiHandler.createRandomCatSendPhoto(chatId));
-            if (userTopics.get(BotButtons.DOG_TOPIC))
+            if (userTopics.get(TopicsDict.DOG_TOPIC))
                 objectsToSend.add(apiHandler.createRandomDogSendPhoto(chatId));
-            if (userTopics.get(BotButtons.POKEMON_TOPIC))
+            if (userTopics.get(TopicsDict.POKEMON_TOPIC))
                 objectsToSend.add(apiHandler.createRandomPokemonSendPhoto(chatId));
-            if (userTopics.get(BotButtons.MOVIE_TOPIC))
+            if (userTopics.get(TopicsDict.MOVIE_TOPIC))
                 objectsToSend.add(apiHandler.createRandomMovieSendPhoto(chatId));
-            if (userTopics.get(BotButtons.TV_SHOW_TOPIC))
+            if (userTopics.get(TopicsDict.TV_SHOW_TOPIC))
                 objectsToSend.add(apiHandler.createRandomTvShowSendPhoto(chatId));
-            if (userTopics.get(BotButtons.QUOTE_TOPIC))
+            if (userTopics.get(TopicsDict.QUOTE_TOPIC))
                 objectsToSend.add(apiHandler.createRandomQuoteSendMessage(chatId));
         });
 

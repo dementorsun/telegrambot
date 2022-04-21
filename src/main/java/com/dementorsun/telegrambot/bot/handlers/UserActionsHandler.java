@@ -2,7 +2,8 @@ package com.dementorsun.telegrambot.bot.handlers;
 
 import com.dementorsun.telegrambot.bot.buttons.BottomButtons;
 import com.dementorsun.telegrambot.bot.buttons.MessageButtons;
-import com.dementorsun.telegrambot.bot.data.BotMessages;
+import com.dementorsun.telegrambot.enums.BotMessages;
+import com.dementorsun.telegrambot.enums.BottomButtonsDict;
 import com.dementorsun.telegrambot.db.UserDataHandler;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 @AllArgsConstructor
 class UserActionsHandler {
 
+    private static final String START_MESSAGE = "/start";
+
     private final UserDataHandler userDataHandler;
     private final MessageHandler messageHandler;
     private final MessageButtons messageButtons;
@@ -32,17 +35,17 @@ class UserActionsHandler {
         SendMessage replyMessage = messageHandler.createDefaultMessageFromUpdateMessage(chatId);
         log.info("'{}' message is received from user with id = '{}'", message, userId);
 
-        if (message.equals("/start")) {
+        if (message.equals(START_MESSAGE)) {
             replyMessage = createSendMessageForStartTopicsTutorial(userId, chatId, user, replyMessage);
         } else if (userDataHandler.getIsTimeEnterMode(userId)) {
             replyMessage = messageHandler.checkTimeFormatIsCorrect(message) ?
                     createSendMessageForCompleteTimeEntering(userId, message, replyMessage) :
                     messageHandler.setMessageToUser(replyMessage, BotMessages.FAIL_TIME_FORMAT_MESSAGE.getMessage());
-        } else if (message.equals("Змінити свої топіки \uD83E\uDDF3")) {
+        } else if (message.equals(BottomButtonsDict.CHANGE_TOPICS_BUTTON.getButtonText())) {
             replyMessage = createSendMessageForShowTopicsButtons(userId, replyMessage, BotMessages.CHANGE_TOPICS_MESSAGE);
-        } else if (message.equals("Змінити час ⏳")) {
+        } else if (message.equals(BottomButtonsDict.CHANGE_TIME_BUTTON.getButtonText())) {
             replyMessage = createSendMessageForChangeUserTime(replyMessage, userId);
-        } else if (message.equals("Зупинити цей спам ❌")) {
+        } else if (message.equals(BottomButtonsDict.SILENCE_MODE_BUTTON.getButtonText())) {
             replyMessage = userDataHandler.checkIsSilenceModeActiveForUser(userId) ?
                     messageHandler.setMessageToUser(replyMessage, BotMessages.SILENCE_MODE_IS_ALREADY_ACTIVE_MESSAGE.getMessage()) :
                     createSendMessageForActivateSilenceMode(replyMessage, userId);
@@ -55,7 +58,7 @@ class UserActionsHandler {
         long userId = UpdateObjectHandler.getCallBackUserIdFromUpdate(update);
         String callBackData = UpdateObjectHandler.getCallBackDataFromUpdate(update);
 
-        EditMessageReplyMarkup editedReplyMessage = generateEditMessageReplyMarkup(update);
+        EditMessageReplyMarkup editedReplyMessage = generateDefaultEditMessageReplyMarkup(update);
 
         switch (callBackData) {
             case "NASA_TOPIC":
@@ -120,7 +123,6 @@ class UserActionsHandler {
 
         return editedReplyMessage;
     }
-
 
     public SendMessage handleTopicsDoneButtonClick(Update update) {
         long userId = UpdateObjectHandler.getCallBackUserIdFromUpdate(update);
@@ -263,7 +265,7 @@ class UserActionsHandler {
         return messageHandler.setMessageToUser(replyMessage, BotMessages.ACTIVATE_SILENCE_MODE_MESSAGE.getMessage());
     }
 
-    private EditMessageReplyMarkup generateEditMessageReplyMarkup(Update update) {
+    private EditMessageReplyMarkup generateDefaultEditMessageReplyMarkup(Update update) {
         String inlineMessageId = UpdateObjectHandler.getCallBackInlineMessageIdFromUpdate(update);
         int messageId = UpdateObjectHandler.getCallBackMessageIdFromUpdate(update);
         long chatId = UpdateObjectHandler.getCallBackChatIdFromUpdate(update);

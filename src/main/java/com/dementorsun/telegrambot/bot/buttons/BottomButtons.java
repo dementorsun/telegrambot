@@ -1,5 +1,6 @@
 package com.dementorsun.telegrambot.bot.buttons;
 
+import com.dementorsun.telegrambot.enums.BottomButtonsDict;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -11,9 +12,6 @@ import java.util.List;
 @Component
 @AllArgsConstructor
 public class BottomButtons {
-
-    private static final List<String> BOTTOM_KEYBOARD_ROW1_BUTTONS = List.of("Змінити свої топіки \uD83E\uDDF3", "Змінити час ⏳");
-    private static final List<String> BOTTOM_KEYBOARD_ROW2_BUTTONS = List.of("Зупинити цей спам ❌");
 
     public void setBottomButtons(SendMessage replyMessage) {
         ReplyKeyboardMarkup bottomKeyboard = createBottomButtonsMarkup();
@@ -34,10 +32,13 @@ public class BottomButtons {
 
     private List<KeyboardRow> createBottomButtons() {
         KeyboardRow bottomKeyboardRow1 = new KeyboardRow();
-        bottomKeyboardRow1.addAll(BOTTOM_KEYBOARD_ROW1_BUTTONS);
+        List<String> bottomKeyboardButtonsRow1 = List.of(BottomButtonsDict.CHANGE_TOPICS_BUTTON.getButtonText(),
+                                                         BottomButtonsDict.CHANGE_TIME_BUTTON.getButtonText());
+        bottomKeyboardRow1.addAll(bottomKeyboardButtonsRow1);
 
         KeyboardRow bottomKeyboardRow2 = new KeyboardRow();
-        bottomKeyboardRow2.addAll(BOTTOM_KEYBOARD_ROW2_BUTTONS);
+        List<String> bottomKeyboardButtonsRow2 = List.of(BottomButtonsDict.SILENCE_MODE_BUTTON.getButtonText());
+        bottomKeyboardRow2.addAll(bottomKeyboardButtonsRow2);
 
         return List.of(bottomKeyboardRow1, bottomKeyboardRow2);
     }

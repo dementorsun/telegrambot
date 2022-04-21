@@ -1,7 +1,8 @@
 package com.dementorsun.telegrambot.bot.buttons;
 
-import com.dementorsun.telegrambot.bot.data.BotButtons;
+import com.dementorsun.telegrambot.enums.MessageButtonsDict;
 import com.dementorsun.telegrambot.db.UserDataHandler;
+import com.dementorsun.telegrambot.enums.TopicsDict;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
@@ -31,16 +32,16 @@ public class MessageButtons {
         return editedMessage;
     }
 
-    private String getTopicButtonText(Map<BotButtons,Boolean> userTopics, BotButtons botButton) {
-        return userTopics.get(botButton) ? botButton.getMarkedButtonText() : botButton.getButtonText();
+    private String getTopicButtonText(Map<TopicsDict,Boolean> userTopics, MessageButtonsDict botButton) {
+        return userTopics.get(botButton.getTopic()) ? botButton.getMarkedButtonText() : botButton.getButtonText();
     }
 
-    private String getTopicButtonCallBackData(Map<BotButtons,Boolean> userTopics, BotButtons botButton) {
-        return userTopics.get(botButton) ? botButton.getMarkedButtonCallBackData() : botButton.getButtonCallBackData();
+    private String getTopicButtonCallBackData(Map<TopicsDict,Boolean> userTopics, MessageButtonsDict botButton) {
+        return userTopics.get(botButton.getTopic()) ? botButton.getMarkedButtonCallBackData() : botButton.getButtonCallBackData();
     }
 
-    private InlineKeyboardButton generateInlineKeyboardButton(long userId, BotButtons botButton) {
-        Map<BotButtons,Boolean> userTopics = userDataHandler.getUserTopics(userId);
+    private InlineKeyboardButton generateInlineKeyboardButton(long userId, MessageButtonsDict botButton) {
+        Map<TopicsDict,Boolean> userTopics = userDataHandler.getUserTopics(userId);
 
         return InlineKeyboardButton.builder()
                 .text(getTopicButtonText(userTopics, botButton))
@@ -51,17 +52,17 @@ public class MessageButtons {
     private List<List<InlineKeyboardButton>> generateInlineKeyboardButtonList(long userId) {
         List<List<InlineKeyboardButton>> inlineKeyboardButtonList = new ArrayList<>();
 
-        for (BotButtons botButton : BotButtons.values()) {
-            if (botButton.equals(BotButtons.TOPICS_DONE)) {
+        List.of(MessageButtonsDict.values()).forEach(botButton -> {
+            if (botButton.equals(MessageButtonsDict.DONE_BUTTON)) {
                 InlineKeyboardButton topicsDoneButton = InlineKeyboardButton.builder()
-                        .text(BotButtons.TOPICS_DONE.getButtonText())
-                        .callbackData(BotButtons.TOPICS_DONE.getButtonCallBackData())
+                        .text(MessageButtonsDict.DONE_BUTTON.getButtonText())
+                        .callbackData(MessageButtonsDict.DONE_BUTTON.getButtonCallBackData())
                         .build();
                 inlineKeyboardButtonList.add(List.of(topicsDoneButton));
             } else {
                 inlineKeyboardButtonList.add(List.of(generateInlineKeyboardButton(userId, botButton)));
             }
-        }
+        });
 
         return inlineKeyboardButtonList;
     }

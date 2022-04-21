@@ -1,4 +1,4 @@
-package com.dementorsun.telegrambot.bot.data;
+package com.dementorsun.telegrambot.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

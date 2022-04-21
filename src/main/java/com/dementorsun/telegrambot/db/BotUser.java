@@ -31,12 +31,12 @@ public class BotUser {
     @Setter
     @Builder
     public static class UserTopic {
-        Boolean isNasa;
-        Boolean isCat;
-        Boolean isDog;
-        Boolean isPokemon;
-        Boolean isQuote;
-        Boolean isMovie;
-        Boolean isTvShow;
+        Boolean isNasaChosen;
+        Boolean isCatChosen;
+        Boolean isDogChosen;
+        Boolean isPokemonChosen;
+        Boolean isQuoteChosen;
+        Boolean isMovieChosen;
+        Boolean isTvShowChosen;
     }
 }

@@ -14,7 +14,7 @@ public enum MessageButtonsDict {
     QUOTE_BUTTON("\uD83E\uDD89 Мудрість дня", "\uD83E\uDD89 Мудрість дня ✅", "QUOTE_TOPIC", "QUOTE_TOPIC_MARKED", TopicsDict.QUOTE_TOPIC),
     MOVIE_BUTTON("\uD83C\uDFAC Фільм дня", "\uD83C\uDFAC Фільм дня ✅", "MOVIE_TOPIC", "MOVIE_TOPIC_MARKED", TopicsDict.MOVIE_TOPIC),
     TV_SHOW_BUTTON("\uD83D\uDCFA Серіал дня", "\uD83D\uDCFA Серіал дня ✅", "TV_SHOW_TOPIC", "TV_SHOW_TOPIC_MARKED", TopicsDict.TV_SHOW_TOPIC),
-    DONE_BUTTON("Готово", null, "TOPICS_DONE", null, null);
+    DONE_BUTTON("Готово", "Готово", "TOPICS_DONE", "TOPICS_DONE", null);
 
     private final String buttonText;
     private final String markedButtonText;

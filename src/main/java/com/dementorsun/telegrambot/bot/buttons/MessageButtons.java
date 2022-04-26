@@ -19,25 +19,39 @@ public class MessageButtons {
 
     private final UserDataHandler userDataHandler;
 
-    public InlineKeyboardMarkup setTopicsButtons(long userId) {
-        List<List<InlineKeyboardButton>> messageAllButtons = new ArrayList<>(generateInlineKeyboardButtonList(userId));
+    public InlineKeyboardMarkup setTopicsButtons(long userId, boolean isNewUser) {
+        List<List<InlineKeyboardButton>> messageAllButtons = new ArrayList<>(generateInlineKeyboardButtonList(userId, isNewUser));
 
         return new InlineKeyboardMarkup(messageAllButtons);
 }
 
-    public EditMessageReplyMarkup editTopicsButtons(EditMessageReplyMarkup editedMessage, long userId) {
-        InlineKeyboardMarkup editedMessageButtonsMarkup = setTopicsButtons(userId);
+    public EditMessageReplyMarkup editTopicsButtons(EditMessageReplyMarkup editedMessage, long userId, boolean isNewUser) {
+        InlineKeyboardMarkup editedMessageButtonsMarkup = setTopicsButtons(userId, isNewUser);
         editedMessage.setReplyMarkup(editedMessageButtonsMarkup);
 
         return editedMessage;
     }
 
     private String getTopicButtonText(Map<TopicsDict,Boolean> userTopics, MessageButtonsDict botButton) {
-        return userTopics.get(botButton.getTopic()) ? botButton.getMarkedButtonText() : botButton.getButtonText();
+        String topicButtonText;
+        if (botButton.equals(MessageButtonsDict.DONE_BUTTON)) {
+            topicButtonText = botButton.getButtonText();
+        }
+        else {
+            topicButtonText = userTopics.get(botButton.getTopic()) ? botButton.getMarkedButtonText() : botButton.getButtonText();
+        }
+        return topicButtonText;
     }
 
     private String getTopicButtonCallBackData(Map<TopicsDict,Boolean> userTopics, MessageButtonsDict botButton) {
-        return userTopics.get(botButton.getTopic()) ? botButton.getMarkedButtonCallBackData() : botButton.getButtonCallBackData();
+        String topicButtonCallBackData;
+        if (botButton.equals(MessageButtonsDict.DONE_BUTTON)) {
+            topicButtonCallBackData = botButton.getButtonCallBackData();
+        } else {
+            topicButtonCallBackData = userTopics.get(botButton.getTopic()) ? botButton.getMarkedButtonCallBackData() : botButton.getButtonCallBackData();
+        }
+
+        return topicButtonCallBackData;
     }
 
     private InlineKeyboardButton generateInlineKeyboardButton(long userId, MessageButtonsDict botButton) {
@@ -49,17 +63,13 @@ public class MessageButtons {
                 .build();
     }
 
-    private List<List<InlineKeyboardButton>> generateInlineKeyboardButtonList(long userId) {
+    private List<List<InlineKeyboardButton>> generateInlineKeyboardButtonList(long userId, boolean isNewUser) {
         List<List<InlineKeyboardButton>> inlineKeyboardButtonList = new ArrayList<>();
 
         List.of(MessageButtonsDict.values()).forEach(botButton -> {
-            if (botButton.equals(MessageButtonsDict.DONE_BUTTON)) {
-                InlineKeyboardButton topicsDoneButton = InlineKeyboardButton.builder()
-                        .text(MessageButtonsDict.DONE_BUTTON.getButtonText())
-                        .callbackData(MessageButtonsDict.DONE_BUTTON.getButtonCallBackData())
-                        .build();
-                inlineKeyboardButtonList.add(List.of(topicsDoneButton));
-            } else {
+            if (!isNewUser && !botButton.equals(MessageButtonsDict.DONE_BUTTON)) {
+                inlineKeyboardButtonList.add(List.of(generateInlineKeyboardButton(userId, botButton)));
+            } else if (isNewUser) {
                 inlineKeyboardButtonList.add(List.of(generateInlineKeyboardButton(userId, botButton)));
             }
         });

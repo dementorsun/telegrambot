@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -21,15 +22,12 @@ public class UserDataHandler {
 
     private final FileHandler fileHandler;
 
-    public boolean checkIsUserNew(long userId) {
-        boolean isNewUser = false;
-        BotUser botUser = fileHandler.getUserDataFromDbFile(userId);
+    public boolean checkIsDataPresentForUser(long userId) {
+        return Optional.ofNullable(fileHandler.getUserDataFromDbFile(userId)).isPresent();
+    }
 
-        if (botUser == null) {
-            isNewUser = true;
-        }
-
-        return isNewUser;
+    public boolean checkIsNewUser(long userId) {
+        return fileHandler.getUserDataFromDbFile(userId).userSettings.isNewUser;
     }
 
     public boolean getIsDoneButtonClickedForUser(long userId) {
@@ -63,6 +61,7 @@ public class UserDataHandler {
                 .userSettings(BotUser.UserSetting.builder()
                         .isDoneClicked(false)
                         .isTimeEnterMode(false)
+                        .isNewUser(true)
                         .time(NONE_TIME)
                         .build())
                 .userTopics(BotUser.UserTopic.builder()
@@ -169,6 +168,15 @@ public class UserDataHandler {
         fileHandler.updateUserDataInDbFile(botUser);
 
         log.info("Value '{}' has been set for time enter mode property and user with id = '{}' in DB file", isMarked, userId);
+    }
+
+    public void setIsNewUserForUser(long userId, boolean isNewUser) {
+        BotUser botUser = fileHandler.getUserDataFromDbFile(userId);
+
+        botUser.userSettings.setIsNewUser(isNewUser);
+        fileHandler.updateUserDataInDbFile(botUser);
+
+        log.info("Value '{}' has been set for new user property and user with id = '{}' in DB file", isNewUser, userId);
     }
 
     public Map<TopicsDict, Boolean> getUserTopics(long userId) {

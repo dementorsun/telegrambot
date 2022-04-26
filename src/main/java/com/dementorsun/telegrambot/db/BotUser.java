@@ -26,6 +26,7 @@ public class BotUser {
         String time;
         Boolean isDoneClicked;
         Boolean isTimeEnterMode;
+        Boolean isNewUser;
     }
 
     @Setter

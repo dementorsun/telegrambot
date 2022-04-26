@@ -33,7 +33,7 @@ public class MessageHandler {
                 .build();
     }
 
-    public SendMessage setMessageToUser(SendMessage replyMessage, String message) {
+    public SendMessage setReplyMessageToUser(SendMessage replyMessage, String message) {
         replyMessage.setText(BOT_MESSAGE + message);
         replyMessage.setParseMode(MARKDOWN);
 
@@ -41,7 +41,7 @@ public class MessageHandler {
     }
 
     public SendMessage setNewMessageToUser(long chatId, String message) {
-        SendMessage sendMessage = new SendMessage(String.valueOf(chatId), BOT_MESSAGE + message);
+        SendMessage sendMessage = new SendMessage(String.valueOf(chatId), String.format("%s_%s_", BOT_MESSAGE, message));
         sendMessage.setParseMode(MARKDOWN);
 
         return sendMessage;
@@ -82,8 +82,8 @@ public class MessageHandler {
         List<String> randomMessageList =
                 List.of("Ну і шо?",
                         "Слава Україні!\uD83C\uDDFA\uD83C\uDDE6",
-                        "Ти шо руській? Тобі показати в якій стороні воєнний корабль?",
-                        "Сходи краще зроби собі чай.",
+                        "Ти шо руській?",
+                        "Сходи краще зроби собі заспокійливий чай.",
                         "Майбутні покоління ботів помстяться тобі за це!",
                         "Це все що ти можеш мені сказати?",
                         "Продовжуй, якщо тобі стане від цього легше. Я не поспішаю.",

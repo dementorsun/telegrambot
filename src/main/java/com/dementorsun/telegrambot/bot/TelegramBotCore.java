@@ -94,7 +94,7 @@ class TelegramBotCore extends TelegramLongPollingBot {
                     String chatId = photoToSend.getChatId();
                     try {
                         execute(photoToSend);
-                        log.info("Telegram bot sent scheduled photo with '{}' caption to '{}' chat id", photoToSend.getCaption(), chatId);
+                        log.info("Telegram bot sent scheduled photo to '{}' chat id", chatId);
                     } catch (TelegramApiException e) {
                         log.info("Exception is occurred during sending scheduled photo to '{}' chat id: {}", chatId, e.getMessage());
                     }

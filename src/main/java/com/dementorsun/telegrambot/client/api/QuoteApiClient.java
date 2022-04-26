@@ -1,6 +1,6 @@
 package com.dementorsun.telegrambot.client.api;
 
-import com.dementorsun.telegrambot.client.data.RandomQuoteResponse;
+import com.dementorsun.telegrambot.client.dto.RandomQuoteResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;

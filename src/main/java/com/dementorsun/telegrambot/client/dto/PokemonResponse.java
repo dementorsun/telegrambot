@@ -1,4 +1,4 @@
-package com.dementorsun.telegrambot.client.data;
+package com.dementorsun.telegrambot.client.dto;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;

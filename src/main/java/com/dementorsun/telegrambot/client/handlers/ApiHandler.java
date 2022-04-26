@@ -1,7 +1,7 @@
 package com.dementorsun.telegrambot.client.handlers;
 
 import com.dementorsun.telegrambot.client.api.BotClient;
-import com.dementorsun.telegrambot.client.data.*;
+import com.dementorsun.telegrambot.client.dto.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package com.dementorsun.telegrambot.client.api;
 
-import com.dementorsun.telegrambot.client.data.*;
+import com.dementorsun.telegrambot.client.dto.*;
 import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

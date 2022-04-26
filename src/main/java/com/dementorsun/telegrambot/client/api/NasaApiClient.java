@@ -1,6 +1,6 @@
 package com.dementorsun.telegrambot.client.api;
 
-import com.dementorsun.telegrambot.client.data.NasaApodResponse;
+import com.dementorsun.telegrambot.client.dto.NasaApodResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;

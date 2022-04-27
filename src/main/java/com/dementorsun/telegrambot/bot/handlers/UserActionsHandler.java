@@ -2,9 +2,11 @@ package com.dementorsun.telegrambot.bot.handlers;
 
 import com.dementorsun.telegrambot.bot.buttons.BottomButtons;
 import com.dementorsun.telegrambot.bot.buttons.MessageButtons;
+import com.dementorsun.telegrambot.bot.dto.TopicButtonCallBackData;
 import com.dementorsun.telegrambot.enums.BotMessages;
 import com.dementorsun.telegrambot.enums.BottomButtonsDict;
 import com.dementorsun.telegrambot.db.UserDataHandler;
+import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -25,6 +27,7 @@ class UserActionsHandler {
     private final MessageHandler messageHandler;
     private final MessageButtons messageButtons;
     private final BottomButtons bottomButtons;
+    private final Gson gson;
 
     public SendMessage handleReceivedMessage(Update update) {
         long userId = UpdateObjectHandler.getUserIdFromUpdate(update);
@@ -57,71 +60,46 @@ class UserActionsHandler {
 
     public EditMessageReplyMarkup handleTopicButtonClick(Update update) {
         long userId = UpdateObjectHandler.getCallBackUserIdFromUpdate(update);
-        String callBackData = UpdateObjectHandler.getCallBackDataFromUpdate(update);
+        TopicButtonCallBackData callBackData = gson.fromJson(UpdateObjectHandler.getCallBackDataFromUpdate(update), TopicButtonCallBackData.class);
+        boolean isMarked = !callBackData.getIsMarked();
         boolean isNewUser = userDataHandler.checkIsNewUser(userId);
 
         EditMessageReplyMarkup editedReplyMessage = generateDefaultEditMessageReplyMarkup(update);
 
-        switch (callBackData) {
-            case "NASA_TOPIC":
-                userDataHandler.setNasaTopicDataForUser(userId, true);
+        switch (callBackData.getTopic()) {
+            case NASA_TOPIC:
+                userDataHandler.setNasaTopicDataForUser(userId, isMarked);
                 editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId, isNewUser);
                 break;
-            case "NASA_TOPIC_MARKED":
-                userDataHandler.setNasaTopicDataForUser(userId, false);
+            case CAT_TOPIC:
+                userDataHandler.setCatTopicDataForUser(userId, isMarked);
                 editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId, isNewUser);
                 break;
-            case "CAT_TOPIC":
-                userDataHandler.setCatTopicDataForUser(userId, true);
+            case DOG_TOPIC:
+                userDataHandler.setDogTopicDataForUser(userId, isMarked);
                 editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId, isNewUser);
                 break;
-            case "CAT_TOPIC_MARKED":
-                userDataHandler.setCatTopicDataForUser(userId, false);
+            case POKEMON_TOPIC:
+                userDataHandler.setPokemonTopicDataForUser(userId, isMarked);
                 editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId, isNewUser);
                 break;
-            case "DOG_TOPIC":
-                userDataHandler.setDogTopicDataForUser(userId, true);
+            case QUOTE_TOPIC:
+                userDataHandler.setQuoteTopicDataForUser(userId, isMarked);
                 editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId, isNewUser);
                 break;
-            case "DOG_TOPIC_MARKED":
-                userDataHandler.setDogTopicDataForUser(userId, false);
+            case MOVIE_TOPIC:
+                userDataHandler.setMovieTopicDataForUser(userId, isMarked);
                 editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId, isNewUser);
                 break;
-            case "POKEMON_TOPIC":
-                userDataHandler.setPokemonTopicDataForUser(userId, true);
+            case TV_SHOW_TOPIC:
+                userDataHandler.setTvShowTopicDataForUser(userId, isMarked);
                 editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId, isNewUser);
                 break;
-            case "POKEMON_TOPIC_MARKED":
-                userDataHandler.setPokemonTopicDataForUser(userId, false);
-                editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId, isNewUser);
-                break;
-            case "QUOTE_TOPIC":
-                userDataHandler.setQuoteTopicDataForUser(userId, true);
-                editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId, isNewUser);
-                break;
-            case "QUOTE_TOPIC_MARKED":
-                userDataHandler.setQuoteTopicDataForUser(userId, false);
-                editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId, isNewUser);
-                break;
-            case "MOVIE_TOPIC":
-                userDataHandler.setMovieTopicDataForUser(userId, true);
-                editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId, isNewUser);
-                break;
-            case "MOVIE_TOPIC_MARKED":
-                userDataHandler.setMovieTopicDataForUser(userId, false);
-                editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId, isNewUser);
-                break;
-            case "TV_SHOW_TOPIC":
-                userDataHandler.setTvShowTopicDataForUser(userId, true);
-                editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId, isNewUser);
-                break;
-            case "TV_SHOW_TOPIC_MARKED":
-                userDataHandler.setTvShowTopicDataForUser(userId, false);
-                editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId, isNewUser);
-                break;
+            default:
+                log.info("Incompatible topic from call back data during topic button click for user with id = {}", userId);
         }
 
-        log.info("User with id = {} is clicked on '{}' topic button", userId, callBackData);
+        log.info("User with id = {} is clicked on '{}' topic button", userId, callBackData.getTopic().name());
 
         return editedReplyMessage;
     }

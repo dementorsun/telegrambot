@@ -1,8 +1,10 @@
 package com.dementorsun.telegrambot.bot.buttons;
 
+import com.dementorsun.telegrambot.bot.dto.TopicButtonCallBackData;
 import com.dementorsun.telegrambot.enums.MessageButtonsDict;
 import com.dementorsun.telegrambot.db.UserDataHandler;
 import com.dementorsun.telegrambot.enums.TopicsDict;
+import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
@@ -17,7 +19,11 @@ import java.util.Map;
 @AllArgsConstructor
 public class MessageButtons {
 
+    private static final boolean IS_TOPIC_BUTTON = true;
+    private static final boolean NO_TOPIC_BUTTON = false;
+
     private final UserDataHandler userDataHandler;
+    private final Gson gson;
 
     public InlineKeyboardMarkup setTopicsButtons(long userId, boolean isNewUser) {
         List<List<InlineKeyboardButton>> messageAllButtons = new ArrayList<>(generateInlineKeyboardButtonList(userId, isNewUser));
@@ -38,7 +44,8 @@ public class MessageButtons {
             topicButtonText = botButton.getButtonText();
         }
         else {
-            topicButtonText = userTopics.get(botButton.getTopic()) ? botButton.getMarkedButtonText() : botButton.getButtonText();
+            boolean isTopicMarked = userTopics.get(botButton.getTopic());
+            topicButtonText = isTopicMarked ? botButton.getButtonText() + " ✅" : botButton.getButtonText();
         }
         return topicButtonText;
     }
@@ -46,9 +53,11 @@ public class MessageButtons {
     private String getTopicButtonCallBackData(Map<TopicsDict,Boolean> userTopics, MessageButtonsDict botButton) {
         String topicButtonCallBackData;
         if (botButton.equals(MessageButtonsDict.DONE_BUTTON)) {
-            topicButtonCallBackData = botButton.getButtonCallBackData();
+            topicButtonCallBackData = generateJsonButtonCallBackData(NO_TOPIC_BUTTON, null, false);
         } else {
-            topicButtonCallBackData = userTopics.get(botButton.getTopic()) ? botButton.getMarkedButtonCallBackData() : botButton.getButtonCallBackData();
+            boolean isTopicMarked = userTopics.get(botButton.getTopic());
+            topicButtonCallBackData = isTopicMarked ? generateJsonButtonCallBackData(IS_TOPIC_BUTTON, botButton.getTopic(), true) :
+                                                      generateJsonButtonCallBackData(IS_TOPIC_BUTTON, botButton.getTopic(), false);
         }
 
         return topicButtonCallBackData;
@@ -75,5 +84,8 @@ public class MessageButtons {
         });
 
         return inlineKeyboardButtonList;
+    }
+    private String generateJsonButtonCallBackData(boolean isTopic, TopicsDict topic, boolean isTopicMarked) {
+        return gson.toJson(new TopicButtonCallBackData(isTopic, topic, isTopicMarked), TopicButtonCallBackData.class);
     }
 }

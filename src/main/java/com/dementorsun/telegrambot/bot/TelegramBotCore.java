@@ -1,8 +1,10 @@
 package com.dementorsun.telegrambot.bot;
 
+import com.dementorsun.telegrambot.bot.dto.TopicButtonCallBackData;
 import com.dementorsun.telegrambot.bot.handlers.UpdateHandler;
 import com.dementorsun.telegrambot.bot.handlers.UpdateObjectHandler;
 import com.dementorsun.telegrambot.sheduler.SchedulerHelper;
+import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
@@ -24,6 +26,7 @@ class TelegramBotCore extends TelegramLongPollingBot {
     private final UpdateHandler updateHandler;
     private final SchedulerHelper schedulerHelper;
     private final Environment environment;
+    private final Gson gson;
 
     @Override
     public String getBotUsername() {
@@ -49,15 +52,15 @@ class TelegramBotCore extends TelegramLongPollingBot {
             }
         } else if (update.hasCallbackQuery()) {
             long userId = UpdateObjectHandler.getCallBackUserIdFromUpdate(update);
-            String callBackData = UpdateObjectHandler.getCallBackDataFromUpdate(update);
-            if (callBackData.contains("_TOPIC")) {
+            TopicButtonCallBackData callBackData = gson.fromJson(UpdateObjectHandler.getCallBackDataFromUpdate(update), TopicButtonCallBackData.class);
+            if (callBackData.getIsTopicButton().equals(true)) {
                 try {
                     execute(updateHandler.handleCallBackDataUponTopicButtonClick(update));
                     log.info("Telegram bot handled '{}' button click by user with '{}' id", callBackData, userId);
                 } catch (TelegramApiException e) {
                     log.info("Exception is occurred during handling click to topic button by user with '{}' id: {}", userId, e.getMessage());
                 }
-            } else if (callBackData.equals("TOPICS_DONE")) {
+            } else if (callBackData.getIsTopicButton().equals(false)) {
                 try {
                     execute(updateHandler.handleCallBackDataUponDoneButtonClick(update));
                     log.info("Telegram bot handled done topics button click by user with '{}' id", userId);

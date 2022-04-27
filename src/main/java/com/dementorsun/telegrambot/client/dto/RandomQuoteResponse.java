@@ -5,6 +5,6 @@ import lombok.Getter;
 @Getter
 public class RandomQuoteResponse {
 
-    String quoteText;
-    String quoteAuthor;
+    private String quoteText;
+    private String quoteAuthor;
 }

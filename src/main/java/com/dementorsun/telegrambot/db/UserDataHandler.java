@@ -1,5 +1,6 @@
 package com.dementorsun.telegrambot.db;
 
+import com.dementorsun.telegrambot.db.dto.BotUser;
 import com.dementorsun.telegrambot.enums.TopicsDict;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,22 +28,22 @@ public class UserDataHandler {
     }
 
     public boolean checkIsNewUser(long userId) {
-        return fileHandler.getUserDataFromDbFile(userId).userSettings.isNewUser;
+        return fileHandler.getUserDataFromDbFile(userId).getUserSettings().getIsNewUser();
     }
 
     public boolean getIsDoneButtonClickedForUser(long userId) {
-        return fileHandler.getUserDataFromDbFile(userId).userSettings.isDoneClicked;
+        return fileHandler.getUserDataFromDbFile(userId).getUserSettings().getIsDoneClicked();
     }
 
     public boolean getIsTimeEnterMode(long userId) {
-        return fileHandler.getUserDataFromDbFile(userId).userSettings.isTimeEnterMode;
+        return fileHandler.getUserDataFromDbFile(userId).getUserSettings().getIsTimeEnterMode();
     }
 
     public boolean checkTimeIsPresent(long userId) {
         boolean isTimePresent = true;
         BotUser botUser = fileHandler.getUserDataFromDbFile(userId);
 
-        if (botUser.userSettings.time.equals(NONE_TIME)) {
+        if (botUser.getUserSettings().getTime().equals(NONE_TIME)) {
             isTimePresent = false;
         }
 
@@ -77,13 +78,13 @@ public class UserDataHandler {
 
         fileHandler.updateUserDataInDbFile(botUser);
 
-        log.info("New user with id = '{}' has been saved to DB file", botUser.userInfo.userId);
+        log.info("New user with id = '{}' has been saved to DB file", botUser.getUserInfo().getUserId());
     }
 
     public void setNasaTopicDataForUser(long userId, boolean isMarked) {
         BotUser botUser = fileHandler.getUserDataFromDbFile(userId);
 
-        botUser.userTopics.setIsNasaChosen(isMarked);
+        botUser.getUserTopics().setIsNasaChosen(isMarked);
         fileHandler.updateUserDataInDbFile(botUser);
 
         log.info("Value '{}' has been set for Nasa topic and user with id = '{}' in DB file", isMarked, userId);
@@ -92,7 +93,7 @@ public class UserDataHandler {
     public void setCatTopicDataForUser(long userId, boolean isMarked) {
         BotUser botUser = fileHandler.getUserDataFromDbFile(userId);
 
-        botUser.userTopics.setIsCatChosen(isMarked);
+        botUser.getUserTopics().setIsCatChosen(isMarked);
         fileHandler.updateUserDataInDbFile(botUser);
 
         log.info("Value '{}' has been set for Cat topic and user with id = '{}' in DB file", isMarked, userId);
@@ -101,7 +102,7 @@ public class UserDataHandler {
     public void setDogTopicDataForUser(long userId, boolean isMarked) {
         BotUser botUser = fileHandler.getUserDataFromDbFile(userId);
 
-        botUser.userTopics.setIsDogChosen(isMarked);
+        botUser.getUserTopics().setIsDogChosen(isMarked);
         fileHandler.updateUserDataInDbFile(botUser);
 
         log.info("Value '{}' has been set for Dog topic and user with id = '{}' in DB file", isMarked, userId);
@@ -110,7 +111,7 @@ public class UserDataHandler {
     public void setPokemonTopicDataForUser(long userId, boolean isMarked) {
         BotUser botUser = fileHandler.getUserDataFromDbFile(userId);
 
-        botUser.userTopics.setIsPokemonChosen(isMarked);
+        botUser.getUserTopics().setIsPokemonChosen(isMarked);
         fileHandler.updateUserDataInDbFile(botUser);
 
         log.info("Value '{}' has been set for Pokemon topic and user with id = '{}' in DB file", isMarked, userId);
@@ -119,7 +120,7 @@ public class UserDataHandler {
     public void setQuoteTopicDataForUser(long userId, boolean isMarked) {
         BotUser botUser = fileHandler.getUserDataFromDbFile(userId);
 
-        botUser.userTopics.setIsQuoteChosen(isMarked);
+        botUser.getUserTopics().setIsQuoteChosen(isMarked);
         fileHandler.updateUserDataInDbFile(botUser);
 
         log.info("Value '{}' has been set for Quote topic and user with id = '{}' in DB file", isMarked, userId);
@@ -128,7 +129,7 @@ public class UserDataHandler {
     public void setMovieTopicDataForUser(long userId, boolean isMarked) {
         BotUser botUser = fileHandler.getUserDataFromDbFile(userId);
 
-        botUser.userTopics.setIsMovieChosen(isMarked);
+        botUser.getUserTopics().setIsMovieChosen(isMarked);
         fileHandler.updateUserDataInDbFile(botUser);
 
         log.info("Value '{}' has been set for Movie topic and user with id = '{}' in DB file", isMarked, userId);
@@ -137,7 +138,7 @@ public class UserDataHandler {
     public void setTvShowTopicDataForUser(long userId, boolean isMarked) {
         BotUser botUser = fileHandler.getUserDataFromDbFile(userId);
 
-        botUser.userTopics.setIsTvShowChosen(isMarked);
+        botUser.getUserTopics().setIsTvShowChosen(isMarked);
         fileHandler.updateUserDataInDbFile(botUser);
 
         log.info("Value '{}' has been set for TV Show topic and user with id = '{}' in DB file", isMarked, userId);
@@ -146,7 +147,7 @@ public class UserDataHandler {
     public void setDoneButtonClickedDataForUser(long userId, boolean isClicked) {
         BotUser botUser = fileHandler.getUserDataFromDbFile(userId);
 
-        botUser.userSettings.setIsDoneClicked(isClicked);
+        botUser.getUserSettings().setIsDoneClicked(isClicked);
         fileHandler.updateUserDataInDbFile(botUser);
 
         log.info("Value '{}' has been set for Done topics button and user with id = '{}' in DB file", isClicked, userId);
@@ -155,7 +156,7 @@ public class UserDataHandler {
     public void setTimeDataForUser(long userId, String time) {
         BotUser botUser = fileHandler.getUserDataFromDbFile(userId);
 
-        botUser.userSettings.setTime(time);
+        botUser.getUserSettings().setTime(time);
         fileHandler.updateUserDataInDbFile(botUser);
 
         log.info("Value '{}' has been set for time property and user with id = '{}' in DB file", time, userId);
@@ -164,7 +165,7 @@ public class UserDataHandler {
     public void setTimeEnterModeDataForUser(long userId, boolean isMarked) {
         BotUser botUser = fileHandler.getUserDataFromDbFile(userId);
 
-        botUser.userSettings.setIsTimeEnterMode(isMarked);
+        botUser.getUserSettings().setIsTimeEnterMode(isMarked);
         fileHandler.updateUserDataInDbFile(botUser);
 
         log.info("Value '{}' has been set for time enter mode property and user with id = '{}' in DB file", isMarked, userId);
@@ -173,43 +174,43 @@ public class UserDataHandler {
     public void setIsNewUserForUser(long userId, boolean isNewUser) {
         BotUser botUser = fileHandler.getUserDataFromDbFile(userId);
 
-        botUser.userSettings.setIsNewUser(isNewUser);
+        botUser.getUserSettings().setIsNewUser(isNewUser);
         fileHandler.updateUserDataInDbFile(botUser);
 
         log.info("Value '{}' has been set for new user property and user with id = '{}' in DB file", isNewUser, userId);
     }
 
     public Map<TopicsDict, Boolean> getUserTopics(long userId) {
-        BotUser.UserTopic botUserTopics = fileHandler.getUserDataFromDbFile(userId).userTopics;
+        BotUser.UserTopic botUserTopics = fileHandler.getUserDataFromDbFile(userId).getUserTopics();
         Map<TopicsDict,Boolean> userTopics = new HashMap<>();
 
-        userTopics.put(TopicsDict.NASA_TOPIC, botUserTopics.isNasaChosen);
-        userTopics.put(TopicsDict.CAT_TOPIC, botUserTopics.isCatChosen);
-        userTopics.put(TopicsDict.DOG_TOPIC, botUserTopics.isDogChosen);
-        userTopics.put(TopicsDict.POKEMON_TOPIC, botUserTopics.isPokemonChosen);
-        userTopics.put(TopicsDict.QUOTE_TOPIC, botUserTopics.isQuoteChosen);
-        userTopics.put(TopicsDict.MOVIE_TOPIC, botUserTopics.isMovieChosen);
-        userTopics.put(TopicsDict.TV_SHOW_TOPIC, botUserTopics.isTvShowChosen);
+        userTopics.put(TopicsDict.NASA_TOPIC, botUserTopics.getIsNasaChosen());
+        userTopics.put(TopicsDict.CAT_TOPIC, botUserTopics.getIsCatChosen());
+        userTopics.put(TopicsDict.DOG_TOPIC, botUserTopics.getIsDogChosen());
+        userTopics.put(TopicsDict.POKEMON_TOPIC, botUserTopics.getIsPokemonChosen());
+        userTopics.put(TopicsDict.QUOTE_TOPIC, botUserTopics.getIsQuoteChosen());
+        userTopics.put(TopicsDict.MOVIE_TOPIC, botUserTopics.getIsMovieChosen());
+        userTopics.put(TopicsDict.TV_SHOW_TOPIC, botUserTopics.getIsTvShowChosen());
 
         return userTopics;
     }
 
     public String getUserTime(long userId) {
-        return fileHandler.getUserDataFromDbFile(userId).userSettings.time;
+        return fileHandler.getUserDataFromDbFile(userId).getUserSettings().getTime();
     }
 
     public List<BotUser> getUsersByTime(String time) {
         return fileHandler.getUsersFromDbFile().stream()
-                .filter(botUser -> botUser.userSettings.time.equals(time))
+                .filter(botUser -> botUser.getUserSettings().getTime().equals(time))
                 .collect(Collectors.toList());
     }
 
     public long getUserChatId(BotUser botUser) {
-        return botUser.userInfo.userChatId;
+        return botUser.getUserInfo().getUserChatId();
     }
 
     public long getUserId(BotUser botUser) {
-        return botUser.userInfo.userId;
+        return botUser.getUserInfo().getUserId();
     }
 
     public boolean checkIsUserDoNotHaveActiveTopics(long userId) {
@@ -222,7 +223,7 @@ public class UserDataHandler {
         boolean isStopModeActive = false;
         BotUser botUser = fileHandler.getUserDataFromDbFile(userId);
 
-        if (botUser.userSettings.time.equals(SILENCE_TIME)) {
+        if (botUser.getUserSettings().getTime().equals(SILENCE_TIME)) {
             isStopModeActive = true;
         }
 
@@ -232,7 +233,7 @@ public class UserDataHandler {
     public void setSilenceModeForUser(long userId) {
         BotUser botUser = fileHandler.getUserDataFromDbFile(userId);
 
-        botUser.userSettings.setTime(SILENCE_TIME);
+        botUser.getUserSettings().setTime(SILENCE_TIME);
         fileHandler.updateUserDataInDbFile(botUser);
 
         log.info("Silence mode has been set for user with id = '{}' in DB file", userId);

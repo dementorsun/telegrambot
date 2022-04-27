@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class NasaApodResponse {
 
-    String date;
-    String title;
-    String url;
+    private String date;
+    private String title;
+    private String url;
 }

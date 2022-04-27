@@ -7,12 +7,12 @@ import java.util.List;
 @Getter
 public class RandomCatResponse {
 
-    List<Breed> breeds;
-    String url;
+    private List<Breed> breeds;
+    private String url;
 
     @Getter
     public static class Breed {
-        String name;
-        String description;
+        private String name;
+        private String description;
     }
 }

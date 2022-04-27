@@ -9,17 +9,17 @@ import java.util.List;
 public class PokemonDescriptionResponse {
 
     @SerializedName("flavor_text_entries")
-    List<PokemonDescription> pokemonDescriptions;
+    private List<PokemonDescription> pokemonDescriptions;
 
     @Getter
     public static class PokemonDescription {
         @SerializedName("flavor_text")
-        String description;
-        Language language;
+        private String description;
+        private Language language;
 
         @Getter
         public static class Language {
-            String name;
+            private String name;
         }
     }
 }

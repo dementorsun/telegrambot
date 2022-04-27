@@ -9,25 +9,25 @@ import java.util.List;
 @Getter
 public class TmdbResponse {
 
-    List<TmdbItem> results;
+    private List<TmdbItem> results;
 
     @Setter
     @Getter
     public static class TmdbItem {
         @SerializedName("original_title")
-        String originalTitle;
+        private String originalTitle;
         @SerializedName("original_name")
-        String originalName;
-        String overview;
+        private String originalName;
+        private String overview;
         @SerializedName("poster_path")
-        String posterPath;
+        private String posterPath;
         @SerializedName("release_date")
-        String releaseDate;
+        private String releaseDate;
         @SerializedName("first_air_date")
-        String firstAirDate;
-        String title;
-        String name;
+        private String firstAirDate;
+        private String title;
+        private String name;
         @SerializedName("vote_average")
-        Double voteAverage;
+        private Double voteAverage;
     }
 }

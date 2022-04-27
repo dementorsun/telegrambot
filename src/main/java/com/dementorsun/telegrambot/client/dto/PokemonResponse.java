@@ -8,35 +8,35 @@ import java.util.List;
 @Getter
 public class PokemonResponse {
 
-    String name;
-    Sprite sprites;
-    Integer id;
-    List<PokemonType> types;
+    private String name;
+    private Sprite sprites;
+    private Integer id;
+    private List<PokemonType> types;
 
     @Getter
     public static class Sprite {
-        Other other;
+        private Other other;
 
         @Getter
         public static class Other {
             @SerializedName("official-artwork")
-            OfficialArtwork officialArtwork;
+            private OfficialArtwork officialArtwork;
 
             @Getter
             public static class OfficialArtwork {
                 @SerializedName("front_default")
-                String frontDefault;
+                private String frontDefault;
             }
         }
     }
 
     @Getter
     public static class PokemonType {
-        Type type;
+        private Type type;
 
         @Getter
         public static class Type {
-            String name;
+            private String name;
         }
     }
 }

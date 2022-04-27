@@ -1,5 +1,6 @@
 package com.dementorsun.telegrambot.db;
 
+import com.dementorsun.telegrambot.db.dto.BotUser;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
@@ -48,11 +49,11 @@ class FileHandler {
     public void updateUserDataInDbFile(BotUser botUser) {
         List<BotUser> usersData = getUsersFromDbFile();
         List<BotUser> updatedUsersData;
-        long userId = botUser.userInfo.userId;
+        long userId = botUser.getUserInfo().getUserId();
 
-        if (usersData.stream().anyMatch(userData -> userData.userInfo.userId.equals(userId))) {
+        if (usersData.stream().anyMatch(userData -> userData.getUserInfo().getUserId().equals(userId))) {
             updatedUsersData = usersData.stream()
-                    .map(userData -> userData.userInfo.userId.equals(userId) ? botUser : userData)
+                    .map(userData -> userData.getUserInfo().getUserId().equals(userId) ? botUser : userData)
                     .collect(Collectors.toList());
             usersData = updatedUsersData;
         } else {
@@ -66,7 +67,7 @@ class FileHandler {
         List<BotUser> usersData = getUsersFromDbFile();
 
         return usersData.stream()
-                .filter(user -> user.userInfo.userId.equals(userId))
+                .filter(user -> user.getUserInfo().getUserId().equals(userId))
                 .findFirst().orElse(null);
     }
 

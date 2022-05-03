@@ -36,7 +36,8 @@ public class ApiHandler {
         try {
             NasaApodResponse nasaApodResponse = botClient.getNasaApod();
             InputFile photo = new InputFile(nasaApodResponse.getUrl());
-            String caption = "\uD83E\uDE90 *Астрономічне фото дня*\n" + nasaApodResponse.getTitle();
+            String caption = String.format("\uD83E\uDE90 *Астрономічне фото дня*\n_%s_\n%s", nasaApodResponse.getTitle(),
+                                                                                             nasaApodResponse.getExplanation());
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (NullPointerException e) {

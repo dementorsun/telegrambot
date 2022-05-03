@@ -39,8 +39,8 @@ public class SchedulerHelper {
         List<Object> objectsToSend = new ArrayList<>();
 
         usersByTime.forEach((botUser) -> {
-            long chatId = userDataHandler.getUserChatId(botUser);
-            long userId = userDataHandler.getUserId(botUser);
+            long chatId = botUser.getUserInfo().getUserChatId();
+            long userId = botUser.getUserInfo().getUserId();
             String initialDayMessage = messageHandler.getInitialDayMessage();
             Map<TopicsDict, Boolean> userTopics = userDataHandler.getUserTopics(userId);
 

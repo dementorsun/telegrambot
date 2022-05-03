@@ -7,10 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.User;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -203,14 +200,6 @@ public class UserDataHandler {
         return fileHandler.getUsersFromDbFile().stream()
                 .filter(botUser -> botUser.getUserSettings().getTime().equals(time))
                 .collect(Collectors.toList());
-    }
-
-    public long getUserChatId(BotUser botUser) {
-        return botUser.getUserInfo().getUserChatId();
-    }
-
-    public long getUserId(BotUser botUser) {
-        return botUser.getUserInfo().getUserId();
     }
 
     public boolean checkIsUserDoNotHaveActiveTopics(long userId) {

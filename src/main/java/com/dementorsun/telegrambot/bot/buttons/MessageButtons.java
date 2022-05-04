@@ -40,7 +40,7 @@ public class MessageButtons {
 
     private String getTopicButtonText(Map<TopicsDict,Boolean> userTopics, MessageButtonsDict botButton) {
         String topicButtonText;
-        if (botButton.equals(MessageButtonsDict.DONE_BUTTON)) {
+        if (MessageButtonsDict.DONE_BUTTON.equals(botButton)) {
             topicButtonText = botButton.getButtonText();
         }
         else {
@@ -52,7 +52,7 @@ public class MessageButtons {
 
     private String getTopicButtonCallBackData(Map<TopicsDict,Boolean> userTopics, MessageButtonsDict botButton) {
         String topicButtonCallBackData;
-        if (botButton.equals(MessageButtonsDict.DONE_BUTTON)) {
+        if (MessageButtonsDict.DONE_BUTTON.equals(botButton)) {
             topicButtonCallBackData = generateJsonButtonCallBackData(NO_TOPIC_BUTTON, null, false);
         } else {
             boolean isTopicMarked = userTopics.get(botButton.getTopic());
@@ -76,7 +76,7 @@ public class MessageButtons {
         List<List<InlineKeyboardButton>> inlineKeyboardButtonList = new ArrayList<>();
 
         List.of(MessageButtonsDict.values()).forEach(botButton -> {
-            if (!isNewUser && !botButton.equals(MessageButtonsDict.DONE_BUTTON)) {
+            if (!isNewUser && !MessageButtonsDict.DONE_BUTTON.equals(botButton)) {
                 inlineKeyboardButtonList.add(List.of(generateInlineKeyboardButton(userId, botButton)));
             } else if (isNewUser) {
                 inlineKeyboardButtonList.add(List.of(generateInlineKeyboardButton(userId, botButton)));

@@ -13,6 +13,7 @@ import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -49,7 +50,7 @@ class FileHandler {
     public void updateUserDataInDbFile(BotUser botUser) {
         List<BotUser> usersData = getUsersFromDbFile();
         List<BotUser> updatedUsersData;
-        long userId = botUser.getUserInfo().getUserId();
+        Long userId = Objects.requireNonNullElse(botUser.getUserInfo().getUserId(), Long.parseLong("666"));
 
         if (usersData.stream().anyMatch(userData -> userData.getUserInfo().getUserId().equals(userId))) {
             updatedUsersData = usersData.stream()
@@ -67,6 +68,8 @@ class FileHandler {
         List<BotUser> usersData = getUsersFromDbFile();
 
         return usersData.stream()
+                .filter(Objects::nonNull)
+                .filter(user -> user.getUserInfo().getUserId() != null)
                 .filter(user -> user.getUserInfo().getUserId().equals(userId))
                 .findFirst().orElse(null);
     }

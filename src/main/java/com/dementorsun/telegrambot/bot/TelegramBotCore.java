@@ -53,14 +53,14 @@ class TelegramBotCore extends TelegramLongPollingBot {
         } else if (update.hasCallbackQuery()) {
             long userId = UpdateObjectHandler.getCallBackUserIdFromUpdate(update);
             TopicButtonCallBackData callBackData = gson.fromJson(UpdateObjectHandler.getCallBackDataFromUpdate(update), TopicButtonCallBackData.class);
-            if (callBackData.getIsTopicButton().equals(true)) {
+            if (Boolean.TRUE.equals(callBackData.getIsTopicButton())) {
                 try {
                     execute(updateHandler.handleCallBackDataUponTopicButtonClick(update));
                     log.info("Telegram bot handled '{}' button click by user with '{}' id", callBackData, userId);
                 } catch (TelegramApiException e) {
                     log.info("Exception is occurred during handling click to topic button by user with '{}' id: {}", userId, e.getMessage());
                 }
-            } else if (callBackData.getIsTopicButton().equals(false)) {
+            } else if (Boolean.FALSE.equals(callBackData.getIsTopicButton())) {
                 try {
                     execute(updateHandler.handleCallBackDataUponDoneButtonClick(update));
                     log.info("Telegram bot handled done topics button click by user with '{}' id", userId);

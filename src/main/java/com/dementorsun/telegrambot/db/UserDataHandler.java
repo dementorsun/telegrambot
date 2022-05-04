@@ -197,8 +197,10 @@ public class UserDataHandler {
     }
 
     public List<BotUser> getUsersByTime(String time) {
-        return fileHandler.getUsersFromDbFile().stream()
-                .filter(botUser -> botUser.getUserSettings().getTime().equals(time))
+        return fileHandler.getUsersFromDbFile()
+                .stream()
+                .filter(botUser -> botUser.getUserSettings().getTime() != null)
+                .filter(botUser -> time.equals(botUser.getUserSettings().getTime()))
                 .collect(Collectors.toList());
     }
 
@@ -212,7 +214,7 @@ public class UserDataHandler {
         boolean isStopModeActive = false;
         BotUser botUser = fileHandler.getUserDataFromDbFile(userId);
 
-        if (botUser.getUserSettings().getTime().equals(SILENCE_TIME)) {
+        if (SILENCE_TIME.equals(botUser.getUserSettings().getTime())) {
             isStopModeActive = true;
         }
 

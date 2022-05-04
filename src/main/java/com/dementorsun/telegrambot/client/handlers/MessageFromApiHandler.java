@@ -6,6 +6,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 
+import static org.telegram.telegrambots.meta.api.methods.ParseMode.MARKDOWN;
+
 @Component
 @AllArgsConstructor
 class MessageFromApiHandler {
@@ -15,7 +17,7 @@ class MessageFromApiHandler {
                 .chatId(String.valueOf(chatId))
                 .photo(photo)
                 .caption(caption)
-                .parseMode("Markdown")
+                .parseMode(MARKDOWN)
                 .build();
     }
 
@@ -23,7 +25,7 @@ class MessageFromApiHandler {
         return SendMessage.builder()
                 .chatId(String.valueOf(chatId))
                 .text(message)
-                .parseMode("Markdown")
+                .parseMode(MARKDOWN)
                 .build();
     }
 }

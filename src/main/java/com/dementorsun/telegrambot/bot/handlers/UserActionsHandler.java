@@ -38,18 +38,18 @@ class UserActionsHandler {
         SendMessage replyMessage = messageHandler.createDefaultMessageFromUpdateMessage(chatId);
         log.info("'{}' message is received from user with id = '{}'", message, userId);
 
-        if (message.equals(START_MESSAGE)) {
+        if (START_MESSAGE.equals(message)) {
             replyMessage = createSendMessageForStartTopicsTutorial(userId, chatId, user, replyMessage);
         } else if (userDataHandler.getIsTimeEnterMode(userId)) {
             replyMessage = messageHandler.checkTimeFormatIsCorrect(message) ?
                     createSendMessageForCompleteTimeEntering(userId, message, replyMessage) :
                     messageHandler.setReplyMessageToUser(replyMessage, BotMessages.FAIL_TIME_FORMAT_MESSAGE.getMessage());
-        } else if (message.equals(BottomButtonsDict.CHANGE_TOPICS_BUTTON.getButtonText())) {
+        } else if (BottomButtonsDict.CHANGE_TOPICS_BUTTON.getButtonText().equals(message)) {
             boolean isNewUser = userDataHandler.checkIsNewUser(userId);
             replyMessage = createSendMessageForShowTopicsButtons(userId, replyMessage, BotMessages.CHANGE_TOPICS_MESSAGE, isNewUser);
-        } else if (message.equals(BottomButtonsDict.CHANGE_TIME_BUTTON.getButtonText())) {
+        } else if (BottomButtonsDict.CHANGE_TIME_BUTTON.getButtonText().equals(message)) {
             replyMessage = createSendMessageForChangeUserTime(replyMessage, userId);
-        } else if (message.equals(BottomButtonsDict.SILENCE_MODE_BUTTON.getButtonText())) {
+        } else if (BottomButtonsDict.SILENCE_MODE_BUTTON.getButtonText().equals(message)) {
             replyMessage = userDataHandler.checkIsSilenceModeActiveForUser(userId) ?
                     messageHandler.setReplyMessageToUser(replyMessage, BotMessages.SILENCE_MODE_IS_ALREADY_ACTIVE_MESSAGE.getMessage()) :
                     createSendMessageForActivateSilenceMode(replyMessage, userId);
@@ -206,7 +206,6 @@ class UserActionsHandler {
             replyMessage = messageHandler.setReplyMessageToUser(defaultMessage, BotMessages.TOPICS_WITH_SILENCE_MODE_MESSAGE.getMessage());
 
             log.info("Silence mode explanation is shown after click on topics button by user with id = '{}'", userId);
-
         } else {
             replyMessage = messageHandler.setReplyMessageToUser(defaultMessage, message.getMessage());
 

@@ -15,6 +15,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 @RequiredArgsConstructor
@@ -36,8 +37,9 @@ public class ApiHandler {
         try {
             NasaApodResponse nasaApodResponse = botClient.getNasaApod();
             InputFile photo = new InputFile(nasaApodResponse.getUrl());
+            String explanation = Stream.of(nasaApodResponse.getExplanation().split("\\.")).limit(3).collect(Collectors.joining(".")) + ".";
             String caption = String.format("\uD83E\uDE90 *Астрономічне фото дня*\n_%s_\n%s", nasaApodResponse.getTitle(),
-                                                                                             nasaApodResponse.getExplanation());
+                                                                                             explanation);
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (NullPointerException e) {

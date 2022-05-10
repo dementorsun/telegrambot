@@ -22,7 +22,8 @@ public class MessageHandler {
     public SendMessage createDefaultMessageFromUpdateMessage(long chatId) {
         return SendMessage.builder()
                 .chatId(String.valueOf(chatId))
-                .text(getRandomMessage())
+                .text(BOT_MESSAGE + getRandomMessage())
+                .parseMode(MARKDOWN)
                 .build();
     }
 

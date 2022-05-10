@@ -1,18 +1,21 @@
 package com.dementorsun.telegrambot.client.dto;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 public class RandomCatResponse {
 
-    private List<Breed> breeds;
-    private String url;
+    List<Breed> breeds;
+    String url;
 
     @Getter
     public static class Breed {
-        private String name;
-        private String description;
+        String name;
+        String description;
     }
 }

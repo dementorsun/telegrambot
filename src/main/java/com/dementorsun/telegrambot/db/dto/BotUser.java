@@ -1,48 +1,55 @@
 package com.dementorsun.telegrambot.db.dto;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 
 @Builder
 @Getter
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@RedisHash("BotUser")
 public class BotUser {
 
-    private UserInfo userInfo;
-    private UserSetting userSettings;
-    private UserTopic userTopics;
+    @Id
+    Long userId;
+    UserInfo userInfo;
+    UserSetting userSettings;
+    UserTopic userTopics;
 
     @Setter
     @Getter
     @Builder
     public static class UserInfo {
-        private Long userId;
-        private String username;
-        private String firstName;
-        private String lastName;
-        private Long userChatId;
+        String username;
+        String firstName;
+        String lastName;
+        Long userChatId;
     }
 
     @Setter
     @Getter
     @Builder
     public static class UserSetting {
-        private String time;
-        private Boolean isDoneClicked;
-        private Boolean isTimeEnterMode;
-        private Boolean isNewUser;
+        String time;
+        Boolean isDoneClicked;
+        Boolean isTimeEnterMode;
+        Boolean isNewUser;
     }
 
     @Setter
     @Getter
     @Builder
     public static class UserTopic {
-        private Boolean isNasaChosen;
-        private Boolean isCatChosen;
-        private Boolean isDogChosen;
-        private Boolean isPokemonChosen;
-        private Boolean isQuoteChosen;
-        private Boolean isMovieChosen;
-        private Boolean isTvShowChosen;
+        Boolean isNasaChosen;
+        Boolean isCatChosen;
+        Boolean isDogChosen;
+        Boolean isPokemonChosen;
+        Boolean isQuoteChosen;
+        Boolean isMovieChosen;
+        Boolean isTvShowChosen;
     }
 }

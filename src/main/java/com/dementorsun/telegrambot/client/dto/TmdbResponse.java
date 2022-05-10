@@ -1,11 +1,14 @@
 package com.dementorsun.telegrambot.client.dto;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 public class TmdbResponse {
 
@@ -15,19 +18,19 @@ public class TmdbResponse {
     @Getter
     public static class TmdbItem {
         @SerializedName("original_title")
-        private String originalTitle;
+        String originalTitle;
         @SerializedName("original_name")
-        private String originalName;
-        private String overview;
+        String originalName;
+        String overview;
         @SerializedName("poster_path")
-        private String posterPath;
+        String posterPath;
         @SerializedName("release_date")
-        private String releaseDate;
+        String releaseDate;
         @SerializedName("first_air_date")
-        private String firstAirDate;
-        private String title;
-        private String name;
+        String firstAirDate;
+        String title;
+        String name;
         @SerializedName("vote_average")
-        private Double voteAverage;
+        Double voteAverage;
     }
 }

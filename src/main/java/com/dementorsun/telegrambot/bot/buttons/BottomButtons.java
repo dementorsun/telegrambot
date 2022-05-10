@@ -25,7 +25,6 @@ public class BottomButtons {
     private ReplyKeyboardMarkup createBottomButtonsMarkup() {
         ReplyKeyboardMarkup bottomKeyboard = new ReplyKeyboardMarkup();
         bottomKeyboard.setResizeKeyboard(true);
-        bottomKeyboard.setOneTimeKeyboard(true);
 
         return bottomKeyboard;
     }

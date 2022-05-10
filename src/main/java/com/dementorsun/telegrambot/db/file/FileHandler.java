@@ -1,4 +1,4 @@
-package com.dementorsun.telegrambot.db;
+package com.dementorsun.telegrambot.db.file;
 
 import com.dementorsun.telegrambot.db.dto.BotUser;
 import com.google.gson.Gson;
@@ -16,10 +16,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Deprecated
 @Component
 @Slf4j
 @AllArgsConstructor
-class FileHandler {
+public class FileHandler {
 
     private static final String USER_DB_FILE_PATH = "src/main/resources/userDB";
     private static final Type BOT_USER_TYPE_TOKEN = new TypeToken<List<BotUser>>(){}.getType();
@@ -50,11 +51,11 @@ class FileHandler {
     public void updateUserDataInDbFile(BotUser botUser) {
         List<BotUser> usersData = getUsersFromDbFile();
         List<BotUser> updatedUsersData;
-        Long userId = Objects.requireNonNullElse(botUser.getUserInfo().getUserId(), Long.parseLong("666"));
+        Long userId = Objects.requireNonNullElse(botUser.getUserId(), Long.parseLong("666"));
 
-        if (usersData.stream().anyMatch(userData -> userData.getUserInfo().getUserId().equals(userId))) {
+        if (usersData.stream().anyMatch(userData -> userData.getUserId().equals(userId))) {
             updatedUsersData = usersData.stream()
-                    .map(userData -> userData.getUserInfo().getUserId().equals(userId) ? botUser : userData)
+                    .map(userData -> userData.getUserId().equals(userId) ? botUser : userData)
                     .collect(Collectors.toList());
             usersData = updatedUsersData;
         } else {
@@ -69,8 +70,8 @@ class FileHandler {
 
         return usersData.stream()
                 .filter(Objects::nonNull)
-                .filter(user -> user.getUserInfo().getUserId() != null)
-                .filter(user -> user.getUserInfo().getUserId().equals(userId))
+                .filter(user -> user.getUserId() != null)
+                .filter(user -> user.getUserId().equals(userId))
                 .findFirst().orElse(null);
     }
 

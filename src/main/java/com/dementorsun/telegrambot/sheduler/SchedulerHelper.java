@@ -40,7 +40,7 @@ public class SchedulerHelper {
 
         usersByTime.forEach((botUser) -> {
             long chatId = botUser.getUserInfo().getUserChatId();
-            long userId = botUser.getUserInfo().getUserId();
+            long userId = botUser.getUserId();
             String initialDayMessage = messageHandler.getInitialDayMessage();
             Map<TopicsDict, Boolean> userTopics = userDataHandler.getUserTopics(userId);
 

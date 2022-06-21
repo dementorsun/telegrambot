@@ -41,7 +41,7 @@ public class BotClient {
     }
 
     public String getRandomMovie() {
-        final int totalPages = 62;
+        final int totalPages = 47;
         int page = getRandomResponseItem(totalPages);
 
         return tmdbApiClient.getRandomMovie(page);

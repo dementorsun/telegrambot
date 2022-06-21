@@ -17,7 +17,7 @@ public interface TmdbApiClient {
             consumes = MediaType.APPLICATION_JSON_VALUE)
     String getRandomMovie(@RequestParam("page") int page);
 
-    @GetMapping(value = "/tv?api_key=${tmdb.token}&language=uk-UA&vote_count.gte=50&vote_average.gte=7.5&watch_region=US&without_genres=16,10762,10766",
+    @GetMapping(value = "/tv?api_key=${tmdb.token}&language=uk-UA&vote_count.gte=50&vote_average.gte=7.5&watch_region=US&without_genres=16",
             consumes = MediaType.APPLICATION_JSON_VALUE)
     String getRandomTvShow(@RequestParam("page") int page);
 }

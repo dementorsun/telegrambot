@@ -41,14 +41,14 @@ public class BotClient {
     }
 
     public String getRandomMovie() {
-        final int totalPages = 47;
+        final int totalPages = 34;
         int page = getRandomResponseItem(totalPages);
 
         return tmdbApiClient.getRandomMovie(page);
     }
 
     public String getRandomTvShow() {
-        final int totalPages = 68;
+        final int totalPages = 36;
         int page = getRandomResponseItem(totalPages);
 
         return tmdbApiClient.getRandomTvShow(page);

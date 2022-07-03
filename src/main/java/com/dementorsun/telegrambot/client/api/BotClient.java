@@ -48,7 +48,7 @@ public class BotClient {
     }
 
     public String getRandomTvShow() {
-        final int totalPages = 72;
+        final int totalPages = 68;
         int page = getRandomResponseItem(totalPages);
 
         return tmdbApiClient.getRandomTvShow(page);

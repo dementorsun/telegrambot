@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 )
 public interface DogApiClient {
 
-    @GetMapping(value = "/v1/images/search?has_breeds=true&size=med", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/v1/images/search?has_breeds=true&size=med&api_key=${dog.token}", consumes = MediaType.APPLICATION_JSON_VALUE)
     String getRandomCuteDog();
 }

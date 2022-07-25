@@ -55,9 +55,10 @@ public class UserDataHandler {
         userTopics.put(TopicsDict.CAT_TOPIC, botUserTopics.getIsCatChosen());
         userTopics.put(TopicsDict.DOG_TOPIC, botUserTopics.getIsDogChosen());
         userTopics.put(TopicsDict.POKEMON_TOPIC, botUserTopics.getIsPokemonChosen());
-        userTopics.put(TopicsDict.QUOTE_TOPIC, botUserTopics.getIsQuoteChosen());
         userTopics.put(TopicsDict.MOVIE_TOPIC, botUserTopics.getIsMovieChosen());
         userTopics.put(TopicsDict.TV_SHOW_TOPIC, botUserTopics.getIsTvShowChosen());
+        userTopics.put(TopicsDict.ANIME_TOPIC, botUserTopics.getIsAnimeChosen());
+        userTopics.put(TopicsDict.QUOTE_TOPIC, botUserTopics.getIsQuoteChosen());
 
         return userTopics;
     }
@@ -105,9 +106,10 @@ public class UserDataHandler {
                         .isCatChosen(false)
                         .isDogChosen(false)
                         .isPokemonChosen(false)
-                        .isQuoteChosen(false)
                         .isMovieChosen(false)
                         .isTvShowChosen(false)
+                        .isAnimeChosen(false)
+                        .isQuoteChosen(false)
                         .build())
                 .build();
 
@@ -177,6 +179,15 @@ public class UserDataHandler {
         redisClient.saveUserData(botUser);
 
         log.info("Value '{}' has been set for TV Show topic and user with id = '{}' in DB file", isMarked, userId);
+    }
+
+    public void setAnimeTopicDataForUser(long userId, boolean isMarked) {
+        BotUser botUser = redisClient.getUserData(userId);
+
+        botUser.getUserTopics().setIsAnimeChosen(isMarked);
+        redisClient.saveUserData(botUser);
+
+        log.info("Value '{}' has been set for Anime topic and user with id = '{}' in DB file", isMarked, userId);
     }
 
     public void setDoneButtonClickedDataForUser(long userId, boolean isClicked) {

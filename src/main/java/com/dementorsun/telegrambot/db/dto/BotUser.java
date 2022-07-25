@@ -23,6 +23,7 @@ public class BotUser {
     @Setter
     @Getter
     @Builder
+    @FieldDefaults(level = AccessLevel.PRIVATE)
     public static class UserInfo {
         String username;
         String firstName;
@@ -33,6 +34,7 @@ public class BotUser {
     @Setter
     @Getter
     @Builder
+    @FieldDefaults(level = AccessLevel.PRIVATE)
     public static class UserSetting {
         String time;
         Boolean isDoneClicked;
@@ -43,6 +45,7 @@ public class BotUser {
     @Setter
     @Getter
     @Builder
+    @FieldDefaults(level = AccessLevel.PRIVATE)
     public static class UserTopic {
         Boolean isNasaChosen;
         Boolean isCatChosen;
@@ -51,5 +54,6 @@ public class BotUser {
         Boolean isQuoteChosen;
         Boolean isMovieChosen;
         Boolean isTvShowChosen;
+        Boolean isAnimeChosen;
     }
 }

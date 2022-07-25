@@ -54,6 +54,13 @@ public class BotClient {
         return tmdbApiClient.getRandomTvShow(page);
     }
 
+    public String getRandomAnime() {
+        final int totalPages = 25;
+        int page = getRandomResponseItem(totalPages);
+
+        return tmdbApiClient.getRandomAnime(page);
+    }
+
     public PokemonResponse getRandomPokemon() {
         final int totalPokemons = 493;
         int pokemonId = getRandomResponseItem(totalPokemons);

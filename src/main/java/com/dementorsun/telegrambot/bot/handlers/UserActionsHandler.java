@@ -83,16 +83,20 @@ class UserActionsHandler {
                 userDataHandler.setPokemonTopicDataForUser(userId, isMarked);
                 editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId, isNewUser);
                 break;
-            case QUOTE_TOPIC:
-                userDataHandler.setQuoteTopicDataForUser(userId, isMarked);
-                editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId, isNewUser);
-                break;
             case MOVIE_TOPIC:
                 userDataHandler.setMovieTopicDataForUser(userId, isMarked);
                 editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId, isNewUser);
                 break;
             case TV_SHOW_TOPIC:
                 userDataHandler.setTvShowTopicDataForUser(userId, isMarked);
+                editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId, isNewUser);
+                break;
+            case ANIME_TOPIC:
+                userDataHandler.setAnimeTopicDataForUser(userId, isMarked);
+                editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId, isNewUser);
+                break;
+            case QUOTE_TOPIC:
+                userDataHandler.setQuoteTopicDataForUser(userId, isMarked);
                 editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId, isNewUser);
                 break;
             default:

@@ -11,5 +11,6 @@ public enum TopicsDict {
     POKEMON_TOPIC(),
     QUOTE_TOPIC(),
     MOVIE_TOPIC(),
-    TV_SHOW_TOPIC()
+    TV_SHOW_TOPIC(),
+    ANIME_TOPIC()
 }

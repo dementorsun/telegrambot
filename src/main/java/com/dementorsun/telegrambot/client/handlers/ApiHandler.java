@@ -160,6 +160,28 @@ public class ApiHandler {
         return sendPhoto;
     }
 
+    public SendPhoto createRandomAnimeSendPhoto(long chatId) {
+        SendPhoto sendPhoto;
+
+        try {
+            List<TmdbResponse.TmdbItem> animeList = gson.fromJson(botClient.getRandomAnime(), TmdbResponse.class).getResults();
+            TmdbResponse.TmdbItem anime = getTmdbItemWithOverview(animeList);
+            InputFile photo = new InputFile(tmdbImageUrl + anime.getPosterPath());
+            String caption = String.format("\uD83D\uDC7A *Аніме дня*\n*%s(%s)*\n_%s_\n\"%s\"\n_TMDB рейтинг:_ *%s*",
+                    anime.getName(),
+                    anime.getFirstAirDate().substring(0, 4),
+                    anime.getOriginalName(),
+                    anime.getOverview(),
+                    anime.getVoteAverage());
+
+            sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
+        } catch (NullPointerException e) {
+            sendPhoto = null;
+        }
+
+        return sendPhoto;
+    }
+
     private TmdbResponse.TmdbItem getTmdbItemWithOverview(List<TmdbResponse.TmdbItem> movieList) {
         TmdbResponse.TmdbItem tmdbItem;
         List<TmdbResponse.TmdbItem> movieListWithOverview = movieList.stream()

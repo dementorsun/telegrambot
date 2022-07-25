@@ -58,6 +58,8 @@ public class SchedulerHelper {
                 objectsToSend.add(apiHandler.createRandomMovieSendPhoto(chatId));
             if (userTopics.get(TopicsDict.TV_SHOW_TOPIC))
                 objectsToSend.add(apiHandler.createRandomTvShowSendPhoto(chatId));
+            if (userTopics.get(TopicsDict.ANIME_TOPIC))
+                objectsToSend.add(apiHandler.createRandomAnimeSendPhoto(chatId));
             if (userTopics.get(TopicsDict.QUOTE_TOPIC))
                 objectsToSend.add(apiHandler.createRandomQuoteSendMessage(chatId));
         });

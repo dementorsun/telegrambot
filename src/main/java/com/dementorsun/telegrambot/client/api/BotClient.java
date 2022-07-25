@@ -50,8 +50,9 @@ public class BotClient {
     public String getRandomTvShow() {
         final int totalPages = 36;
         int page = getRandomResponseItem(totalPages);
+        int[] genres = new int[]{16, 10766};
 
-        return tmdbApiClient.getRandomTvShow(page);
+        return tmdbApiClient.getRandomTvShow(genres, page);
     }
 
     public String getRandomAnime() {

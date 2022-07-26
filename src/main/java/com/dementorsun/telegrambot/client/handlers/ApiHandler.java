@@ -182,6 +182,57 @@ public class ApiHandler {
         return sendPhoto;
     }
 
+    public SendPhoto createScenerySendPhoto(long chatId) {
+        SendPhoto sendPhoto;
+
+        try {
+            PexelsPhotoResponse pexelsPhotoResponse = botClient.getRandomPexelsPhoto("landscape", 3000);
+            InputFile photo = new InputFile(pexelsPhotoResponse.getPhotos().get(0).getSrc().getLarge());
+            String title = pexelsPhotoResponse.getPhotos().get(0).getAlt();
+            String caption = String.format("\uD83D\uDDBC *Пейзаж дня*\n_%s_", title);
+
+            sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
+        } catch (NullPointerException e) {
+            sendPhoto = null;
+        }
+
+        return sendPhoto;
+    }
+
+    public SendPhoto createAnimalsSendPhoto(long chatId) {
+        SendPhoto sendPhoto;
+
+        try {
+            PexelsPhotoResponse pexelsPhotoResponse = botClient.getRandomPexelsPhoto("wild_animals", 3000);
+            InputFile photo = new InputFile(pexelsPhotoResponse.getPhotos().get(0).getSrc().getLarge());
+            String title = pexelsPhotoResponse.getPhotos().get(0).getAlt();
+            String caption = String.format("\uD83E\uDD81 *Дикий звір дня*\n_%s_", title);
+
+            sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
+        } catch (NullPointerException e) {
+            sendPhoto = null;
+        }
+
+        return sendPhoto;
+    }
+
+    public SendPhoto createFlowersSendPhoto(long chatId) {
+        SendPhoto sendPhoto;
+
+        try {
+            PexelsPhotoResponse pexelsPhotoResponse = botClient.getRandomPexelsPhoto("wild_flowers", 400);
+            InputFile photo = new InputFile(pexelsPhotoResponse.getPhotos().get(0).getSrc().getLarge());
+            String title = pexelsPhotoResponse.getPhotos().get(0).getAlt();
+            String caption = String.format("\uD83C\uDF3C *Квіти дня*\n_%s_", title);
+
+            sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
+        } catch (NullPointerException e) {
+            sendPhoto = null;
+        }
+
+        return sendPhoto;
+    }
+
     private TmdbResponse.TmdbItem getTmdbItemWithOverview(List<TmdbResponse.TmdbItem> movieList) {
         TmdbResponse.TmdbItem tmdbItem;
         List<TmdbResponse.TmdbItem> movieListWithOverview = movieList.stream()

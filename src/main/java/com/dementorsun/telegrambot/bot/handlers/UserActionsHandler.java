@@ -71,6 +71,18 @@ class UserActionsHandler {
                 userDataHandler.setNasaTopicDataForUser(userId, isMarked);
                 editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId, isNewUser);
                 break;
+            case SCENERY_TOPIC:
+                userDataHandler.setSceneryTopicDataForUser(userId, isMarked);
+                editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId, isNewUser);
+                break;
+            case ANIMALS_TOPIC:
+                userDataHandler.setAnimalsTopicDataForUser(userId, isMarked);
+                editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId, isNewUser);
+                break;
+            case FLOWERS_TOPIC:
+                userDataHandler.setFlowersTopicDataForUser(userId, isMarked);
+                editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId, isNewUser);
+                break;
             case CAT_TOPIC:
                 userDataHandler.setCatTopicDataForUser(userId, isMarked);
                 editedReplyMessage = messageButtons.editTopicsButtons(editedReplyMessage, userId, isNewUser);

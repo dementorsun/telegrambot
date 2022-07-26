@@ -48,6 +48,9 @@ public class BotUser {
     @FieldDefaults(level = AccessLevel.PRIVATE)
     public static class UserTopic {
         Boolean isNasaChosen;
+        Boolean isSceneryChosen;
+        Boolean isAnimalsChosen;
+        Boolean isFlowersChosen;
         Boolean isCatChosen;
         Boolean isDogChosen;
         Boolean isPokemonChosen;

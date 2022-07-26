@@ -22,6 +22,7 @@ public class BotClient {
     private final PokemonApiClient pokemonApiClient;
     private final QuoteApiClient quoteApiClient;
     private final TmdbApiClient tmdbApiClient;
+    private final PexelsApiClient pexelsApiClient;
     private final Gson gson;
 
     public NasaApodResponse getNasaApod() {
@@ -74,6 +75,13 @@ public class BotClient {
         String response = pokemonApiClient.getPokemonDescription(USER_AGENT_HEADER, pokemonId);
 
         return gson.fromJson(response, PokemonDescriptionResponse.class);
+    }
+
+    public PexelsPhotoResponse getRandomPexelsPhoto(String query, int totalPages) {
+        final int page = getRandomResponseItem(totalPages);
+        String response = pexelsApiClient.getRandomPexelsPhoto(query, page);
+
+        return gson.fromJson(response, PexelsPhotoResponse.class);
     }
 
     private int getRandomResponseItem(int totalItems) {

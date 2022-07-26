@@ -52,6 +52,9 @@ public class UserDataHandler {
         Map<TopicsDict,Boolean> userTopics = new HashMap<>();
 
         userTopics.put(TopicsDict.NASA_TOPIC, botUserTopics.getIsNasaChosen());
+        userTopics.put(TopicsDict.SCENERY_TOPIC, botUserTopics.getIsSceneryChosen());
+        userTopics.put(TopicsDict.ANIMALS_TOPIC, botUserTopics.getIsAnimalsChosen());
+        userTopics.put(TopicsDict.FLOWERS_TOPIC, botUserTopics.getIsFlowersChosen());
         userTopics.put(TopicsDict.CAT_TOPIC, botUserTopics.getIsCatChosen());
         userTopics.put(TopicsDict.DOG_TOPIC, botUserTopics.getIsDogChosen());
         userTopics.put(TopicsDict.POKEMON_TOPIC, botUserTopics.getIsPokemonChosen());
@@ -103,6 +106,9 @@ public class UserDataHandler {
                         .build())
                 .userTopics(BotUser.UserTopic.builder()
                         .isNasaChosen(false)
+                        .isSceneryChosen(false)
+                        .isAnimalsChosen(false)
+                        .isFlowersChosen(false)
                         .isCatChosen(false)
                         .isDogChosen(false)
                         .isPokemonChosen(false)
@@ -188,6 +194,33 @@ public class UserDataHandler {
         redisClient.saveUserData(botUser);
 
         log.info("Value '{}' has been set for Anime topic and user with id = '{}' in DB file", isMarked, userId);
+    }
+
+    public void setSceneryTopicDataForUser(long userId, boolean isMarked) {
+        BotUser botUser = redisClient.getUserData(userId);
+
+        botUser.getUserTopics().setIsSceneryChosen(isMarked);
+        redisClient.saveUserData(botUser);
+
+        log.info("Value '{}' has been set for Wild landscape topic and user with id = '{}' in DB file", isMarked, userId);
+    }
+
+    public void setAnimalsTopicDataForUser(long userId, boolean isMarked) {
+        BotUser botUser = redisClient.getUserData(userId);
+
+        botUser.getUserTopics().setIsAnimalsChosen(isMarked);
+        redisClient.saveUserData(botUser);
+
+        log.info("Value '{}' has been set for Wild animals topic and user with id = '{}' in DB file", isMarked, userId);
+    }
+
+    public void setFlowersTopicDataForUser(long userId, boolean isMarked) {
+        BotUser botUser = redisClient.getUserData(userId);
+
+        botUser.getUserTopics().setIsFlowersChosen(isMarked);
+        redisClient.saveUserData(botUser);
+
+        log.info("Value '{}' has been set for Wild flowers topic and user with id = '{}' in DB file", isMarked, userId);
     }
 
     public void setDoneButtonClickedDataForUser(long userId, boolean isClicked) {

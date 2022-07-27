@@ -9,10 +9,12 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 
 import java.util.List;
 
+@Deprecated
 @Component
 @AllArgsConstructor
 public class BottomButtons {
 
+    @Deprecated
     public void setBottomButtons(SendMessage replyMessage) {
         ReplyKeyboardMarkup bottomKeyboard = createBottomButtonsMarkup();
 

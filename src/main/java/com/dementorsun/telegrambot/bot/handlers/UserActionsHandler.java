@@ -1,10 +1,9 @@
 package com.dementorsun.telegrambot.bot.handlers;
 
-import com.dementorsun.telegrambot.bot.buttons.BottomButtons;
 import com.dementorsun.telegrambot.bot.buttons.MessageButtons;
 import com.dementorsun.telegrambot.bot.dto.TopicButtonCallBackData;
+import com.dementorsun.telegrambot.enums.BotCommands;
 import com.dementorsun.telegrambot.enums.BotMessages;
-import com.dementorsun.telegrambot.enums.BottomButtonsDict;
 import com.dementorsun.telegrambot.db.UserDataHandler;
 import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
@@ -21,12 +20,9 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 @AllArgsConstructor
 class UserActionsHandler {
 
-    private static final String START_MESSAGE = "/start";
-
     private final UserDataHandler userDataHandler;
     private final MessageHandler messageHandler;
     private final MessageButtons messageButtons;
-    private final BottomButtons bottomButtons;
     private final Gson gson;
 
     public SendMessage handleReceivedMessage(Update update) {
@@ -38,18 +34,18 @@ class UserActionsHandler {
         SendMessage replyMessage = messageHandler.createDefaultMessageFromUpdateMessage(chatId);
         log.info("'{}' message is received from user with id = '{}'", message, userId);
 
-        if (START_MESSAGE.equals(message)) {
+        if (BotCommands.START.getCommand().equals(message)) {
             replyMessage = createSendMessageForStartTopicsTutorial(userId, chatId, user, replyMessage);
         } else if (userDataHandler.getIsTimeEnterMode(userId)) {
             replyMessage = messageHandler.checkTimeFormatIsCorrect(message) ?
                     createSendMessageForCompleteTimeEntering(userId, message, replyMessage) :
                     messageHandler.setReplyMessageToUser(replyMessage, BotMessages.FAIL_TIME_FORMAT_MESSAGE.getMessage());
-        } else if (BottomButtonsDict.CHANGE_TOPICS_BUTTON.getButtonText().equals(message)) {
+        } else if (BotCommands.CHANGE_TOPICS.getCommand().equals(message)) {
             boolean isNewUser = userDataHandler.checkIsNewUser(userId);
             replyMessage = createSendMessageForShowTopicsButtons(userId, replyMessage, BotMessages.CHANGE_TOPICS_MESSAGE, isNewUser);
-        } else if (BottomButtonsDict.CHANGE_TIME_BUTTON.getButtonText().equals(message)) {
+        } else if (BotCommands.CHANGE_TIME.getCommand().equals(message)) {
             replyMessage = createSendMessageForChangeUserTime(replyMessage, userId);
-        } else if (BottomButtonsDict.SILENCE_MODE_BUTTON.getButtonText().equals(message)) {
+        } else if (BotCommands.SILENCE_MODE.getCommand().equals(message)) {
             replyMessage = userDataHandler.checkIsSilenceModeActiveForUser(userId) ?
                     messageHandler.setReplyMessageToUser(replyMessage, BotMessages.SILENCE_MODE_IS_ALREADY_ACTIVE_MESSAGE.getMessage()) :
                     createSendMessageForActivateSilenceMode(replyMessage, userId);
@@ -161,13 +157,11 @@ class UserActionsHandler {
         } else if(userDataHandler.checkIsSilenceModeActiveForUser(userId)) {
             String welcomeBackMessage = String.format(BotMessages.WELCOME_BACK_WITH_SILENCE_MODE_MESSAGE.getMessage(), user.getFirstName());
             replyMessage = messageHandler.setReplyMessageToUser(defaultMessage, welcomeBackMessage);
-            bottomButtons.setBottomButtons(replyMessage);
 
             log.info("Welcome back tutorial with active silence mode is finished for user with id = '{}'", userId);
         } else {
             String welcomeBackMessage = String.format(BotMessages.WELCOME_BACK_MESSAGE.getMessage(), user.getFirstName());
             replyMessage = messageHandler.setReplyMessageToUser(defaultMessage, welcomeBackMessage);
-            bottomButtons.setBottomButtons(replyMessage);
 
             log.info("Welcome back tutorial is finished for user with id = '{}'", userId);
         }
@@ -206,7 +200,6 @@ class UserActionsHandler {
             log.info("Time changing flow is completed for user with id = '{}'", userId);
         } else {
             userDataHandler.setTimeDataForUser(userId, message);
-            bottomButtons.setBottomButtons(defaultMessage);
             replyMessage = messageHandler.setReplyMessageToUser(defaultMessage, BotMessages.COMPLETE_TUTORIAL_MESSAGE.getMessage());
 
             log.info("Tutorial is completed for user with id = '{}'", userId);

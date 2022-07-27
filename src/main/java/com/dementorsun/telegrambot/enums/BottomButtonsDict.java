@@ -3,6 +3,7 @@ package com.dementorsun.telegrambot.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@Deprecated
 @Getter
 @AllArgsConstructor
 public enum BottomButtonsDict {

@@ -51,17 +51,17 @@ public class UserDataHandler {
         BotUser.UserTopic botUserTopics = redisClient.getUserData(userId).getUserTopics();
         Map<TopicsDict,Boolean> userTopics = new HashMap<>();
 
-        userTopics.put(TopicsDict.NASA_TOPIC, botUserTopics.getIsNasaChosen());
-        userTopics.put(TopicsDict.SCENERY_TOPIC, botUserTopics.getIsSceneryChosen());
-        userTopics.put(TopicsDict.ANIMALS_TOPIC, botUserTopics.getIsAnimalsChosen());
-        userTopics.put(TopicsDict.FLOWERS_TOPIC, botUserTopics.getIsFlowersChosen());
-        userTopics.put(TopicsDict.CAT_TOPIC, botUserTopics.getIsCatChosen());
-        userTopics.put(TopicsDict.DOG_TOPIC, botUserTopics.getIsDogChosen());
-        userTopics.put(TopicsDict.POKEMON_TOPIC, botUserTopics.getIsPokemonChosen());
-        userTopics.put(TopicsDict.MOVIE_TOPIC, botUserTopics.getIsMovieChosen());
-        userTopics.put(TopicsDict.TV_SHOW_TOPIC, botUserTopics.getIsTvShowChosen());
-        userTopics.put(TopicsDict.ANIME_TOPIC, botUserTopics.getIsAnimeChosen());
-        userTopics.put(TopicsDict.QUOTE_TOPIC, botUserTopics.getIsQuoteChosen());
+        userTopics.put(TopicsDict.NASA_TOPIC, getNasaTopicDataForUser(botUserTopics, userId));
+        userTopics.put(TopicsDict.SCENERY_TOPIC, getSceneryTopicDataForUser(botUserTopics, userId));
+        userTopics.put(TopicsDict.ANIMALS_TOPIC, getAnimalsTopicDataForUser(botUserTopics, userId));
+        userTopics.put(TopicsDict.FLOWERS_TOPIC, getFlowersTopicDataForUser(botUserTopics, userId));
+        userTopics.put(TopicsDict.CAT_TOPIC, getCatTopicDataForUser(botUserTopics, userId));
+        userTopics.put(TopicsDict.DOG_TOPIC, getDogTopicDataForUser(botUserTopics, userId));
+        userTopics.put(TopicsDict.POKEMON_TOPIC, getPokemonTopicDataForUser(botUserTopics, userId));
+        userTopics.put(TopicsDict.MOVIE_TOPIC, getMovieTopicDataForUser(botUserTopics, userId));
+        userTopics.put(TopicsDict.TV_SHOW_TOPIC, getTvShowTopicDataForUser(botUserTopics, userId));
+        userTopics.put(TopicsDict.ANIME_TOPIC, getAnimeTopicDataForUser(botUserTopics, userId));
+        userTopics.put(TopicsDict.QUOTE_TOPIC, getQuoteTopicDataForUser(botUserTopics, userId));
 
         return userTopics;
     }
@@ -272,5 +272,126 @@ public class UserDataHandler {
         return getUserTopics(userId).entrySet()
                 .stream()
                 .noneMatch(Map.Entry::getValue);
+    }
+
+    private boolean getNasaTopicDataForUser(BotUser.UserTopic botUserTopics, long userId) {
+        try {
+            return botUserTopics.getIsNasaChosen();
+        } catch (NullPointerException exception) {
+            setNasaTopicDataForUser(userId, false);
+            log.info("{} exception is occurred during get Nasa topic data, false is written", exception.toString());
+
+            return false;
+        }
+    }
+
+    private boolean getSceneryTopicDataForUser(BotUser.UserTopic botUserTopics, long userId) {
+        try {
+            return botUserTopics.getIsSceneryChosen();
+        } catch (NullPointerException exception) {
+            setSceneryTopicDataForUser(userId, false);
+            log.info("{} exception is occurred during get Scenery topic data, false is written", exception.toString());
+
+            return false;
+        }
+    }
+
+    private boolean getAnimalsTopicDataForUser(BotUser.UserTopic botUserTopics, long userId) {
+        try {
+            return botUserTopics.getIsAnimalsChosen();
+        } catch (NullPointerException exception) {
+            setAnimalsTopicDataForUser(userId, false);
+            log.info("{} exception is occurred during get Animals topic data, false is written", exception.toString());
+
+            return false;
+        }
+    }
+
+    private boolean getFlowersTopicDataForUser(BotUser.UserTopic botUserTopics, long userId) {
+        try {
+            return botUserTopics.getIsFlowersChosen();
+        } catch (NullPointerException exception) {
+            setFlowersTopicDataForUser(userId, false);
+            log.info("{} exception is occurred during get Flowers topic data, false is written", exception.toString());
+
+            return false;
+        }
+    }
+
+    private boolean getCatTopicDataForUser(BotUser.UserTopic botUserTopics, long userId) {
+        try {
+            return botUserTopics.getIsCatChosen();
+        } catch (NullPointerException exception) {
+            setCatTopicDataForUser(userId, false);
+            log.info("{} exception is occurred during get Cat topic data, false is written", exception.toString());
+
+            return false;
+        }
+    }
+
+    private boolean getDogTopicDataForUser(BotUser.UserTopic botUserTopics, long userId) {
+        try {
+            return botUserTopics.getIsDogChosen();
+        } catch (NullPointerException exception) {
+            setDogTopicDataForUser(userId, false);
+            log.info("{} exception is occurred during get Dog topic data, false is written", exception.toString());
+
+            return false;
+        }
+    }
+
+    private boolean getPokemonTopicDataForUser(BotUser.UserTopic botUserTopics, long userId) {
+        try {
+            return botUserTopics.getIsPokemonChosen();
+        } catch (NullPointerException exception) {
+            setPokemonTopicDataForUser(userId, false);
+            log.info("{} exception is occurred during get Pokemon topic data, false is written", exception.toString());
+
+            return false;
+        }
+    }
+
+    private boolean getMovieTopicDataForUser(BotUser.UserTopic botUserTopics, long userId) {
+        try {
+            return botUserTopics.getIsMovieChosen();
+        } catch (NullPointerException exception) {
+            setMovieTopicDataForUser(userId, false);
+            log.info("{} exception is occurred during get Movie topic data, false is written", exception.toString());
+
+            return false;
+        }
+    }
+
+    private boolean getTvShowTopicDataForUser(BotUser.UserTopic botUserTopics, long userId) {
+        try {
+            return botUserTopics.getIsTvShowChosen();
+        } catch (NullPointerException exception) {
+            setTvShowTopicDataForUser(userId, false);
+            log.info("{} exception is occurred during get Tv Show topic data, false is written", exception.toString());
+
+            return false;
+        }
+    }
+
+    private boolean getAnimeTopicDataForUser(BotUser.UserTopic botUserTopics, long userId) {
+        try {
+            return botUserTopics.getIsAnimeChosen();
+        } catch (NullPointerException exception) {
+            setAnimeTopicDataForUser(userId, false);
+            log.info("{} exception is occurred during get Anime topic data, false is written", exception.toString());
+
+            return false;
+        }
+    }
+
+    private boolean getQuoteTopicDataForUser(BotUser.UserTopic botUserTopics, long userId) {
+        try {
+            return botUserTopics.getIsQuoteChosen();
+        } catch (NullPointerException exception) {
+            setQuoteTopicDataForUser(userId, false);
+            log.info("{} exception is occurred during get Quote topic data, false is written", exception.toString());
+
+            return false;
+        }
     }
 }

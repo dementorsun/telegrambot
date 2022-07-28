@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Random;
 
 @Component
@@ -43,14 +44,14 @@ public class BotClient {
 
     public String getRandomMovie() {
         final int totalPages = 34;
-        int page = getRandomResponseItem(totalPages);
+        int page = getRandomNumber(totalPages);
 
         return tmdbApiClient.getRandomMovie(page);
     }
 
     public String getRandomTvShow() {
         final int totalPages = 36;
-        int page = getRandomResponseItem(totalPages);
+        int page = getRandomNumber(totalPages);
         int[] genres = new int[]{16, 10766};
 
         return tmdbApiClient.getRandomTvShow(genres, page);
@@ -58,14 +59,14 @@ public class BotClient {
 
     public String getRandomAnime() {
         final int totalPages = 25;
-        int page = getRandomResponseItem(totalPages);
+        int page = getRandomNumber(totalPages);
 
         return tmdbApiClient.getRandomAnime(page);
     }
 
     public PokemonResponse getRandomPokemon() {
         final int totalPokemons = 493;
-        int pokemonId = getRandomResponseItem(totalPokemons);
+        int pokemonId = getRandomNumber(totalPokemons);
         String response = pokemonApiClient.getPokemon(USER_AGENT_HEADER, pokemonId);
 
         return gson.fromJson(response, PokemonResponse.class);
@@ -78,13 +79,21 @@ public class BotClient {
     }
 
     public PexelsPhotoResponse getRandomPexelsPhoto(String query, int totalPages) {
-        final int page = getRandomResponseItem(totalPages);
+        final int page = getRandomNumber(totalPages);
         String response = pexelsApiClient.getRandomPexelsPhoto(query, page);
 
         return gson.fromJson(response, PexelsPhotoResponse.class);
     }
 
-    private int getRandomResponseItem(int totalItems) {
+    public PexelsPhotoResponse.PexelsPhoto getPexelsPhotoForFailedTopic() {
+        List<Integer> photosIdList = List.of(1134204, 3601097, 734479, 247314, 247195, 2865901);
+        int photoId = photosIdList.get(getRandomNumber(photosIdList.size()));
+        String response = pexelsApiClient.getPexelsPhotoById(photoId);
+
+        return gson.fromJson(response, PexelsPhotoResponse.PexelsPhoto.class);
+    }
+
+    private int getRandomNumber(int totalItems) {
         return new Random().ints(1, totalItems).findFirst().orElse(1);
     }
 }

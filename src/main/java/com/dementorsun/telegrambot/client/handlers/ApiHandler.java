@@ -43,7 +43,7 @@ public class ApiHandler {
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (NullPointerException e) {
-            sendPhoto = null;
+            sendPhoto = generateFailedSendPhoto(chatId, "\uD83E\uDE90 *Астрономічне фото дня*");
         }
 
         return sendPhoto;
@@ -59,7 +59,7 @@ public class ApiHandler {
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (NullPointerException e) {
-            sendPhoto = null;
+            sendPhoto = generateFailedSendPhoto(chatId, "\uD83D\uDC08 *Кіт дня*");
         }
 
         return sendPhoto;
@@ -75,7 +75,7 @@ public class ApiHandler {
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (NullPointerException e) {
-            sendPhoto = null;
+            sendPhoto = generateFailedSendPhoto(chatId, "\uD83D\uDC15 *Пес дня*");
         }
 
         return sendPhoto;
@@ -93,7 +93,7 @@ public class ApiHandler {
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (NullPointerException e) {
-            sendPhoto = null;
+            sendPhoto = generateFailedSendPhoto(chatId, "⛩ *Покемон дня*");
         }
 
         return sendPhoto;
@@ -110,7 +110,7 @@ public class ApiHandler {
 
             sendMessage = messageFromApiHandler.generateSendMessage(chatId, message);
         } catch (NullPointerException e) {
-            sendMessage = null;
+            sendMessage = generateFailedSendMessage(chatId, "\uD83E\uDD89 *Мудрість дня*");
         }
 
         return sendMessage;
@@ -132,7 +132,7 @@ public class ApiHandler {
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (NullPointerException e) {
-            sendPhoto = null;
+            sendPhoto = generateFailedSendPhoto(chatId, "\uD83C\uDFAC *Фільм дня*");
         }
 
         return sendPhoto;
@@ -154,7 +154,7 @@ public class ApiHandler {
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (NullPointerException e) {
-            sendPhoto = null;
+            sendPhoto = generateFailedSendPhoto(chatId, "\uD83D\uDCFA *Серіал дня*");
         }
 
         return sendPhoto;
@@ -176,7 +176,7 @@ public class ApiHandler {
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (NullPointerException e) {
-            sendPhoto = null;
+            sendPhoto = generateFailedSendPhoto(chatId, "\uD83D\uDC7A *Аніме дня*");
         }
 
         return sendPhoto;
@@ -193,7 +193,7 @@ public class ApiHandler {
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (NullPointerException e) {
-            sendPhoto = null;
+            sendPhoto = generateFailedSendPhoto(chatId, "\uD83D\uDDBC *Пейзаж дня*");
         }
 
         return sendPhoto;
@@ -210,7 +210,7 @@ public class ApiHandler {
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (NullPointerException e) {
-            sendPhoto = null;
+            sendPhoto = generateFailedSendPhoto(chatId, "\uD83E\uDD81 *Дикий звір дня*");
         }
 
         return sendPhoto;
@@ -227,7 +227,7 @@ public class ApiHandler {
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (NullPointerException e) {
-            sendPhoto = null;
+            sendPhoto = generateFailedSendPhoto(chatId, "\uD83C\uDF3C *Квіти дня*");
         }
 
         return sendPhoto;
@@ -266,5 +266,19 @@ public class ApiHandler {
                 .findFirst().orElse("На жаль, опису немає(").replace("\n", " ");
 
         return String.format("⛩ *Покемон дня*\n*Назва:* %s\n*Тип:* %s\n*Опис:* %s", pokemonName, pokemonTypes, pokemonDescription);
+    }
+
+    private SendPhoto generateFailedSendPhoto(long chatId, String caption) {
+        PexelsPhotoResponse.PexelsPhoto pexelsPhotoResponse = botClient.getPexelsPhotoForFailedTopic();
+        InputFile photo = new InputFile(pexelsPhotoResponse.getSrc().getLarge());
+        String newCaption = String.format("%s\n_Як то кажуть, самсінг вент ронг. Будемо сподіватися, що завтра все буде ок._", caption);
+
+        return messageFromApiHandler.generateSendPhoto(chatId, photo, newCaption);
+    }
+
+    private SendMessage generateFailedSendMessage(long chatId, String message) {
+        String newMessage = String.format("%s\n_Як то кажуть, самсінг вент ронг. Будемо сподіватися, що завтра все буде ок._", message);
+
+        return messageFromApiHandler.generateSendMessage(chatId, newMessage);
     }
 }

@@ -42,7 +42,7 @@ public class ApiHandler {
                                                                                              explanation);
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             sendPhoto = generateFailedSendPhoto(chatId, "\uD83E\uDE90 *Астрономічне фото дня*");
         }
 
@@ -58,7 +58,7 @@ public class ApiHandler {
             String caption = "\uD83D\uDC08 *Кіт дня*\n" + randomCatResponse.get(0).getBreeds().get(0).getName();
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             sendPhoto = generateFailedSendPhoto(chatId, "\uD83D\uDC08 *Кіт дня*");
         }
 
@@ -74,7 +74,7 @@ public class ApiHandler {
             String caption = "\uD83D\uDC15 *Пес дня*\n" + randomDogResponse.get(0).getBreeds().get(0).getName();
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             sendPhoto = generateFailedSendPhoto(chatId, "\uD83D\uDC15 *Пес дня*");
         }
 
@@ -92,7 +92,7 @@ public class ApiHandler {
             String caption = getPokemonCaption(pokemonResponse, pokemonDescriptionResponse);
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             sendPhoto = generateFailedSendPhoto(chatId, "⛩ *Покемон дня*");
         }
 
@@ -109,7 +109,7 @@ public class ApiHandler {
             String message = String.format("\uD83E\uDD89 *Мудрість дня*\n\"%s\"\n*%s*", quote, author);
 
             sendMessage = messageFromApiHandler.generateSendMessage(chatId, message);
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             sendMessage = generateFailedSendMessage(chatId, "\uD83E\uDD89 *Мудрість дня*");
         }
 
@@ -131,7 +131,7 @@ public class ApiHandler {
                                             movie.getVoteAverage());
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             sendPhoto = generateFailedSendPhoto(chatId, "\uD83C\uDFAC *Фільм дня*");
         }
 
@@ -153,7 +153,7 @@ public class ApiHandler {
                                             tvShow.getVoteAverage());
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             sendPhoto = generateFailedSendPhoto(chatId, "\uD83D\uDCFA *Серіал дня*");
         }
 
@@ -175,7 +175,7 @@ public class ApiHandler {
                     anime.getVoteAverage());
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             sendPhoto = generateFailedSendPhoto(chatId, "\uD83D\uDC7A *Аніме дня*");
         }
 
@@ -192,7 +192,7 @@ public class ApiHandler {
             String caption = String.format("\uD83D\uDDBC *Пейзаж дня*\n_%s_", title);
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             sendPhoto = generateFailedSendPhoto(chatId, "\uD83D\uDDBC *Пейзаж дня*");
         }
 
@@ -209,7 +209,7 @@ public class ApiHandler {
             String caption = String.format("\uD83E\uDD81 *Дикий звір дня*\n_%s_", title);
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             sendPhoto = generateFailedSendPhoto(chatId, "\uD83E\uDD81 *Дикий звір дня*");
         }
 
@@ -226,7 +226,7 @@ public class ApiHandler {
             String caption = String.format("\uD83C\uDF3C *Квіти дня*\n_%s_", title);
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             sendPhoto = generateFailedSendPhoto(chatId, "\uD83C\uDF3C *Квіти дня*");
         }
 

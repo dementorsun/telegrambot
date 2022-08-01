@@ -2,8 +2,9 @@ package com.dementorsun.telegrambot.client.api;
 
 import com.dementorsun.telegrambot.client.dto.*;
 import com.google.gson.Gson;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.Random;
 
 @Component
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class BotClient {
 
     private static final String USER_AGENT_HEADER = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
@@ -25,6 +26,9 @@ public class BotClient {
     private final TmdbApiClient tmdbApiClient;
     private final PexelsApiClient pexelsApiClient;
     private final Gson gson;
+
+    @Value("${pexels.token}")
+    private final String pexelsToken;
 
     public NasaApodResponse getNasaApod() {
         return nasaApiClient.getNasaApod();
@@ -80,7 +84,7 @@ public class BotClient {
 
     public PexelsPhotoResponse getRandomPexelsPhoto(String query, int totalPages) {
         final int page = getRandomNumber(totalPages);
-        String response = pexelsApiClient.getRandomPexelsPhoto(query, page);
+        String response = pexelsApiClient.getRandomPexelsPhoto(query, page, pexelsToken);
 
         return gson.fromJson(response, PexelsPhotoResponse.class);
     }
@@ -88,7 +92,7 @@ public class BotClient {
     public PexelsPhotoResponse.PexelsPhoto getPexelsPhotoForFailedTopic() {
         List<Integer> photosIdList = List.of(1134204, 3601097, 734479, 247314, 247195, 2865901);
         int photoId = photosIdList.get(getRandomNumber(photosIdList.size()));
-        String response = pexelsApiClient.getPexelsPhotoById(photoId);
+        String response = pexelsApiClient.getPexelsPhotoById(photoId, pexelsToken);
 
         return gson.fromJson(response, PexelsPhotoResponse.PexelsPhoto.class);
     }

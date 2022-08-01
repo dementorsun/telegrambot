@@ -51,7 +51,6 @@ class TelegramBotCore extends TelegramLongPollingBot {
                 log.info("Exception is occurred during sending message to user with '{}' id: {}", userId, e.getMessage());
             }
         } else if (update.hasCallbackQuery()) {
-            log.info(update.toString());
             long userId = UpdateObjectHandler.getCallBackUserIdFromUpdate(update);
             TopicButtonCallBackData callBackData = gson.fromJson(UpdateObjectHandler.getCallBackDataFromUpdate(update), TopicButtonCallBackData.class);
             if (Boolean.TRUE.equals(callBackData.getIsTopicButton())) {

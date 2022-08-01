@@ -1,14 +1,12 @@
 package com.dementorsun.telegrambot.bot.handlers;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 
 @Component
 @AllArgsConstructor
-@Slf4j
 public class UpdateObjectHandler {
 
     public static long getUserIdFromUpdate(Update update) {
@@ -32,7 +30,6 @@ public class UpdateObjectHandler {
     }
 
     public static long getCallBackUserIdFromUpdate(Update update) {
-        log.info("Update is: {}", update.toString());
         return update.getCallbackQuery().getFrom().getId();
     }
 

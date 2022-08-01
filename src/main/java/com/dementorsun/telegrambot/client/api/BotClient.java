@@ -28,7 +28,7 @@ public class BotClient {
     private final Gson gson;
 
     @Value("${pexels.token}")
-    private final String pexelsToken;
+    private String pexelsToken;
 
     public NasaApodResponse getNasaApod() {
         return nasaApiClient.getNasaApod();

@@ -5,6 +5,7 @@ import com.dementorsun.telegrambot.client.dto.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -12,17 +13,19 @@ import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 
 import java.lang.reflect.Type;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class ApiHandler {
 
     private static final Type CAT_TYPE_TOKEN = new TypeToken<List<RandomCatResponse>>(){}.getType();
     private static final Type DOG_TYPE_TOKEN = new TypeToken<List<RandomDogResponse>>(){}.getType();
+    private static final int PHOTO_CAPTION_CHARS_LIMIT = 1024;
 
     private final Gson gson;
     private final BotClient botClient;
@@ -37,7 +40,7 @@ public class ApiHandler {
         try {
             NasaApodResponse nasaApodResponse = botClient.getNasaApod();
             InputFile photo = new InputFile(nasaApodResponse.getUrl());
-            String explanation = Stream.of(nasaApodResponse.getExplanation().split("\\.")).limit(3).collect(Collectors.joining(".")) + ".";
+            String explanation = checkStringToCharsLimit(nasaApodResponse.getExplanation());
             String caption = String.format("\uD83E\uDE90 *Астрономічне фото дня*\n_%s_\n%s", nasaApodResponse.getTitle(),
                                                                                              explanation);
 
@@ -127,8 +130,10 @@ public class ApiHandler {
                                             movie.getTitle(),
                                             movie.getReleaseDate().substring(0, 4),
                                             movie.getOriginalTitle(),
-                                            movie.getOverview(),
+                                            checkStringToCharsLimit(movie.getOverview()),
                                             movie.getVoteAverage());
+
+            log.info("Movie item is: {}", movie.getTitle());
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (Exception e) {
@@ -149,8 +154,10 @@ public class ApiHandler {
                                             tvShow.getName(),
                                             tvShow.getFirstAirDate().substring(0, 4),
                                             tvShow.getOriginalName(),
-                                            tvShow.getOverview(),
+                                            checkStringToCharsLimit(tvShow.getOverview()),
                                             tvShow.getVoteAverage());
+
+            log.info("Tv show item is: {}", tvShow.getName());
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (Exception e) {
@@ -171,8 +178,10 @@ public class ApiHandler {
                     anime.getName(),
                     anime.getFirstAirDate().substring(0, 4),
                     anime.getOriginalName(),
-                    anime.getOverview(),
+                    checkStringToCharsLimit(anime.getOverview()),
                     anime.getVoteAverage());
+
+            log.info("Anime item is: {}", anime.getName());
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (Exception e) {
@@ -186,7 +195,7 @@ public class ApiHandler {
         SendPhoto sendPhoto;
 
         try {
-            PexelsPhotoResponse pexelsPhotoResponse = botClient.getRandomPexelsPhoto("landscape", 3000);
+            PexelsPhotoResponse pexelsPhotoResponse = botClient.getRandomPexelsPhoto("landscape", 1000);
             InputFile photo = new InputFile(pexelsPhotoResponse.getPhotos().get(0).getSrc().getLarge());
             String title = pexelsPhotoResponse.getPhotos().get(0).getAlt();
             String caption = String.format("\uD83D\uDDBC *Пейзаж дня*\n_%s_", title);
@@ -203,7 +212,7 @@ public class ApiHandler {
         SendPhoto sendPhoto;
 
         try {
-            PexelsPhotoResponse pexelsPhotoResponse = botClient.getRandomPexelsPhoto("wild_animals", 3000);
+            PexelsPhotoResponse pexelsPhotoResponse = botClient.getRandomPexelsPhoto("wild_animals", 1000);
             InputFile photo = new InputFile(pexelsPhotoResponse.getPhotos().get(0).getSrc().getLarge());
             String title = pexelsPhotoResponse.getPhotos().get(0).getAlt();
             String caption = String.format("\uD83E\uDD81 *Дикий звір дня*\n_%s_", title);
@@ -280,5 +289,27 @@ public class ApiHandler {
         String newMessage = String.format("%s\n_Як то кажуть, самсінг вент ронг. Будемо сподіватися, що завтра все буде ок._", message);
 
         return messageFromApiHandler.generateSendMessage(chatId, newMessage);
+    }
+
+    private String checkStringToCharsLimit(String message) {
+        String newMessage = message;
+
+        if (message.length() > PHOTO_CAPTION_CHARS_LIMIT) {
+            newMessage = trimStringByCharsLimit(message);
+        }
+
+        return newMessage;
+    }
+
+    private String trimStringByCharsLimit(String message) {
+        String newMessage = message;
+
+        while (newMessage.length() >= PHOTO_CAPTION_CHARS_LIMIT) {
+            List<String> sentences = new LinkedList<>(List.of(newMessage.split("\\.")));
+            sentences.remove(sentences.size() - 1);
+            newMessage = String.join(".", sentences) + ".";
+        }
+
+        return newMessage;
     }
 }

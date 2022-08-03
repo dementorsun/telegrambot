@@ -195,7 +195,7 @@ public class ApiHandler {
         SendPhoto sendPhoto;
 
         try {
-            PexelsPhotoResponse pexelsPhotoResponse = botClient.getRandomPexelsPhoto("landscape", 1000);
+            PexelsPhotoResponse pexelsPhotoResponse = botClient.getRandomPexelsPhoto("landscapes", 1000);
             InputFile photo = new InputFile(pexelsPhotoResponse.getPhotos().get(0).getSrc().getLarge());
             String title = pexelsPhotoResponse.getPhotos().get(0).getAlt();
             String caption = String.format("\uD83D\uDDBC *Пейзаж дня*\n_%s_", title);
@@ -212,7 +212,7 @@ public class ApiHandler {
         SendPhoto sendPhoto;
 
         try {
-            PexelsPhotoResponse pexelsPhotoResponse = botClient.getRandomPexelsPhoto("wild_animals", 1000);
+            PexelsPhotoResponse pexelsPhotoResponse = botClient.getRandomPexelsPhoto("predators", 800);
             InputFile photo = new InputFile(pexelsPhotoResponse.getPhotos().get(0).getSrc().getLarge());
             String title = pexelsPhotoResponse.getPhotos().get(0).getAlt();
             String caption = String.format("\uD83E\uDD81 *Дикий звір дня*\n_%s_", title);
@@ -229,7 +229,7 @@ public class ApiHandler {
         SendPhoto sendPhoto;
 
         try {
-            PexelsPhotoResponse pexelsPhotoResponse = botClient.getRandomPexelsPhoto("wild_flowers", 400);
+            PexelsPhotoResponse pexelsPhotoResponse = botClient.getRandomPexelsPhoto("flowers", 1000);
             InputFile photo = new InputFile(pexelsPhotoResponse.getPhotos().get(0).getSrc().getLarge());
             String title = pexelsPhotoResponse.getPhotos().get(0).getAlt();
             String caption = String.format("\uD83C\uDF3C *Квіти дня*\n_%s_", title);

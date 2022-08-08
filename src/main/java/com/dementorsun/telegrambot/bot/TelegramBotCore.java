@@ -23,6 +23,8 @@ import java.util.List;
 @AllArgsConstructor
 class TelegramBotCore extends TelegramLongPollingBot {
 
+    private static final int TOTAL_RETRY_TIMES = 3;
+
     private final UpdateHandler updateHandler;
     private final SchedulerHelper schedulerHelper;
     private final Environment environment;
@@ -94,26 +96,48 @@ class TelegramBotCore extends TelegramLongPollingBot {
             photosAndMessagesToSend.forEach((objectToSend) -> {
                 if (objectToSend instanceof SendPhoto) {
                     SendPhoto photoToSend = (SendPhoto) objectToSend;
-                    String chatId = photoToSend.getChatId();
-                    try {
-                        execute(photoToSend);
-                        log.info("Telegram bot sent scheduled photo to '{}' chat id", chatId);
-                    } catch (TelegramApiException e) {
-                        log.info("Exception is occurred during sending scheduled photo to '{}' chat id: {}", chatId, e.getMessage());
-                    }
+                    sendPhotoByTelegramApi(photoToSend);
                 } else if (objectToSend instanceof SendMessage) {
                     SendMessage messageToSend = (SendMessage) objectToSend;
-                    String chatId = messageToSend.getChatId();
-                    try {
-                        execute(messageToSend);
-                        log.info("Telegram bot sent scheduled message with '{}' text to '{}' chat id", messageToSend.getText(), chatId);
-                    } catch (TelegramApiException e) {
-                        log.info("Exception is occurred during sending scheduled message to '{}' chat id: {}", chatId, e.getMessage());
-                    }
+                    sendMessageByTelegramApi(messageToSend);
                 } else {
                     log.info("Incompatible object type during send message/photo");
                 }
             });
+        }
+    }
+
+    private void sendMessageByTelegramApi(SendMessage sendMessage) {
+        String chatId = sendMessage.getChatId();
+
+        for (int currentRetryTime = 1; currentRetryTime <= TOTAL_RETRY_TIMES;) {
+            try {
+                execute(sendMessage);
+                currentRetryTime = TOTAL_RETRY_TIMES + 1;
+
+                log.info("Telegram bot sent scheduled message with '{}' text to '{}' chat id", sendMessage.getText(), chatId);
+            } catch (TelegramApiException e) {
+                log.info("Attempt {}. Exception is occurred during sending scheduled message to '{}' chat id: {}", currentRetryTime, chatId, e.getMessage());
+
+                currentRetryTime++;
+            }
+        }
+    }
+
+    private void sendPhotoByTelegramApi(SendPhoto sendPhoto) {
+        String chatId = sendPhoto.getChatId();
+
+        for (int currentRetryTime = 1; currentRetryTime <= TOTAL_RETRY_TIMES;) {
+            try {
+                execute(sendPhoto);
+                currentRetryTime = TOTAL_RETRY_TIMES + 1;
+
+                log.info("Telegram bot sent scheduled photo to '{}' chat id", chatId);
+            } catch (TelegramApiException e) {
+                log.info("Attempt {}. Exception is occurred during sending scheduled photo to '{}' chat id: {}", currentRetryTime, chatId, e.getMessage());
+
+                currentRetryTime++;
+            }
         }
     }
 }

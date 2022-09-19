@@ -133,8 +133,6 @@ public class ApiHandler {
                                             checkStringToCharsLimit(movie.getOverview()),
                                             movie.getVoteAverage());
 
-            log.info("Movie item is: {}", movie.getTitle());
-
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (Exception e) {
             sendPhoto = generateFailedSendPhoto(chatId, "\uD83C\uDFAC *Фільм дня*");
@@ -156,8 +154,6 @@ public class ApiHandler {
                                             tvShow.getOriginalName(),
                                             checkStringToCharsLimit(tvShow.getOverview()),
                                             tvShow.getVoteAverage());
-
-            log.info("Tv show item is: {}", tvShow.getName());
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (Exception e) {
@@ -181,8 +177,6 @@ public class ApiHandler {
                     checkStringToCharsLimit(anime.getOverview()),
                     anime.getVoteAverage());
 
-            log.info("Anime item is: {}", anime.getName());
-
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (Exception e) {
             sendPhoto = generateFailedSendPhoto(chatId, "\uD83D\uDC7A *Аніме дня*");
@@ -191,18 +185,17 @@ public class ApiHandler {
         return sendPhoto;
     }
 
-    public SendPhoto createScenerySendPhoto(long chatId) {
+    public SendPhoto createNatureSendPhoto(long chatId) {
         SendPhoto sendPhoto;
 
         try {
-            PexelsPhotoResponse pexelsPhotoResponse = botClient.getRandomPexelsPhoto("landscapes", 1000);
+            PexelsPhotoResponse pexelsPhotoResponse = botClient.getRandomPexelsPhoto("nature", 1000);
             InputFile photo = new InputFile(pexelsPhotoResponse.getPhotos().get(0).getSrc().getLarge());
-            String title = pexelsPhotoResponse.getPhotos().get(0).getAlt();
-            String caption = String.format("\uD83D\uDDBC *Пейзаж дня*\n_%s_", title);
+            String caption = "\uD83D\uDDBC *Гарне фото дня*";
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (Exception e) {
-            sendPhoto = generateFailedSendPhoto(chatId, "\uD83D\uDDBC *Пейзаж дня*");
+            sendPhoto = generateFailedSendPhoto(chatId, "\uD83D\uDDBC *Гарне фото дня*");
         }
 
         return sendPhoto;
@@ -214,8 +207,7 @@ public class ApiHandler {
         try {
             PexelsPhotoResponse pexelsPhotoResponse = botClient.getRandomPexelsPhoto("predators", 800);
             InputFile photo = new InputFile(pexelsPhotoResponse.getPhotos().get(0).getSrc().getLarge());
-            String title = pexelsPhotoResponse.getPhotos().get(0).getAlt();
-            String caption = String.format("\uD83E\uDD81 *Дикий звір дня*\n_%s_", title);
+            String caption = "\uD83E\uDD81 *Дикий звір дня*";
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (Exception e) {
@@ -225,18 +217,17 @@ public class ApiHandler {
         return sendPhoto;
     }
 
-    public SendPhoto createFlowersSendPhoto(long chatId) {
+    public SendPhoto createForestSendPhoto(long chatId) {
         SendPhoto sendPhoto;
 
         try {
-            PexelsPhotoResponse pexelsPhotoResponse = botClient.getRandomPexelsPhoto("flowers", 1000);
+            PexelsPhotoResponse pexelsPhotoResponse = botClient.getRandomPexelsPhoto("forest", 1000);
             InputFile photo = new InputFile(pexelsPhotoResponse.getPhotos().get(0).getSrc().getLarge());
-            String title = pexelsPhotoResponse.getPhotos().get(0).getAlt();
-            String caption = String.format("\uD83C\uDF3C *Квіти дня*\n_%s_", title);
+            String caption = "\uD83C\uDFD5 *Ліс дня*";
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (Exception e) {
-            sendPhoto = generateFailedSendPhoto(chatId, "\uD83C\uDF3C *Квіти дня*");
+            sendPhoto = generateFailedSendPhoto(chatId, "\uD83C\uDFD5 *Ліс дня*");
         }
 
         return sendPhoto;

@@ -52,9 +52,9 @@ public class UserDataHandler {
         Map<TopicsDict,Boolean> userTopics = new HashMap<>();
 
         userTopics.put(TopicsDict.NASA_TOPIC, getNasaTopicDataForUser(botUserTopics, userId));
-        userTopics.put(TopicsDict.SCENERY_TOPIC, getSceneryTopicDataForUser(botUserTopics, userId));
+        userTopics.put(TopicsDict.NATURE_TOPIC, getNatureTopicDataForUser(botUserTopics, userId));
         userTopics.put(TopicsDict.ANIMALS_TOPIC, getAnimalsTopicDataForUser(botUserTopics, userId));
-        userTopics.put(TopicsDict.FLOWERS_TOPIC, getFlowersTopicDataForUser(botUserTopics, userId));
+        userTopics.put(TopicsDict.FOREST_TOPIC, getForestTopicDataForUser(botUserTopics, userId));
         userTopics.put(TopicsDict.CAT_TOPIC, getCatTopicDataForUser(botUserTopics, userId));
         userTopics.put(TopicsDict.DOG_TOPIC, getDogTopicDataForUser(botUserTopics, userId));
         userTopics.put(TopicsDict.POKEMON_TOPIC, getPokemonTopicDataForUser(botUserTopics, userId));
@@ -106,9 +106,9 @@ public class UserDataHandler {
                         .build())
                 .userTopics(BotUser.UserTopic.builder()
                         .isNasaChosen(false)
-                        .isSceneryChosen(false)
+                        .isNatureChosen(false)
                         .isAnimalsChosen(false)
-                        .isFlowersChosen(false)
+                        .isForestChosen(false)
                         .isCatChosen(false)
                         .isDogChosen(false)
                         .isPokemonChosen(false)
@@ -196,13 +196,13 @@ public class UserDataHandler {
         log.info("Value '{}' has been set for Anime topic and user with id = '{}' in DB file", isMarked, userId);
     }
 
-    public void setSceneryTopicDataForUser(long userId, boolean isMarked) {
+    public void setNatureTopicDataForUser(long userId, boolean isMarked) {
         BotUser botUser = redisClient.getUserData(userId);
 
-        botUser.getUserTopics().setIsSceneryChosen(isMarked);
+        botUser.getUserTopics().setIsNatureChosen(isMarked);
         redisClient.saveUserData(botUser);
 
-        log.info("Value '{}' has been set for Wild landscape topic and user with id = '{}' in DB file", isMarked, userId);
+        log.info("Value '{}' has been set for Nature topic and user with id = '{}' in DB file", isMarked, userId);
     }
 
     public void setAnimalsTopicDataForUser(long userId, boolean isMarked) {
@@ -214,13 +214,13 @@ public class UserDataHandler {
         log.info("Value '{}' has been set for Wild animals topic and user with id = '{}' in DB file", isMarked, userId);
     }
 
-    public void setFlowersTopicDataForUser(long userId, boolean isMarked) {
+    public void setForestTopicDataForUser(long userId, boolean isMarked) {
         BotUser botUser = redisClient.getUserData(userId);
 
-        botUser.getUserTopics().setIsFlowersChosen(isMarked);
+        botUser.getUserTopics().setIsForestChosen(isMarked);
         redisClient.saveUserData(botUser);
 
-        log.info("Value '{}' has been set for Wild flowers topic and user with id = '{}' in DB file", isMarked, userId);
+        log.info("Value '{}' has been set for Forest topic and user with id = '{}' in DB file", isMarked, userId);
     }
 
     public void setDoneButtonClickedDataForUser(long userId, boolean isClicked) {
@@ -285,12 +285,12 @@ public class UserDataHandler {
         }
     }
 
-    private boolean getSceneryTopicDataForUser(BotUser.UserTopic botUserTopics, long userId) {
+    private boolean getNatureTopicDataForUser(BotUser.UserTopic botUserTopics, long userId) {
         try {
-            return botUserTopics.getIsSceneryChosen();
+            return botUserTopics.getIsNatureChosen();
         } catch (NullPointerException exception) {
-            setSceneryTopicDataForUser(userId, false);
-            log.info("{} exception is occurred during get Scenery topic data, false is written", exception.toString());
+            setNatureTopicDataForUser(userId, false);
+            log.info("{} exception is occurred during get Nature topic data, false is written", exception.toString());
 
             return false;
         }
@@ -307,12 +307,12 @@ public class UserDataHandler {
         }
     }
 
-    private boolean getFlowersTopicDataForUser(BotUser.UserTopic botUserTopics, long userId) {
+    private boolean getForestTopicDataForUser(BotUser.UserTopic botUserTopics, long userId) {
         try {
-            return botUserTopics.getIsFlowersChosen();
+            return botUserTopics.getIsForestChosen();
         } catch (NullPointerException exception) {
-            setFlowersTopicDataForUser(userId, false);
-            log.info("{} exception is occurred during get Flowers topic data, false is written", exception.toString());
+            setForestTopicDataForUser(userId, false);
+            log.info("{} exception is occurred during get Forest topic data, false is written", exception.toString());
 
             return false;
         }

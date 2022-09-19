@@ -48,12 +48,12 @@ public class SchedulerHelper {
 
             if (userTopics.get(TopicsDict.NASA_TOPIC))
                 objectsToSend.add(apiHandler.createNasaApodSendPhoto(chatId));
-            if (userTopics.get(TopicsDict.SCENERY_TOPIC))
-                objectsToSend.add(apiHandler.createScenerySendPhoto(chatId));
+            if (userTopics.get(TopicsDict.NATURE_TOPIC))
+                objectsToSend.add(apiHandler.createNatureSendPhoto(chatId));
             if (userTopics.get(TopicsDict.ANIMALS_TOPIC))
                 objectsToSend.add(apiHandler.createAnimalsSendPhoto(chatId));
-            if (userTopics.get(TopicsDict.FLOWERS_TOPIC))
-                objectsToSend.add(apiHandler.createFlowersSendPhoto(chatId));
+            if (userTopics.get(TopicsDict.FOREST_TOPIC))
+                objectsToSend.add(apiHandler.createForestSendPhoto(chatId));
             if (userTopics.get(TopicsDict.CAT_TOPIC))
                 objectsToSend.add(apiHandler.createRandomCatSendPhoto(chatId));
             if (userTopics.get(TopicsDict.DOG_TOPIC))

@@ -6,9 +6,9 @@ import lombok.AllArgsConstructor;
 public enum TopicsDict {
 
     NASA_TOPIC(),
-    SCENERY_TOPIC(),
+    NATURE_TOPIC(),
     ANIMALS_TOPIC(),
-    FLOWERS_TOPIC(),
+    FOREST_TOPIC(),
     CAT_TOPIC(),
     DOG_TOPIC(),
     POKEMON_TOPIC(),

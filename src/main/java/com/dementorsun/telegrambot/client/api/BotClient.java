@@ -47,14 +47,14 @@ public class BotClient {
     }
 
     public String getRandomMovie() {
-        final int totalPages = 34;
+        final int totalPages = 24;
         int page = getRandomNumber(totalPages);
 
         return tmdbApiClient.getRandomMovie(page);
     }
 
     public String getRandomTvShow() {
-        final int totalPages = 36;
+        final int totalPages = 26;
         int page = getRandomNumber(totalPages);
         int[] genres = new int[]{16, 10766};
 
@@ -62,7 +62,7 @@ public class BotClient {
     }
 
     public String getRandomAnime() {
-        final int totalPages = 25;
+        final int totalPages = 22;
         int page = getRandomNumber(totalPages);
 
         return tmdbApiClient.getRandomAnime(page);

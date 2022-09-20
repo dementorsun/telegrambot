@@ -3,9 +3,11 @@ package com.dementorsun.telegrambot.bot;
 import com.dementorsun.telegrambot.bot.dto.TopicButtonCallBackData;
 import com.dementorsun.telegrambot.bot.handlers.UpdateHandler;
 import com.dementorsun.telegrambot.bot.handlers.UpdateObjectHandler;
+import com.dementorsun.telegrambot.client.handlers.ApiHandler;
 import com.dementorsun.telegrambot.sheduler.SchedulerHelper;
 import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -29,6 +31,7 @@ class TelegramBotCore extends TelegramLongPollingBot {
     private final SchedulerHelper schedulerHelper;
     private final Environment environment;
     private final Gson gson;
+    private ApiHandler apiHandler;
 
     @Override
     public String getBotUsername() {
@@ -106,9 +109,9 @@ class TelegramBotCore extends TelegramLongPollingBot {
             });
         }
     }
-
+    @SneakyThrows
     private void sendMessageByTelegramApi(SendMessage sendMessage) {
-        String chatId = sendMessage.getChatId();
+        long chatId = Long.parseLong(sendMessage.getChatId());
 
         for (int currentRetryTime = 1; currentRetryTime <= TOTAL_RETRY_TIMES;) {
             try {
@@ -116,16 +119,24 @@ class TelegramBotCore extends TelegramLongPollingBot {
                 currentRetryTime = TOTAL_RETRY_TIMES + 1;
 
                 log.info("Telegram bot sent scheduled message with '{}' text to '{}' chat id", sendMessage.getText(), chatId);
-            } catch (TelegramApiException e) {
+            } catch (Exception e) {
                 log.info("Attempt {}. Exception is occurred during sending scheduled message to '{}' chat id: {}", currentRetryTime, chatId, e.getMessage());
 
                 currentRetryTime++;
+
+                if (currentRetryTime == 4) {
+                    String title = sendMessage.getText().split("\n")[0];
+                    execute(apiHandler.generateFailedSendMessage(chatId, title));
+
+                    log.info("Exception is occurred during sending scheduled message to '{}' chat id and stub photo was sent instead", chatId);
+                }
             }
         }
     }
 
+    @SneakyThrows
     private void sendPhotoByTelegramApi(SendPhoto sendPhoto) {
-        String chatId = sendPhoto.getChatId();
+        long chatId = Long.parseLong(sendPhoto.getChatId());
 
         for (int currentRetryTime = 1; currentRetryTime <= TOTAL_RETRY_TIMES;) {
             try {
@@ -133,10 +144,18 @@ class TelegramBotCore extends TelegramLongPollingBot {
                 currentRetryTime = TOTAL_RETRY_TIMES + 1;
 
                 log.info("Telegram bot sent scheduled photo to '{}' chat id", chatId);
-            } catch (TelegramApiException e) {
+            } catch (Exception e) {
                 log.info("Attempt {}. Exception is occurred during sending scheduled photo to '{}' chat id: {}", currentRetryTime, chatId, e.getMessage());
 
                 currentRetryTime++;
+
+                if (currentRetryTime == 4) {
+                    String caption = sendPhoto.getCaption();
+                    String title = caption.contains("\n") ? caption.split("\n")[0] : caption;
+                    execute(apiHandler.generateFailedSendPhoto(chatId, title));
+
+                    log.info("Exception is occurred during sending scheduled photo to '{}' chat id and stub photo was sent instead", chatId);
+                }
             }
         }
     }

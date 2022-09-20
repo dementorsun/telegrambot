@@ -233,6 +233,20 @@ public class ApiHandler {
         return sendPhoto;
     }
 
+    public SendPhoto generateFailedSendPhoto(long chatId, String caption) {
+        PexelsPhotoResponse.PexelsPhoto pexelsPhotoResponse = botClient.getPexelsPhotoForFailedTopic();
+        InputFile photo = new InputFile(pexelsPhotoResponse.getSrc().getLarge());
+        String newCaption = String.format("%s\n_Як то кажуть, самсінг вент ронг. Будемо сподіватися, що завтра все буде ок._", caption);
+
+        return messageFromApiHandler.generateSendPhoto(chatId, photo, newCaption);
+    }
+
+    public SendMessage generateFailedSendMessage(long chatId, String message) {
+        String newMessage = String.format("%s\n_Як то кажуть, самсінг вент ронг. Будемо сподіватися, що завтра все буде ок._", message);
+
+        return messageFromApiHandler.generateSendMessage(chatId, newMessage);
+    }
+
     private TmdbResponse.TmdbItem getTmdbItemWithOverview(List<TmdbResponse.TmdbItem> movieList) {
         TmdbResponse.TmdbItem tmdbItem;
         List<TmdbResponse.TmdbItem> movieListWithOverview = movieList.stream()
@@ -266,20 +280,6 @@ public class ApiHandler {
                 .findFirst().orElse("На жаль, опису немає(").replace("\n", " ");
 
         return String.format("⛩ *Покемон дня*\n*Назва:* %s\n*Тип:* %s\n*Опис:* %s", pokemonName, pokemonTypes, pokemonDescription);
-    }
-
-    private SendPhoto generateFailedSendPhoto(long chatId, String caption) {
-        PexelsPhotoResponse.PexelsPhoto pexelsPhotoResponse = botClient.getPexelsPhotoForFailedTopic();
-        InputFile photo = new InputFile(pexelsPhotoResponse.getSrc().getLarge());
-        String newCaption = String.format("%s\n_Як то кажуть, самсінг вент ронг. Будемо сподіватися, що завтра все буде ок._", caption);
-
-        return messageFromApiHandler.generateSendPhoto(chatId, photo, newCaption);
-    }
-
-    private SendMessage generateFailedSendMessage(long chatId, String message) {
-        String newMessage = String.format("%s\n_Як то кажуть, самсінг вент ронг. Будемо сподіватися, що завтра все буде ок._", message);
-
-        return messageFromApiHandler.generateSendMessage(chatId, newMessage);
     }
 
     private String checkStringToCharsLimit(String message) {

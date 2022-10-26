@@ -40,9 +40,9 @@ public class ApiHandler {
         try {
             NasaApodResponse nasaApodResponse = botClient.getNasaApod();
             InputFile photo = new InputFile(nasaApodResponse.getUrl());
-            String explanation = checkStringToCharsLimit(nasaApodResponse.getExplanation());
-            String caption = String.format("\uD83E\uDE90 *Астрономічне фото дня*\n_%s_\n%s", nasaApodResponse.getTitle(),
-                                                                                             explanation);
+            String explanation = nasaApodResponse.getExplanation();
+            String preCaption = String.format("\uD83E\uDE90 *Астрономічне фото дня*\n_%s_\n%s", nasaApodResponse.getTitle(), explanation);
+            String caption = checkStringToCharsLimit(preCaption);
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (Exception e) {
@@ -126,12 +126,13 @@ public class ApiHandler {
             List<TmdbResponse.TmdbItem> movieList = gson.fromJson(botClient.getRandomMovie(), TmdbResponse.class).getResults();
             TmdbResponse.TmdbItem movie = getTmdbItemWithOverview(movieList);
             InputFile photo = new InputFile(tmdbImageUrl + movie.getPosterPath());
-            String caption = String.format("\uD83C\uDFAC *Фільм дня*\n*%s(%s)*\n_%s_\n\"%s\"\n_TMDB рейтинг:_ *%s*",
-                                            movie.getTitle(),
-                                            movie.getReleaseDate().substring(0, 4),
-                                            movie.getOriginalTitle(),
-                                            checkStringToCharsLimit(movie.getOverview()),
-                                            movie.getVoteAverage());
+            String preCaption = String.format("\uD83C\uDFAC *Фільм дня*\n*%s(%s)*\n_%s_\n\"%s\"\n_TMDB рейтинг:_ *%s*",
+                    movie.getTitle(),
+                    movie.getReleaseDate().substring(0, 4),
+                    movie.getOriginalTitle(),
+                    movie.getOverview(),
+                    movie.getVoteAverage());
+            String caption = checkStringToCharsLimit(preCaption);
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (Exception e) {
@@ -148,12 +149,13 @@ public class ApiHandler {
             List<TmdbResponse.TmdbItem> tvShowList = gson.fromJson(botClient.getRandomTvShow(), TmdbResponse.class).getResults();
             TmdbResponse.TmdbItem tvShow = getTmdbItemWithOverview(tvShowList);
             InputFile photo = new InputFile(tmdbImageUrl + tvShow.getPosterPath());
-            String caption = String.format("\uD83D\uDCFA *Серіал дня*\n*%s(%s)*\n_%s_\n\"%s\"\n_TMDB рейтинг:_ *%s*",
-                                            tvShow.getName(),
-                                            tvShow.getFirstAirDate().substring(0, 4),
-                                            tvShow.getOriginalName(),
-                                            checkStringToCharsLimit(tvShow.getOverview()),
-                                            tvShow.getVoteAverage());
+            String preCaption = String.format("\uD83D\uDCFA *Серіал дня*\n*%s(%s)*\n_%s_\n\"%s\"\n_TMDB рейтинг:_ *%s*",
+                    tvShow.getName(),
+                    tvShow.getFirstAirDate().substring(0, 4),
+                    tvShow.getOriginalName(),
+                    tvShow.getOverview(),
+                    tvShow.getVoteAverage());
+            String caption = checkStringToCharsLimit(preCaption);
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (Exception e) {
@@ -170,12 +172,13 @@ public class ApiHandler {
             List<TmdbResponse.TmdbItem> animeList = gson.fromJson(botClient.getRandomAnime(), TmdbResponse.class).getResults();
             TmdbResponse.TmdbItem anime = getTmdbItemWithOverview(animeList);
             InputFile photo = new InputFile(tmdbImageUrl + anime.getPosterPath());
-            String caption = String.format("\uD83D\uDC7A *Аніме дня*\n*%s(%s)*\n_%s_\n\"%s\"\n_TMDB рейтинг:_ *%s*",
+            String preCaption = String.format("\uD83D\uDC7A *Аніме дня*\n*%s(%s)*\n_%s_\n\"%s\"\n_TMDB рейтинг:_ *%s*",
                     anime.getName(),
                     anime.getFirstAirDate().substring(0, 4),
                     anime.getOriginalName(),
-                    checkStringToCharsLimit(anime.getOverview()),
+                    anime.getOverview(),
                     anime.getVoteAverage());
+            String caption = checkStringToCharsLimit(preCaption);
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (Exception e) {

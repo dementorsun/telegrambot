@@ -141,6 +141,7 @@ public class ApiHandler {
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (Exception e) {
+            log.info("Exception: {}", e.getMessage());
             sendPhoto = generateFailedSendPhoto(chatId, "\uD83C\uDFAC *Фільм дня*");
         }
 

@@ -141,7 +141,6 @@ public class ApiHandler {
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (Exception e) {
-            log.info("Exception: {}", e.getMessage());
             sendPhoto = generateFailedSendPhoto(chatId, "\uD83C\uDFAC *Фільм дня*");
         }
 
@@ -315,10 +314,13 @@ public class ApiHandler {
 
     @SneakyThrows
     private InputFile generatePhotoFileForTmdb(String posterPath) {
+        log.info("Step0");
         File file = new File(posterPath);
+        log.info("Step1");
         int connectionTimeOutMills = 5000;
         int readTimeOutMills = 10000;
         FileUtils.copyURLToFile(new URL(tmdbImageUrl + posterPath), file, connectionTimeOutMills, readTimeOutMills);
+        log.info("Step2");
         String fileName = RandomStringUtils.randomAlphanumeric(8);
 
         return new InputFile(file, fileName);

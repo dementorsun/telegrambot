@@ -16,6 +16,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 
 import java.io.File;
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.LinkedList;
@@ -317,12 +318,13 @@ public class ApiHandler {
         log.info("Step0");
         File file = new File(posterPath);
         log.info("Step1");
-        int connectionTimeOutMills = 5000;
-        int readTimeOutMills = 10000;
-        FileUtils.copyURLToFile(new URL(tmdbImageUrl + posterPath), file, connectionTimeOutMills, readTimeOutMills);
+        //int connectionTimeOutMills = 5000;
+        //int readTimeOutMills = 10000;
+        //FileUtils.copyURLToFile(new URL(tmdbImageUrl + posterPath), file, connectionTimeOutMills, readTimeOutMills);
+        InputStream inputStream = new URL(tmdbImageUrl + posterPath).openStream();
         log.info("Step2");
         String fileName = RandomStringUtils.randomAlphanumeric(8);
 
-        return new InputFile(file, fileName);
+        return new InputFile(inputStream, fileName);
     }
 }

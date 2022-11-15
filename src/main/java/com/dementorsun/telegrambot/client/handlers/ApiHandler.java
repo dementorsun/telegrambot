@@ -5,14 +5,19 @@ import com.dementorsun.telegrambot.client.dto.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 
+import java.io.File;
 import java.lang.reflect.Type;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -125,7 +130,7 @@ public class ApiHandler {
         try {
             List<TmdbResponse.TmdbItem> movieList = gson.fromJson(botClient.getRandomMovie(), TmdbResponse.class).getResults();
             TmdbResponse.TmdbItem movie = getTmdbItemWithOverview(movieList);
-            InputFile photo = new InputFile(tmdbImageUrl + movie.getPosterPath());
+            InputFile photo = generatePhotoFileForTmdb(movie.getPosterPath());
             String preCaption = String.format("\uD83C\uDFAC *Фільм дня*\n*%s(%s)*\n_%s_\n\"%s\"\n_TMDB рейтинг:_ *%s*",
                     movie.getTitle(),
                     movie.getReleaseDate().substring(0, 4),
@@ -148,7 +153,7 @@ public class ApiHandler {
         try {
             List<TmdbResponse.TmdbItem> tvShowList = gson.fromJson(botClient.getRandomTvShow(), TmdbResponse.class).getResults();
             TmdbResponse.TmdbItem tvShow = getTmdbItemWithOverview(tvShowList);
-            InputFile photo = new InputFile(tmdbImageUrl + tvShow.getPosterPath());
+            InputFile photo = generatePhotoFileForTmdb(tvShow.getPosterPath());
             String preCaption = String.format("\uD83D\uDCFA *Серіал дня*\n*%s(%s)*\n_%s_\n\"%s\"\n_TMDB рейтинг:_ *%s*",
                     tvShow.getName(),
                     tvShow.getFirstAirDate().substring(0, 4),
@@ -171,7 +176,7 @@ public class ApiHandler {
         try {
             List<TmdbResponse.TmdbItem> animeList = gson.fromJson(botClient.getRandomAnime(), TmdbResponse.class).getResults();
             TmdbResponse.TmdbItem anime = getTmdbItemWithOverview(animeList);
-            InputFile photo = new InputFile(tmdbImageUrl + anime.getPosterPath());
+            InputFile photo = generatePhotoFileForTmdb(anime.getPosterPath());
             String preCaption = String.format("\uD83D\uDC7A *Аніме дня*\n*%s(%s)*\n_%s_\n\"%s\"\n_TMDB рейтинг:_ *%s*",
                     anime.getName(),
                     anime.getFirstAirDate().substring(0, 4),
@@ -305,5 +310,16 @@ public class ApiHandler {
         }
 
         return newMessage;
+    }
+
+    @SneakyThrows
+    private InputFile generatePhotoFileForTmdb(String posterPath) {
+        File file = new File(posterPath);
+        int connectionTimeOutMills = 5000;
+        int readTimeOutMills = 10000;
+        FileUtils.copyURLToFile(new URL(tmdbImageUrl + posterPath), file, connectionTimeOutMills, readTimeOutMills);
+        String fileName = RandomStringUtils.randomAlphanumeric(8);
+
+        return new InputFile(file, fileName);
     }
 }

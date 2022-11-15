@@ -126,7 +126,7 @@ class TelegramBotCore extends TelegramLongPollingBot {
 
                 if (currentRetryTime == 4) {
                     String title = sendMessage.getText().split("\n")[0];
-                    execute(apiHandler.generateFailedSendMessage(chatId, title));
+                    execute(apiHandler.generateFailedSendMessage(chatId, title, e));
 
                     log.info("Exception is occurred during sending scheduled message to '{}' chat id and stub photo was sent instead", chatId);
                 }
@@ -152,7 +152,7 @@ class TelegramBotCore extends TelegramLongPollingBot {
                 if (currentRetryTime == 4) {
                     String caption = sendPhoto.getCaption();
                     String title = caption.contains("\n") ? caption.split("\n")[0] : caption;
-                    execute(apiHandler.generateFailedSendPhoto(chatId, title));
+                    execute(apiHandler.generateFailedSendPhoto(chatId, title, e));
 
                     log.info("Exception is occurred during sending scheduled photo to '{}' chat id and stub photo was sent instead", chatId);
                 }

@@ -7,7 +7,6 @@ import com.google.gson.reflect.TypeToken;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,7 +14,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 
-import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.net.URL;
@@ -52,7 +50,7 @@ public class ApiHandler {
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (Exception e) {
-            sendPhoto = generateFailedSendPhoto(chatId, "\uD83E\uDE90 *Астрономічне фото дня*");
+            sendPhoto = generateFailedSendPhoto(chatId, "\uD83E\uDE90 *Астрономічне фото дня*", e);
         }
 
         return sendPhoto;
@@ -68,7 +66,7 @@ public class ApiHandler {
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (Exception e) {
-            sendPhoto = generateFailedSendPhoto(chatId, "\uD83D\uDC08 *Кіт дня*");
+            sendPhoto = generateFailedSendPhoto(chatId, "\uD83D\uDC08 *Кіт дня*", e);
         }
 
         return sendPhoto;
@@ -84,7 +82,7 @@ public class ApiHandler {
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (Exception e) {
-            sendPhoto = generateFailedSendPhoto(chatId, "\uD83D\uDC15 *Пес дня*");
+            sendPhoto = generateFailedSendPhoto(chatId, "\uD83D\uDC15 *Пес дня*", e);
         }
 
         return sendPhoto;
@@ -102,7 +100,7 @@ public class ApiHandler {
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (Exception e) {
-            sendPhoto = generateFailedSendPhoto(chatId, "⛩ *Покемон дня*");
+            sendPhoto = generateFailedSendPhoto(chatId, "⛩ *Покемон дня*", e);
         }
 
         return sendPhoto;
@@ -119,7 +117,7 @@ public class ApiHandler {
 
             sendMessage = messageFromApiHandler.generateSendMessage(chatId, message);
         } catch (Exception e) {
-            sendMessage = generateFailedSendMessage(chatId, "\uD83E\uDD89 *Мудрість дня*");
+            sendMessage = generateFailedSendMessage(chatId, "\uD83E\uDD89 *Мудрість дня*", e);
         }
 
         return sendMessage;
@@ -142,7 +140,7 @@ public class ApiHandler {
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (Exception e) {
-            sendPhoto = generateFailedSendPhoto(chatId, "\uD83C\uDFAC *Фільм дня*");
+            sendPhoto = generateFailedSendPhoto(chatId, "\uD83C\uDFAC *Фільм дня*", e);
         }
 
         return sendPhoto;
@@ -165,7 +163,7 @@ public class ApiHandler {
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (Exception e) {
-            sendPhoto = generateFailedSendPhoto(chatId, "\uD83D\uDCFA *Серіал дня*");
+            sendPhoto = generateFailedSendPhoto(chatId, "\uD83D\uDCFA *Серіал дня*", e);
         }
 
         return sendPhoto;
@@ -188,7 +186,7 @@ public class ApiHandler {
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (Exception e) {
-            sendPhoto = generateFailedSendPhoto(chatId, "\uD83D\uDC7A *Аніме дня*");
+            sendPhoto = generateFailedSendPhoto(chatId, "\uD83D\uDC7A *Аніме дня*", e);
         }
 
         return sendPhoto;
@@ -204,7 +202,7 @@ public class ApiHandler {
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (Exception e) {
-            sendPhoto = generateFailedSendPhoto(chatId, "\uD83D\uDDBC *Гарне фото дня*");
+            sendPhoto = generateFailedSendPhoto(chatId, "\uD83D\uDDBC *Гарне фото дня*", e);
         }
 
         return sendPhoto;
@@ -220,7 +218,7 @@ public class ApiHandler {
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (Exception e) {
-            sendPhoto = generateFailedSendPhoto(chatId, "\uD83E\uDD81 *Дикий звір дня*");
+            sendPhoto = generateFailedSendPhoto(chatId, "\uD83E\uDD81 *Дикий звір дня*", e);
         }
 
         return sendPhoto;
@@ -236,13 +234,15 @@ public class ApiHandler {
 
             sendPhoto = messageFromApiHandler.generateSendPhoto(chatId, photo, caption);
         } catch (Exception e) {
-            sendPhoto = generateFailedSendPhoto(chatId, "\uD83C\uDFD5 *Ліс дня*");
+            sendPhoto = generateFailedSendPhoto(chatId, "\uD83C\uDFD5 *Ліс дня*", e);
         }
 
         return sendPhoto;
     }
 
-    public SendPhoto generateFailedSendPhoto(long chatId, String caption) {
+    public SendPhoto generateFailedSendPhoto(long chatId, String caption, Exception exception) {
+        log.info("Exception is occurred during prepare SendPhoto: {}", exception.toString());
+
         PexelsPhotoResponse.PexelsPhoto pexelsPhotoResponse = botClient.getPexelsPhotoForFailedTopic();
         InputFile photo = new InputFile(pexelsPhotoResponse.getSrc().getLarge());
         String newCaption = String.format("%s\n_Як то кажуть, самсінг вент ронг. Будемо сподіватися, що завтра все буде ок._", caption);
@@ -250,7 +250,9 @@ public class ApiHandler {
         return messageFromApiHandler.generateSendPhoto(chatId, photo, newCaption);
     }
 
-    public SendMessage generateFailedSendMessage(long chatId, String message) {
+    public SendMessage generateFailedSendMessage(long chatId, String message, Exception exception) {
+        log.info("Exception is occurred during prepare SendMessage: {}", exception.toString());
+
         String newMessage = String.format("%s\n_Як то кажуть, самсінг вент ронг. Будемо сподіватися, що завтра все буде ок._", message);
 
         return messageFromApiHandler.generateSendMessage(chatId, newMessage);
@@ -315,14 +317,7 @@ public class ApiHandler {
 
     @SneakyThrows
     private InputFile generatePhotoFileForTmdb(String posterPath) {
-        log.info("Step0");
-        File file = new File(posterPath);
-        log.info("Step1");
-        //int connectionTimeOutMills = 5000;
-        //int readTimeOutMills = 10000;
-        //FileUtils.copyURLToFile(new URL(tmdbImageUrl + posterPath), file, connectionTimeOutMills, readTimeOutMills);
         InputStream inputStream = new URL(tmdbImageUrl + posterPath).openStream();
-        log.info("Step2");
         String fileName = RandomStringUtils.randomAlphanumeric(8);
 
         return new InputFile(inputStream, fileName);

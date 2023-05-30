@@ -1,12 +1,14 @@
-package com.dementorsun.telegrambot.bot;
+package com.dementorsun.telegrambot;
 
 import com.dementorsun.telegrambot.bot.dto.TopicButtonCallBackData;
 import com.dementorsun.telegrambot.bot.handlers.UpdateHandler;
 import com.dementorsun.telegrambot.bot.handlers.UpdateObjectHandler;
 import com.dementorsun.telegrambot.client.handlers.ApiHandler;
+import com.dementorsun.telegrambot.command.CommandsContainer;
+import com.dementorsun.telegrambot.command.NotMenuCommand;
 import com.dementorsun.telegrambot.sheduler.SchedulerHelper;
 import com.google.gson.Gson;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
@@ -20,18 +22,21 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.List;
 
-@Component
 @Slf4j
-@AllArgsConstructor
-class TelegramBotCore extends TelegramLongPollingBot {
+@Component
+@RequiredArgsConstructor
+public class TelegramBotCore extends TelegramLongPollingBot {
 
     private static final int TOTAL_RETRY_TIMES = 3;
+    private static final String COMMAND_PREFIX = "/";
 
     private final UpdateHandler updateHandler;
     private final SchedulerHelper schedulerHelper;
     private final Environment environment;
     private final Gson gson;
-    private ApiHandler apiHandler;
+    private final ApiHandler apiHandler;
+    private final CommandsContainer commandsContainer;
+    private final NotMenuCommand notMenuCommand;
 
     @Override
     public String getBotUsername() {
@@ -45,16 +50,19 @@ class TelegramBotCore extends TelegramLongPollingBot {
 
     @Override
     public synchronized void onUpdateReceived(Update update) {
-        if (update.hasMessage()) {
-            SendMessage sendMessageToUser = updateHandler.handleMessageUpdate(update);
+        //If Update object has message text, then check if it's a bot command
+        if (update.hasMessage() && update.getMessage().hasText()) {
             long userId = UpdateObjectHandler.getUserIdFromUpdate(update);
-            String messageToUser = sendMessageToUser.getText();
-            try {
-                execute(sendMessageToUser);
-                log.info("Telegram bot sent '{}' message to user with '{}' id", messageToUser, userId);
-            } catch (TelegramApiException e) {
-                log.info("Exception is occurred during sending message to user with '{}' id: {}", userId, e.getMessage());
+            String message = UpdateObjectHandler.getMessageTextFromUpdate(update);
+            SendMessage sendMessage;
+            //If message is a bot command, then handle it according to command name
+            if (message.startsWith(COMMAND_PREFIX)) {
+                sendMessage = commandsContainer.retrieveMenuCommand(message).handleMenuCommand(update);
+                //In case message is not bot command, then handle it according to 'no command' logic
+            } else {
+                sendMessage = notMenuCommand.handleMenuCommand(update);
             }
+            sendBotMessage(sendMessage, userId);
         } else if (update.hasCallbackQuery()) {
             long userId = UpdateObjectHandler.getCallBackUserIdFromUpdate(update);
             TopicButtonCallBackData callBackData = gson.fromJson(UpdateObjectHandler.getCallBackDataFromUpdate(update), TopicButtonCallBackData.class);
@@ -96,7 +104,7 @@ class TelegramBotCore extends TelegramLongPollingBot {
         List<Object> photosAndMessagesToSend = schedulerHelper.getPhotosAndMessagesToSend();
 
         if (!photosAndMessagesToSend.isEmpty()) {
-            photosAndMessagesToSend.forEach((objectToSend) -> {
+            photosAndMessagesToSend.forEach(objectToSend -> {
                 if (objectToSend instanceof SendPhoto) {
                     SendPhoto photoToSend = (SendPhoto) objectToSend;
                     sendPhotoByTelegramApi(photoToSend);
@@ -109,6 +117,16 @@ class TelegramBotCore extends TelegramLongPollingBot {
             });
         }
     }
+
+    private void sendBotMessage(SendMessage sendMessage, long userId) {
+        try {
+            execute(sendMessage);
+            log.info("Telegram bot sent '{}' message to user with '{}' id", sendMessage.getText(), userId);
+        } catch (TelegramApiException e) {
+            log.info("Exception is occurred during sending message to user with '{}' id: {}", userId, e.getMessage());
+        }
+    }
+
     @SneakyThrows
     private void sendMessageByTelegramApi(SendMessage sendMessage) {
         long chatId = Long.parseLong(sendMessage.getChatId());

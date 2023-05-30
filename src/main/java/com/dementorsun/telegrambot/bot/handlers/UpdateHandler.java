@@ -13,10 +13,6 @@ public class UpdateHandler {
 
     private final UserActionsHandler userActionsHandler;
 
-    public SendMessage handleMessageUpdate(Update update) {
-        return userActionsHandler.handleReceivedMessage(update);
-    }
-
     public EditMessageReplyMarkup handleCallBackDataUponTopicButtonClick(Update update) {
         return userActionsHandler.handleTopicButtonClick(update);
     }

@@ -23,7 +23,8 @@ public enum BotMessages {
     TIME_CHANGING_WITH_SILENCE_MODE("Що, передумав? Чекаю новий час у форматі '12:45'."),
     UNEXPECTED_ACTION_MESSAGE("Як то кажуть 'Oops, something went wrong'."),
     ACTIVATE_SILENCE_MODE_MESSAGE("Ну що ж, вибір зроблено. Відтепер, я буду мовчати. Захочеш знову отримувати від мене повідомлення обирай 'Змінити час' в меню. Бувай!"),
-    SILENCE_MODE_IS_ALREADY_ACTIVE_MESSAGE("Я ображений і зараз в режимі тиші. 'Змінити час' в меню. Ти знаєш, що робити.");
+    SILENCE_MODE_IS_ALREADY_ACTIVE_MESSAGE("Я ображений і зараз в режимі тиші. 'Змінити час' в меню. Ти знаєш, що робити."),
+    UNKNOWN_COMMAND_MESSAGE("Шось я не розумію, шо саме ти від мене хочеш юний хакер.");
 
     private final String message;
 }

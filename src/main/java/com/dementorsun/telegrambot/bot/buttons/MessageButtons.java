@@ -25,46 +25,46 @@ public class MessageButtons {
     private final UserDataHandler userDataHandler;
     private final Gson gson;
 
-    public InlineKeyboardMarkup setTopicsButtons(long userId, boolean isNewUser) {
+    public InlineKeyboardMarkup setTopicsButtons(long userId) {
+        boolean isNewUser = userDataHandler.checkIsNewUser(userId);
         List<List<InlineKeyboardButton>> messageAllButtons = new ArrayList<>(generateInlineKeyboardButtonList(userId, isNewUser));
 
         return new InlineKeyboardMarkup(messageAllButtons);
-}
+    }
 
-    public EditMessageReplyMarkup editTopicsButtons(EditMessageReplyMarkup editedMessage, long userId, boolean isNewUser) {
-        InlineKeyboardMarkup editedMessageButtonsMarkup = setTopicsButtons(userId, isNewUser);
+    public EditMessageReplyMarkup editTopicsButtons(EditMessageReplyMarkup editedMessage, long userId) {
+        InlineKeyboardMarkup editedMessageButtonsMarkup = setTopicsButtons(userId);
         editedMessage.setReplyMarkup(editedMessageButtonsMarkup);
 
         return editedMessage;
     }
 
-    private String getTopicButtonText(Map<TopicsDict,Boolean> userTopics, MessageButtonsDict botButton) {
+    private String getTopicButtonText(Map<TopicsDict, Boolean> userTopics, MessageButtonsDict botButton) {
         String topicButtonText;
         if (MessageButtonsDict.DONE_BUTTON.equals(botButton)) {
             topicButtonText = botButton.getButtonText();
-        }
-        else {
+        } else {
             boolean isTopicMarked = userTopics.get(botButton.getTopic());
             topicButtonText = isTopicMarked ? botButton.getButtonText() + " ✅" : botButton.getButtonText();
         }
         return topicButtonText;
     }
 
-    private String getTopicButtonCallBackData(Map<TopicsDict,Boolean> userTopics, MessageButtonsDict botButton) {
+    private String getTopicButtonCallBackData(Map<TopicsDict, Boolean> userTopics, MessageButtonsDict botButton) {
         String topicButtonCallBackData;
         if (MessageButtonsDict.DONE_BUTTON.equals(botButton)) {
             topicButtonCallBackData = generateJsonButtonCallBackData(NO_TOPIC_BUTTON, null, false);
         } else {
             boolean isTopicMarked = userTopics.get(botButton.getTopic());
             topicButtonCallBackData = isTopicMarked ? generateJsonButtonCallBackData(IS_TOPIC_BUTTON, botButton.getTopic(), true) :
-                                                      generateJsonButtonCallBackData(IS_TOPIC_BUTTON, botButton.getTopic(), false);
+                    generateJsonButtonCallBackData(IS_TOPIC_BUTTON, botButton.getTopic(), false);
         }
 
         return topicButtonCallBackData;
     }
 
     private InlineKeyboardButton generateInlineKeyboardButton(long userId, MessageButtonsDict botButton) {
-        Map<TopicsDict,Boolean> userTopics = userDataHandler.getUserTopics(userId);
+        Map<TopicsDict, Boolean> userTopics = userDataHandler.getUserTopics(userId);
 
         return InlineKeyboardButton.builder()
                 .text(getTopicButtonText(userTopics, botButton))
@@ -85,6 +85,7 @@ public class MessageButtons {
 
         return inlineKeyboardButtonList;
     }
+
     private String generateJsonButtonCallBackData(boolean isTopic, TopicsDict topic, boolean isTopicMarked) {
         return gson.toJson(new TopicButtonCallBackData(isTopic, topic, isTopicMarked), TopicButtonCallBackData.class);
     }

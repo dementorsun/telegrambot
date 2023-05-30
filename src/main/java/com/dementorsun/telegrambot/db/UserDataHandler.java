@@ -1,11 +1,13 @@
 package com.dementorsun.telegrambot.db;
 
+import com.dementorsun.telegrambot.bot.handlers.UpdateObjectHandler;
 import com.dementorsun.telegrambot.db.dto.BotUser;
 import com.dementorsun.telegrambot.db.redis.RedisClient;
 import com.dementorsun.telegrambot.enums.TopicsDict;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 
 import java.util.*;
@@ -89,7 +91,9 @@ public class UserDataHandler {
                 .collect(Collectors.toList());
     }
 
-    public void saveNewUserData(User user, long chatId) {
+    public void saveNewUserData(User user, Update update) {
+        long chatId = UpdateObjectHandler.getChatIdFromUpdate(update);
+
         BotUser botUser = BotUser.builder()
                 .userId(user.getId())
                 .userInfo(BotUser.UserInfo.builder()

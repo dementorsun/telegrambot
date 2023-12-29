@@ -4,7 +4,7 @@ import com.dementorsun.telegrambot.bot.handlers.MessageHandler;
 import com.dementorsun.telegrambot.client.handlers.ApiHandler;
 import com.dementorsun.telegrambot.db.dto.BotUser;
 import com.dementorsun.telegrambot.db.UserDataHandler;
-import com.dementorsun.telegrambot.enums.TopicsDict;
+import com.dementorsun.telegrambot.topic.enums.TopicsDict;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 

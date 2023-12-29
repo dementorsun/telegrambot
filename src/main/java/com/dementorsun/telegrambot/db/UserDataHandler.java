@@ -3,7 +3,7 @@ package com.dementorsun.telegrambot.db;
 import com.dementorsun.telegrambot.bot.handlers.UpdateObjectHandler;
 import com.dementorsun.telegrambot.db.dto.BotUser;
 import com.dementorsun.telegrambot.db.redis.RedisClient;
-import com.dementorsun.telegrambot.enums.TopicsDict;
+import com.dementorsun.telegrambot.topic.enums.TopicsDict;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -24,10 +24,6 @@ public class UserDataHandler {
 
     public boolean checkIsDataPresentForUser(long userId) {
         return Optional.ofNullable(redisClient.getUserData(userId)).isPresent();
-    }
-
-    public boolean checkIsNewUser(long userId) {
-        return redisClient.getUserData(userId).getUserSettings().getIsNewUser();
     }
 
     public boolean getIsDoneButtonClickedForUser(long userId) {
@@ -51,7 +47,7 @@ public class UserDataHandler {
 
     public Map<TopicsDict, Boolean> getUserTopics(long userId) {
         BotUser.UserTopic botUserTopics = redisClient.getUserData(userId).getUserTopics();
-        Map<TopicsDict,Boolean> userTopics = new HashMap<>();
+        Map<TopicsDict,Boolean> userTopics = new EnumMap<>(TopicsDict.class);
 
         userTopics.put(TopicsDict.NASA_TOPIC, getNasaTopicDataForUser(botUserTopics, userId));
         userTopics.put(TopicsDict.NATURE_TOPIC, getNatureTopicDataForUser(botUserTopics, userId));
@@ -272,10 +268,10 @@ public class UserDataHandler {
         log.info("Silence mode has been set for user with id = '{}' in DB file", userId);
     }
 
-    public boolean checkIsUserDoNotHaveActiveTopics(long userId) {
+    public boolean getIsAnyTopicActiveForUser(long userId) {
         return getUserTopics(userId).entrySet()
                 .stream()
-                .noneMatch(Map.Entry::getValue);
+                .anyMatch(Map.Entry::getValue);
     }
 
     private boolean getNasaTopicDataForUser(BotUser.UserTopic botUserTopics, long userId) {

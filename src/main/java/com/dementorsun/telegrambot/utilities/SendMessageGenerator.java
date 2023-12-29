@@ -13,7 +13,7 @@ import static org.telegram.telegrambots.meta.api.methods.ParseMode.MARKDOWN;
 
 @Component
 @NoArgsConstructor
-public class SendMessageObjectGenerator {
+public class SendMessageGenerator {
 
     private static final String BOT_MESSAGE_TITLE = "*КоженДеньБот: *";
 
@@ -23,9 +23,19 @@ public class SendMessageObjectGenerator {
      * @param text provides text for {@link SendMessage} object.
      * @return {@link SendMessage} object with filled mandatory fields.
      */
-    public SendMessage createSendMessageObject(Update update, String text) {
+    public SendMessage createSendMessageFromMessage(Update update, String text) {
         long chatId = update.getMessage().getChatId();
 
+        return createSendMessage(chatId, text);
+    }
+
+    public SendMessage createSendMessageFromCallBack(Update update, String text) {
+        long chatId = update.getCallbackQuery().getMessage().getChatId();
+
+        return createSendMessage(chatId, text);
+    }
+
+    private SendMessage createSendMessage(long chatId, String text) {
         return SendMessage.builder().
                 chatId(String.valueOf(chatId))
                 .text(BOT_MESSAGE_TITLE + text)

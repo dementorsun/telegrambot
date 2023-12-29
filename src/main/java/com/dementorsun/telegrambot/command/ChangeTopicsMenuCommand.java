@@ -1,8 +1,8 @@
 package com.dementorsun.telegrambot.command;
 
-import com.dementorsun.telegrambot.bot.buttons.MessageButtons;
 import com.dementorsun.telegrambot.db.UserDataHandler;
-import com.dementorsun.telegrambot.utilities.SendMessageObjectGenerator;
+import com.dementorsun.telegrambot.topic.TopicButtonHandler;
+import com.dementorsun.telegrambot.utilities.SendMessageGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -22,8 +22,8 @@ import static com.dementorsun.telegrambot.enums.BotMessages.*;
 public class ChangeTopicsMenuCommand implements MenuCommand {
 
     private final UserDataHandler userDataHandler;
-    private final MessageButtons messageButtons;
-    private final SendMessageObjectGenerator sendMessageObjectGenerator;
+    private final SendMessageGenerator sendMessageGenerator;
+    private final TopicButtonHandler topicButtonHandler;
 
     /**
      * Method return {@link SendMessage} object for further execution /change_topics menu command logic.
@@ -38,18 +38,16 @@ public class ChangeTopicsMenuCommand implements MenuCommand {
 
         //If silent mode is active and user wants to change topics, then send info message.
         if (userDataHandler.checkIsSilenceModeActiveForUser(userId)) {
-            sendMessage = sendMessageObjectGenerator.createSendMessageObject(update,
+            sendMessage = sendMessageGenerator.createSendMessageFromMessage(update,
                                                                              TOPICS_WITH_SILENCE_MODE_MESSAGE.getMessage());
 
             log.info("SendMessage with silence mode explanation after click on topics button is generated for user with id = '{}'", userId);
 
             //In other cases show topics buttons for user.
         } else {
-            sendMessage = sendMessageObjectGenerator.createSendMessageObject(update, CHANGE_TOPICS_MESSAGE.getMessage());
-            InlineKeyboardMarkup messageButtonsMarkup = messageButtons.setTopicsButtons(userId);
+            sendMessage = sendMessageGenerator.createSendMessageFromMessage(update, CHANGE_TOPICS_MESSAGE.getMessage());
+            InlineKeyboardMarkup messageButtonsMarkup = topicButtonHandler.setTopicsButtons(userId);
             sendMessage.setReplyMarkup(messageButtonsMarkup);
-
-            userDataHandler.setDoneButtonClickedDataForUser(userId, false);
 
             log.info("SendMessage with topics buttons is generated for user with id = '{}'", userId);
         }

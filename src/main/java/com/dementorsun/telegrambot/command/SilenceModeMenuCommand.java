@@ -1,7 +1,7 @@
 package com.dementorsun.telegrambot.command;
 
 import com.dementorsun.telegrambot.db.UserDataHandler;
-import com.dementorsun.telegrambot.utilities.SendMessageObjectGenerator;
+import com.dementorsun.telegrambot.utilities.SendMessageGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ import static com.dementorsun.telegrambot.enums.BotMessages.*;
 public class SilenceModeMenuCommand implements MenuCommand {
 
     private final UserDataHandler userDataHandler;
-    private final SendMessageObjectGenerator sendMessageObjectGenerator;
+    private final SendMessageGenerator sendMessageGenerator;
 
     /**
      * Method return {@link SendMessage} object for further execution /stop_spam menu command logic.
@@ -34,7 +34,7 @@ public class SilenceModeMenuCommand implements MenuCommand {
 
         //If silent mode is active for user, then send info message.
         if (userDataHandler.checkIsSilenceModeActiveForUser(userId)) {
-            sendMessage = sendMessageObjectGenerator.createSendMessageObject(update,
+            sendMessage = sendMessageGenerator.createSendMessageFromMessage(update,
                                                                              SILENCE_MODE_IS_ALREADY_ACTIVE_MESSAGE.getMessage());
 
             log.info("SendMessage with already active silence mode is generated for user with id = '{}'", userId);
@@ -43,7 +43,7 @@ public class SilenceModeMenuCommand implements MenuCommand {
         } else {
             userDataHandler.setSilenceModeForUser(userId);
 
-            sendMessage = sendMessageObjectGenerator.createSendMessageObject(update,
+            sendMessage = sendMessageGenerator.createSendMessageFromMessage(update,
                                                                              ACTIVATE_SILENCE_MODE_MESSAGE.getMessage());
 
             log.info("SendMessage with activated silence mode is generated for user with id = '{}'", userId);

@@ -1,16 +1,15 @@
 package com.dementorsun.telegrambot.command;
 
-import com.dementorsun.telegrambot.bot.buttons.MessageButtons;
+import com.dementorsun.telegrambot.TestData;
 import com.dementorsun.telegrambot.db.UserDataHandler;
-import com.dementorsun.telegrambot.utilities.SendMessageObjectGenerator;
+import com.dementorsun.telegrambot.topic.TopicButtonHandler;
+import com.dementorsun.telegrambot.utilities.SendMessageGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -20,45 +19,43 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
 @DisplayName("Unit level tests for ChangeTopicsMenuCommand")
-class ChangeTopicsMenuCommandTest extends TestData {
+class ChangeTopicsMenuCommandCommandTest extends TestData {
 
     @InjectMocks
     private ChangeTopicsMenuCommand changeTopicsMenuCommand;
     @Mock
     private UserDataHandler userDataHandler;
     @Mock
-    private SendMessageObjectGenerator sendMessageObjectGenerator;
+    private SendMessageGenerator sendMessageGenerator;
     @Mock
-    private MessageButtons messageButtons;
+    private TopicButtonHandler topicButtonHandler;
     @Mock
     private SendMessage sendMessage;
 
     @Test
     @DisplayName("Verify Change Topics menu command when silence mode is active")
     void verifyChangeTopicsCommandWhenSilenceModeIsActive() {
-        Update update = createUpdateInstance();
+        Update update = createUpdateMessageInstance();
         when(userDataHandler.checkIsSilenceModeActiveForUser(USER_ID)).thenReturn(true);
 
         changeTopicsMenuCommand.handleMenuCommand(update);
 
-        verify(sendMessageObjectGenerator).createSendMessageObject(update,
+        verify(sendMessageGenerator).createSendMessageFromMessage(update,
                                                                    TOPICS_WITH_SILENCE_MODE_MESSAGE.getMessage());
     }
 
     @Test
     @DisplayName("Verify Change Topics menu command when silence mode is inactive")
     void verifyChangeTopicsCommandWhenSilenceModeIsInactive() {
-        Update update = createUpdateInstance();
+        Update update = createUpdateMessageInstance();
         when(userDataHandler.checkIsSilenceModeActiveForUser(USER_ID)).thenReturn(false);
-        when(sendMessageObjectGenerator.createSendMessageObject(update,
+        when(sendMessageGenerator.createSendMessageFromMessage(update,
                                                                 CHANGE_TOPICS_MESSAGE.getMessage())).thenReturn(sendMessage);
 
         changeTopicsMenuCommand.handleMenuCommand(update);
 
-        verify(sendMessageObjectGenerator).createSendMessageObject(update, CHANGE_TOPICS_MESSAGE.getMessage());
-        verify(messageButtons).setTopicsButtons(USER_ID);
-        verify(userDataHandler).setDoneButtonClickedDataForUser(USER_ID, false);
+        verify(sendMessageGenerator).createSendMessageFromMessage(update, CHANGE_TOPICS_MESSAGE.getMessage());
+        verify(topicButtonHandler).setTopicsButtons(USER_ID);
     }
 }

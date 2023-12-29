@@ -1,11 +1,19 @@
-package com.dementorsun.telegrambot.enums;
+package com.dementorsun.telegrambot.topic.enums;
 
-import lombok.AllArgsConstructor;
+import com.dementorsun.telegrambot.topic.TopicButtonHandler;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+
+/**
+ * Enumeration for {@link TopicButtonHandler}'s.
+ */
 
 @Getter
-@AllArgsConstructor
-public enum MessageButtonsDict {
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public enum TopicButtonsDict {
 
     NASA_BUTTON("\uD83E\uDE90 Астрономічне фото дня", "\uD83E\uDE90 Астрономічне фото дня ✅", "NASA_TOPIC", "NASA_TOPIC_MARKED", TopicsDict.NASA_TOPIC),
     NATURE_BUTTON("\uD83D\uDDBC Гарне фото дня", "\uD83D\uDDBC Гарне фото дня ✅", "NATURE_TOPIC", "NATURE_TOPIC_MARKED", TopicsDict.NATURE_TOPIC),
@@ -20,9 +28,9 @@ public enum MessageButtonsDict {
     QUOTE_BUTTON("\uD83E\uDD89 Мудрість дня", "\uD83E\uDD89 Мудрість дня ✅", "QUOTE_TOPIC", "QUOTE_TOPIC_MARKED", TopicsDict.QUOTE_TOPIC),
     DONE_BUTTON("Готово", "Готово", "TOPICS_DONE", "TOPICS_DONE", null);
 
-    private final String buttonText;
-    private final String markedButtonText;
-    private final String buttonCallBackData;
-    private final String markedButtonCallBackData;
-    private final TopicsDict topic;
+    String buttonText;
+    String markedButtonText;
+    String buttonCallBackData;
+    String markedButtonCallBackData;
+    TopicsDict topic;
 }

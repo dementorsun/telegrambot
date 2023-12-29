@@ -1,12 +1,14 @@
 package com.dementorsun.telegrambot;
 
-import com.dementorsun.telegrambot.bot.dto.TopicButtonCallBackData;
+import com.dementorsun.telegrambot.topic.button.DoneTopicButton;
+import com.dementorsun.telegrambot.topic.model.TopicButtonCallBackData;
 import com.dementorsun.telegrambot.bot.handlers.UpdateHandler;
-import com.dementorsun.telegrambot.bot.handlers.UpdateObjectHandler;
 import com.dementorsun.telegrambot.client.handlers.ApiHandler;
 import com.dementorsun.telegrambot.command.CommandsContainer;
 import com.dementorsun.telegrambot.command.NotMenuCommand;
 import com.dementorsun.telegrambot.sheduler.SchedulerHelper;
+import com.dementorsun.telegrambot.topic.button.TopicButton;
+import com.dementorsun.telegrambot.topic.TopicsButtonContainer;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -15,8 +17,10 @@ import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -37,6 +41,7 @@ public class TelegramBotCore extends TelegramLongPollingBot {
     private final ApiHandler apiHandler;
     private final CommandsContainer commandsContainer;
     private final NotMenuCommand notMenuCommand;
+    private final TopicsButtonContainer topicsButtonContainer;
 
     @Override
     public String getBotUsername() {
@@ -52,8 +57,8 @@ public class TelegramBotCore extends TelegramLongPollingBot {
     public synchronized void onUpdateReceived(Update update) {
         //If Update object has message text, then check if it's a bot command
         if (update.hasMessage() && update.getMessage().hasText()) {
-            long userId = UpdateObjectHandler.getUserIdFromUpdate(update);
-            String message = UpdateObjectHandler.getMessageTextFromUpdate(update);
+            long userId = update.getMessage().getFrom().getId();
+            String message = update.getMessage().getText().trim();
             SendMessage sendMessage;
             //If message is a bot command, then handle it according to command name
             if (message.startsWith(COMMAND_PREFIX)) {
@@ -63,33 +68,23 @@ public class TelegramBotCore extends TelegramLongPollingBot {
                 sendMessage = notMenuCommand.handleMenuCommand(update);
             }
             sendBotMessage(sendMessage, userId);
+            //If Update object has call back query, then handle click on topic button action
         } else if (update.hasCallbackQuery()) {
-            long userId = UpdateObjectHandler.getCallBackUserIdFromUpdate(update);
-            TopicButtonCallBackData callBackData = gson.fromJson(UpdateObjectHandler.getCallBackDataFromUpdate(update), TopicButtonCallBackData.class);
-            if (Boolean.TRUE.equals(callBackData.getIsTopicButton())) {
-                try {
-                    execute(updateHandler.handleCallBackDataUponTopicButtonClick(update));
-                    log.info("Telegram bot handled '{}' button click by user with '{}' id", callBackData, userId);
-                } catch (TelegramApiException e) {
-                    log.info("Exception is occurred during handling click to topic button by user with '{}' id: {}", userId, e.getMessage());
-                }
-            } else if (Boolean.FALSE.equals(callBackData.getIsTopicButton())) {
-                try {
-                    execute(updateHandler.handleCallBackDataUponDoneButtonClick(update));
-                    log.info("Telegram bot handled done topics button click by user with '{}' id", userId);
+            long userId = update.getCallbackQuery().getFrom().getId();
+            TopicButtonCallBackData callBackData = gson.fromJson(update.getCallbackQuery().getData(), TopicButtonCallBackData.class);
+            TopicButton topicButton = topicsButtonContainer.retrieveTopicButton(callBackData.getTopic());
+            EditMessageReplyMarkup editMessageReplyMarkup = topicButton.handleTopicButtonClick(userId, !callBackData.getIsMarked(), update);
+            sendBotEditMessageReplyMarkup(editMessageReplyMarkup, userId);
 
-                } catch (TelegramApiException e) {
-                    log.info("Exception is occurred during handling click to topics done button by user with '{}' id: {}", userId, e.getMessage());
-                }
-            }
-            try {
-                execute(updateHandler.generateAnswerCallBackQuery(update));
-                log.info("Telegram bot sent answer call back query to user with '{}' id", userId);
-            } catch (TelegramApiException e) {
-                log.info("Exception is occurred during sending answer call back query to user with '{}' id: {}", userId, e.getMessage());
+            sendAnswerCallBackQuery(update, userId);
+
+            //If call back query has Done topic data, then handle click on Done topic button
+            if (topicButton instanceof DoneTopicButton) {
+                SendMessage sendMessage = ((DoneTopicButton) topicButton).handleTutorialDoneButtonClick(update, userId);
+                sendBotMessage(sendMessage, userId);
             }
         } else {
-            long userId = UpdateObjectHandler.getCallBackUserIdFromUpdate(update);
+            long userId = update.getCallbackQuery().getFrom().getId();
             try {
                 execute(updateHandler.handleUnexpectedAction(update));
                 log.info("Telegram bot sent message about unexpected action to user with '{}' id", userId);
@@ -124,6 +119,24 @@ public class TelegramBotCore extends TelegramLongPollingBot {
             log.info("Telegram bot sent '{}' message to user with '{}' id", sendMessage.getText(), userId);
         } catch (TelegramApiException e) {
             log.info("Exception is occurred during sending message to user with '{}' id: {}", userId, e.getMessage());
+        }
+    }
+
+    private void sendBotEditMessageReplyMarkup(EditMessageReplyMarkup editMessageReplyMarkup, long userId) {
+        try {
+            execute(editMessageReplyMarkup);
+            log.info("Telegram bot sent '{}' edit message reply markup to user with '{}' id", editMessageReplyMarkup.getReplyMarkup(), userId);
+        } catch (TelegramApiException e) {
+            log.info("Exception is occurred during sending edit message reply markup to user with '{}' id: {}", userId, e.getMessage());
+        }
+    }
+
+    private void sendAnswerCallBackQuery(Update update, long userId) {
+        try {
+            execute(new AnswerCallbackQuery(update.getCallbackQuery().getId()));
+            log.info("Telegram bot sent answer call back query to user with '{}' id", userId);
+        } catch (TelegramApiException e) {
+            log.info("Exception is occurred during sending answer call back query to user with '{}' id: {}", userId, e.getMessage());
         }
     }
 

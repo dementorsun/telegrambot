@@ -1,8 +1,11 @@
-package com.dementorsun.telegrambot.enums;
+package com.dementorsun.telegrambot.topic.enums;
 
-import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
+/**
+ * Enumeration for {@link }'s.
+ */
+@NoArgsConstructor
 public enum TopicsDict {
 
     NASA_TOPIC(),

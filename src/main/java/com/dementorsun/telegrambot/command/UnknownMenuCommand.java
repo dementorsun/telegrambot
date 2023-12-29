@@ -1,6 +1,6 @@
 package com.dementorsun.telegrambot.command;
 
-import com.dementorsun.telegrambot.utilities.SendMessageObjectGenerator;
+import com.dementorsun.telegrambot.utilities.SendMessageGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ import static com.dementorsun.telegrambot.enums.BotMessages.UNKNOWN_COMMAND_MESS
 @RequiredArgsConstructor
 public class UnknownMenuCommand implements MenuCommand {
 
-    private final SendMessageObjectGenerator sendMessageObjectGenerator;
+    private final SendMessageGenerator sendMessageGenerator;
 
     /**
      * Method return {@link SendMessage} object for further bot logic execution when user entered
@@ -29,7 +29,7 @@ public class UnknownMenuCommand implements MenuCommand {
     @Override
     public SendMessage handleMenuCommand(Update update) {
         long userId = update.getMessage().getFrom().getId();
-        SendMessage sendMessage = sendMessageObjectGenerator.createSendMessageObject(update,
+        SendMessage sendMessage = sendMessageGenerator.createSendMessageFromMessage(update,
                                                                                      UNKNOWN_COMMAND_MESSAGE.getMessage());
 
         log.info("SendMessage with entered unknown command is generated for user with id = '{}'.", userId);

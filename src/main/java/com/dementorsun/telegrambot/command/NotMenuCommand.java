@@ -2,7 +2,7 @@ package com.dementorsun.telegrambot.command;
 
 import com.dementorsun.telegrambot.db.UserDataHandler;
 import com.dementorsun.telegrambot.utilities.BotMessageGenerator;
-import com.dementorsun.telegrambot.utilities.SendMessageObjectGenerator;
+import com.dementorsun.telegrambot.utilities.SendMessageGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -26,7 +26,7 @@ import static com.dementorsun.telegrambot.enums.BotMessages.*;
 public class NotMenuCommand implements MenuCommand {
 
     private final UserDataHandler userDataHandler;
-    private final SendMessageObjectGenerator sendMessageObjectGenerator;
+    private final SendMessageGenerator sendMessageGenerator;
     private final BotMessageGenerator botMessageGenerator;
 
     /**
@@ -50,7 +50,7 @@ public class NotMenuCommand implements MenuCommand {
                 if (userDataHandler.checkTimeIsPresent(userId)) {
                     userDataHandler.setTimeDataForUser(userId, message);
 
-                    sendMessage = sendMessageObjectGenerator.createSendMessageObject(update,
+                    sendMessage = sendMessageGenerator.createSendMessageFromMessage(update,
                                                                                      TIME_ARE_CHANGED_MESSAGE.getMessage());
 
                     log.info("SendMessage with completed time changing flow is generated for user with id = '{}'", userId);
@@ -59,7 +59,7 @@ public class NotMenuCommand implements MenuCommand {
                 } else {
                     userDataHandler.setTimeDataForUser(userId, message);
 
-                    sendMessage = sendMessageObjectGenerator.createSendMessageObject(update,
+                    sendMessage = sendMessageGenerator.createSendMessageFromMessage(update,
                                                                                      COMPLETE_TUTORIAL_MESSAGE.getMessage());
 
                     log.info("SendMessage with completed tutorial is generated for user with id = '{}'", userId);
@@ -67,7 +67,7 @@ public class NotMenuCommand implements MenuCommand {
 
                 //In other case send info message for user
             } else {
-                sendMessage = sendMessageObjectGenerator.createSendMessageObject(update,
+                sendMessage = sendMessageGenerator.createSendMessageFromMessage(update,
                                                                                  FAIL_TIME_FORMAT_MESSAGE.getMessage());
 
                 log.info("SendMessage with 'Wrong time format' message is generated for user with id = '{}'.", userId);
@@ -75,7 +75,7 @@ public class NotMenuCommand implements MenuCommand {
 
             //If time entering mode is not active, then send 'random message' for user
         } else {
-            sendMessage = sendMessageObjectGenerator.createSendMessageObject(update,
+            sendMessage = sendMessageGenerator.createSendMessageFromMessage(update,
                                                                              botMessageGenerator.generateRandomBotMessage());
 
             log.info("SendMessage with random message is generated for user with id = '{}'.", userId);

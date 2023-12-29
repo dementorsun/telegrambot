@@ -1,7 +1,7 @@
 package com.dementorsun.telegrambot.command;
 
 import com.dementorsun.telegrambot.db.UserDataHandler;
-import com.dementorsun.telegrambot.utilities.SendMessageObjectGenerator;
+import com.dementorsun.telegrambot.utilities.SendMessageGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ import static com.dementorsun.telegrambot.enums.BotMessages.*;
 public class ChangeTimeMenuCommand implements MenuCommand {
 
     private final UserDataHandler userDataHandler;
-    private final SendMessageObjectGenerator sendMessageObjectGenerator;
+    private final SendMessageGenerator sendMessageGenerator;
 
     /**
      * Method return {@link SendMessage} object for further execution /change_time menu command logic.
@@ -39,7 +39,7 @@ public class ChangeTimeMenuCommand implements MenuCommand {
 
         //If silent mode is active for user, then send info message.
         if (isSilenceModeActive) {
-            sendMessage = sendMessageObjectGenerator.createSendMessageObject(update,
+            sendMessage = sendMessageGenerator.createSendMessageFromMessage(update,
                                                                              TIME_CHANGING_WITH_SILENCE_MODE.getMessage());
 
             log.info("Send message with time changing process during active silence mode is generated for user with id = '{}'", userId);
@@ -47,7 +47,7 @@ public class ChangeTimeMenuCommand implements MenuCommand {
             //In other case send info message for user with current time from DB.
         } else {
             String time = userDataHandler.getUserTime(userId);
-            sendMessage = sendMessageObjectGenerator.createSendMessageObject(update,
+            sendMessage = sendMessageGenerator.createSendMessageFromMessage(update,
                                                                              String.format(TIME_CHANGING_MESSAGE.getMessage(), time));
 
             log.info("SendMessage with started time changing process is generated for user with id = '{}'", userId);

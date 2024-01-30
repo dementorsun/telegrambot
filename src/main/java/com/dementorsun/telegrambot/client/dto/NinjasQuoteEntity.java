@@ -1,13 +1,13 @@
 package com.dementorsun.telegrambot.client.dto;
 
 import lombok.AccessLevel;
-import lombok.Getter;
+import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
+@Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Getter
-public class RandomQuoteResponse {
+public class NinjasQuoteEntity {
 
-    String quoteText;
-    String quoteAuthor;
+    String quote;
+    String author;
 }

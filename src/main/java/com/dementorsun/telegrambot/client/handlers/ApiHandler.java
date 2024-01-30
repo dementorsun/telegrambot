@@ -110,9 +110,9 @@ public class ApiHandler {
         SendMessage sendMessage;
 
         try {
-            RandomQuoteResponse randomQuoteResponse = botClient.getRandomQuote();
-            String quote = randomQuoteResponse.getQuoteText();
-            String author = randomQuoteResponse.getQuoteAuthor();
+            NinjasQuoteEntity randomQuote = botClient.getRandomQuote();
+            String quote = randomQuote.getQuote();
+            String author = randomQuote.getAuthor();
             String message = String.format("\uD83E\uDD89 *Мудрість дня*\n\"%s\"\n*%s*", quote, author);
 
             sendMessage = messageFromApiHandler.generateSendMessage(chatId, message);

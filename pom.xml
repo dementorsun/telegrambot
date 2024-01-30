@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.dementorsun</groupId>
 	<artifactId>telegrambot</artifactId>
-	<version>2.2.0</version>
+	<version>2.2.1</version>
 	<name>telegrambot</name>
 	<description>Project for telegram bot</description>
 	<properties>

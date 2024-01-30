@@ -22,7 +22,7 @@ public class BotClient {
     private final CatApiClient catApiClient;
     private final DogApiClient dogApiClient;
     private final PokemonApiClient pokemonApiClient;
-    private final QuoteApiClient quoteApiClient;
+    private final NinjasApiClient ninjasApiClient;
     private final TmdbApiClient tmdbApiClient;
     private final PexelsApiClient pexelsApiClient;
     private final Gson gson;
@@ -42,8 +42,8 @@ public class BotClient {
         return dogApiClient.getRandomCuteDog();
     }
 
-    public RandomQuoteResponse getRandomQuote() {
-        return quoteApiClient.getRandomQuote(USER_AGENT_HEADER);
+    public NinjasQuoteEntity getRandomQuote() {
+        return ninjasApiClient.getRandomQuotes().stream().findFirst().orElse(null);
     }
 
     public String getRandomMovie() {
